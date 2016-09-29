@@ -1,0 +1,28 @@
+battery 0 {
+	format = "%status %percetage %remaining"
+	integer_battery_capacity = true
+}
+
+tztime local { 
+       format = "%a %b %d %I:%M:%S" 
+}
+
+disk "/" {
+     format = "Used %used: Free %free"
+     prefix_type = SI
+}
+
+
+#order += "ipv6"
+#order += "disk /mnt/flash"
+order += "disk /"
+order += "battery 0"
+#order += "run_watch DHCP"
+#order += "run_watch VPN"
+order += "wireless wlan0"
+order += "ethernet eth0"
+order += "load"
+order += "tztime local"
+
+
+

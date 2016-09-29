@@ -1,0 +1,17 @@
+#Move Between Workspaces
+bindsym XF86Forward workspace next
+bindsym XF86Back workspace prev
+
+#Start dmenu
+bindsym $mod+d exec dmenu_run
+
+#Alsamixer Audio Control
+bindsym XF86AudioRaiseVolume exec "amixer -q sset Master,0 1+ unmute"
+bindsym XF86AudioLowerVolume exec "amixer -q sset Master,0 1- unmute"
+bindsym XF86AudioMute exec "amixer -q sset Master,0 Toggle"
+
+#Brightness Control
+#bindsym XF86WakeUp+Home exec xbacklight -inc 20
+# increase screen brightness
+#bindsym XF86WakeUp+End exec xbacklight -dec 20
+# decrease screen brightness

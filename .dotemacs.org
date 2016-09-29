@@ -1,0 +1,471 @@
+unDeadHerbs's emacs init file
+
+* Buffer-wide TODO states
+  You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
+  #+TODO: BROKEN UNUSED CHECK TODO
+
+* emacs Settings
+  :PROPERTIES:
+  :NAME:    back_end_settings
+  :END:
+** Setup Package Repositories
+   :PROPERTIES:
+   :NAME:     repo_init
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (require 'package)
+   (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			    ("marmalade" . "https://marmalade-repo.org/packages/")
+			    ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
+			    ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+   (package-initialize)
+   #+END_SRC
+*** install missing required packages
+    (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs))
+    (unless package-archive-contents
+    (package-refresh-contents))
+    (dolist (package package-list)
+    (unless (package-installed-p package)
+    (ignore-errors
+    (package-install package))))
+** Disable Default things
+   :PROPERTIES:
+   :NAME:     disable_defaults
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (setq inhibit-startup-message t ; prevent tutorial
+	 initial-major-mode 'org-mode
+	 initial-scratch-message "-*- mode: org -*-
+scratch
+
+"
+	 sentence-end-double-space nil)
+   (menu-bar-mode -1)
+   (tool-bar-mode -1)
+   (scroll-bar-mode -1)
+   (global-unset-key (kbd "C-z")) ; was suspend-frame
+   #+END_SRC
+*** TODO unset (kbd "C-[") from ESC
+    :PROPERTIES:
+    :NAME:     disable_ctrl_bracket
+    :END:
+    didn't work
+    ;(define-key key-translation-map
+    ;  [?\C-\[] nil);[(control left_bracket)])
+    ;(define-key key-translation-map
+    ;  (kbd "C-[") nil);[(control left_bracket)])
+    ;(define-key key-translation-map
+    ;  [escape] [?\e])
+    ;(define-key key-translation-map
+    ;  [escape] nil)
+    ;(define-key key-translation-map
+    ;  [?\e] nil)
+    ;(when (boundp 'local-function-key-map)
+    ;  ;;(define-key local-function-key-map)
+    ;  (defun remove-escape-from-local-function-key-map ()
+    ;    (define-key local-function-key-map [?\e] nil)
+    ;    (define-key local-function-key-map [escape] nil)
+    ;    (define-key local-function-key-map [?\C-\[] nil)
+    ;    (define-key local-function-key-map (kbd "C-[") nil))
+    ;  (add-hook 'term-setup-hook 'remove-escape-from-local-function-key-map))
+
+** File Extensions
+   :PROPERTIES:
+   :NAME:     file_extentions
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
+   (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
+   (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
+   #+END_SRC
+*** Trello
+    #+BEGIN_SRC emacs-lisp
+    (add-hook 'org-mode-hook
+	      (lambda ()
+		      (let ((filename (buffer-file-name (current-buffer))))
+			    (when (and filename (string= "trello" (file-name-extension filename)))
+			    (org-trello-mode)))))
+    #+END_SRC
+** TODO Pre-Load Packages to Reduce Hook Time
+   :PROPERTIES:
+   :NAME:     require_packages
+   :END:
+   I'm not acutely sure this helps but some of them are required
+   #+BEGIN_SRC emacs-lisp
+   ;(autoload 'whitespace-mode 'hs-minor-mode 'hideshowvis-minor-mode 'relative-line-numbers-mode 'pretty-mode)
+   ;(require 'whitespace)
+   ;(require 'flymake)
+   ;(require 'hideshow)
+   ;(require 'hideshowvis)
+   ;(require 'relative-line-numbers)
+   ;(require 'pretty-mode)
+   ;(require 'timerfunctions)
+   (require 'org-trello)
+   ;(require 'smart-tab) ; package no longer exists or something
+   (require 'persistent-scratch)
+   (require 'centered-cursor-mode)
+   (require 'multiple-cursors)
+   (require 'calendar)
+   (require 'org-gcal)
+   (require 'yasnippet)
+   (require 'helm-config)
+   #+END_SRC
+** Tell TRAMP To Use SSH
+   :PROPERTIES:
+   :NAME:     tramp
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (setq tramp-default-method "ssh")
+   #+END_SRC
+** Use Tabs and Spaces
+   :PROPERTIES:
+   :NAME:     tabs_and_spaces
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   ;(global-smart-tab-mode 1) ; package no longer exists or something
+   #+END_SRC
+** Ask-Before-Closing
+   :PROPERTIES:
+   :NAME:     ask_before_close
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (defun ask-before-closing ()
+     "Ask whether or not to close, and then close if y was pressed"
+     (interactive)
+     (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
+	 (if (< emacs-major-version 22)
+	     (save-buffers-kill-terminal)
+	   (save-buffers-kill-emacs))
+       (message "Canceled exit")))
+   (global-set-key (kbd "C-x C-c") 'ask-before-closing)
+   #+END_SRC
+** Persistent-Scratch
+   :PROPERTIES:
+   :NAME:     persistent_scratch
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (persistent-scratch-setup-default)
+   #+END_SRC
+** YASnippet
+   #+BEGIN_SRC emacs-lisp
+   ;(yas-reload-all)
+   ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
+   ;(setq yas/root-directory '"~/.emacs.d/snippets")
+   ;(yas/reload-all)
+   #+END_SRC
+** Helm
+   (helm-mode 1)
+** etags
+   #+BEGIN_SRC emacs-lisp
+   (setq path-to-ctags "/usr/bin/ctags-emacs-24")
+   #+END_SRC
+* Pretty Modes
+  :PROPERTIES:
+  :NAME:     pretty_modes
+  :END:
+** Global
+   :PROPERTIES:
+   :NAME:     global_prettyness
+   :END:
+*** Highlight Parentheses
+    :PROPERTIES:
+    :NAME:    highlight_parentheses
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (show-paren-mode 1) ; highlight matching parentheses
+    #+END_SRC
+*** whitespace-mode
+    :PROPERTIES:
+     :NAME:     whitespace_mode
+     :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'after-change-major-mode-hook
+		'(lambda () (if (display-graphic-p)
+				(progn (whitespace-mode 1)
+				       (setq whitespace-style
+					     '(face tabs spaces trailing space-before-tab
+						    newline indentation empty space-after-tab
+						    space-mark tab-mark newline-mark)))
+			      (progn (whitespace-mode 1)
+				     (setq whitespace-style
+					   '(face tabs trailing space-before-tab
+						  newline indentation empty
+						  space-mark tab-mark newline-mark))))))
+      (setq whitespace-empty-at-eob-regexp "^
+      \\([
+
+      ]+\\)");set it not to care about the first empty line (org files tend to have one)
+    #+END_SRC
+*** Cyan Mini-Buffer
+    :PROPERTIES:
+     :NAME:     mini_buffer_cyan
+     :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'tty-setup-hook
+		(lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
+    #+END_SRC
+** Classes
+   :PROPERTIES:
+   :NAME:     mode_classes
+   :END:
+*** Text Mode
+    :PROPERTIES:
+    :NAME:    text_mode
+    :END:
+**** Fly Spell
+     :PROPERTIES:
+    :NAME:     fly_spell
+    :END:
+     #+BEGIN_SRC emacs-lisp
+    (add-hook 'text-mode-hook 'turn-on-flyspell)
+     #+END_SRC
+*** C Common Mode
+    :PROPERTIES:
+    :NAME:     cpp_pretty
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (defun udh-c-mode-layout ()
+      ;(glasses-mode 1)
+      (require 'flymake-cursor)
+      (setq-default c-basic-offset 2
+		    tab-width 2
+		    indent-tabs-mode t)
+      (hs-minor-mode 1)
+      (hideshowvis-minor-mode 1)
+      (hideshowvis-symbols)
+      (relative-line-numbers-mode 1)
+      ;make current line number the line number
+      (require 'centered-cursor-mode)
+      (centered-cursor-mode 1)
+      (highlight-parentheses-mode 1)
+      ;(hl-line-mode 1)
+      ;(highlight-blocks-mode 1)
+      ;(highlight-current-line-minor-mode 1)
+      ;(highline-mode 1)
+    )
+    (defun udh-c-mode-prettify ()
+      (pretty-mode 1)
+      (pretty-regexp "--" "↧");"↓"
+      (pretty-regexp "[+][+]" "↥");"↑"
+      (pretty-regexp " *> > >" "⋙")
+      (pretty-regexp "< < < *" "⋘")
+      (pretty-regexp " *> >" "≫")
+      (pretty-regexp "< < *" "≪")
+      (pretty-regexp "<<" "《");"⩽"
+      ;(pretty-regexp "< < <" "⫹")
+      (pretty-regexp ">>" "》");"⩾"
+      ;(pretty-regexp "> > >" "⫺")
+      (pretty-regexp ">=" "≥")
+      (pretty-regexp "<=" "≤")
+      (pretty-regexp "!=" "≠")
+      (pretty-regexp "==" "≡")
+      (pretty-regexp "!" "¬")
+      (pretty-regexp "||" "∥")
+      (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
+      (pretty-regexp "true" "⊨")
+      (pretty-regexp "bool" "⊢");"╠";"├";"¤"
+      (pretty-regexp "float" "ℝ")
+      (pretty-regexp "int" "ℤ")
+      (pretty-regexp "char" "¶")
+      (pretty-regexp "void" "Ø")
+      (pretty-regexp "//" "⑊")
+      ;(pretty-regexp "const" "𝌸")
+      ;(pretty-regexp "[/][/][*]" "∫∮" )
+      ;(pretty-regexp "[*][/][/]" "∮∫" )
+      ;(pretty-regexp "[*][/]" "∮" )
+      ;(pretty-regexp "[/][*]" "∮" )
+      ;(pretty-regexp "[/][/]" "∬" )
+      ;(pretty-regexp "[.]unlock()" "")
+      ;(pretty-regexp "[.]lock()" "")
+      (pretty-regexp "std::deque" "ℚ");ɋʠ
+      (pretty-regexp "std::function" "ℱ");∳ƒⁿ
+      (pretty-regexp "std::ostream" "水");⇴⌫⼮
+      (pretty-regexp "std::atomic" "⚛");⌬
+      (pretty-regexp "std::thread" "⎇");↛ ⇶
+      (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
+      (pretty-regexp "std::map" "↦");"≔"
+      (pretty-regexp "std::pair" "⑵");"②";"ʭ"
+      (pretty-regexp "std::make_pair" "mk⑵")
+      (pretty-regexp "std::vector" "→")
+      (pretty-regexp "std::cin" "⌨")
+      ;(pretty-regexp "std::buffer" "𝌖")
+      (pretty-regexp "[.]second" "₂")
+      (pretty-regexp "[.]first" "₁")
+      (pretty-regexp "template" "◳")
+      (pretty-regexp "()" "≬")
+      (pretty-regexp "std" "§");"準"
+      (pretty-regexp "::" "∷");"⁞"
+      (pretty-regexp "symbol" "※")
+      (pretty-regexp "Symbol" "⁜")
+      (pretty-regexp "Stream" "川")
+      (pretty-regexp "Thread" "⇶")
+      (pretty-regexp "Array" "⇻")
+      (pretty-regexp "Tree" "ᛘ");𝌎
+      ;(pretty-regexp "Key" "🔑")
+      (pretty-regexp "[*]" "∗")
+      (pretty-mode -1)
+      (pretty-mode -1)
+    )
+    (add-hook 'c-mode-common-hook
+	      'udh-c-mode-layout)
+    (add-hook 'c-mode-common-hook
+	      '(lambda () (local-set-key (kbd "C-M-S-p")
+					 '(lambda () (interactive) (udh-c-mode-prettify)))))
+    #+END_SRC
+** Major
+   :PROPERTIES:
+   :NAME:     major_prettyness
+   :END:
+*** lisp
+**** TODO rainbow-blocks
+     :PROPERTIES:
+     :NAME:     lisp_rainbows
+     :END:
+     #+BEGIN_SRC emacs-lisp
+     ;(require 'rainbow-blocks)
+     ;(add-hook 'tty-setup-hook
+     ;	  (add-hook 'lisp-mode-hook
+     ;		    'rainbow-blocks-mode)
+     #+END_SRC
+** Minor
+   :PROPERTIES:
+   :NAME:     minor_prettyness
+   :END:
+*** set relative-line-numbers-mode Visible Lines to
+    :PROPERTIES:
+    :NAME:     relitive_line_numbers
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    ;(add-hook 'nlinum-mode-hook
+    ;	      (lambda ()
+    (setq relative-line-numbers-motion-function 'forward-visible-line);))
+    #+END_SRC
+* Key Bindings
+  :PROPERTIES:
+ :NAME:     key_bindings
+ :END:
+** Global
+   :PROPERTIES:
+   :NAME:     global_keys
+   :END:
+*** Frame Movement
+    :PROPERTIES:
+    :NAME:     frame_controll_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-x O") 'previous-multiframe-window) ; make shift-o move back a frame
+    #+END_SRC
+*** Cursor Movement
+    :PROPERTIES:
+    :NAME:     cursor_movment_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-a") 'back-to-indentation)
+    (global-unset-key (kbd "M-m"))
+    #+END_SRC
+*** multiple-cursors
+    :PROPERTIES:
+    :NAME:     multiple_cursors_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-S-l") 'mc/edit-lines)
+    (global-set-key (kbd "C-d")   'mc/mark-next-like-this)
+    (global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
+    #+END_SRC
+*** org-mode
+    :PROPERTIES:
+    :NAME:     org_mode_global_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-c l") 'org-store-link)
+    (global-set-key (kbd "C-c a") 'org-agenda)
+    (global-set-key (kbd "C-c c") 'org-capture)
+    (global-set-key (kbd "C-c b") 'org-iswitchb)
+    #+END_SRC
+* Mode Settings
+** Major
+   :PROPERTIES:
+   :NAME:     major_keys
+   :END:
+*** c-mode
+    :PROPERTIES:
+    :NAME:     c_mode_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (defun udh-c-mode-keys ()
+      (local-set-key (kbd "C-t") 'hs-toggle-hiding)
+      (local-set-key (kbd "C-M-t") 'hs-hide-level)
+      (local-set-key (kbd "M-{") 'hs-hide-block)
+      (local-set-key (kbd "M-}") 'hs-show-block)
+      (local-set-key (kbd "C-S-b") (lambda () (interactive)
+				     (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
+				     (flymake-mode -1) (flymake-mode 1)
+				     (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+				     (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+				     )) ;find some way of move makefile error to minibuffer
+      (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+				      (flycheck-mode -1) (flymake-mode -1)
+				      (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+      (setq tags-revert-without-query 1)
+    )
+    (add-hook 'c-mode-common-hook
+	     'udh-c-mode-keys)
+    #+END_SRC
+*** org-mode
+    :PROPERTIES:
+    :NAME:     org_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    (defun org-collapse-element ()
+      "moves to parent element and then collapses it"
+      (interactive)
+      (org-up-element)
+      (org-cycle))
+    (defun udh-org-mode-keys ()
+      (local-set-key (kbd "RET") 'org-return-indent)
+      ;(local-set-key (kbd "M-C-RET") 'org-return)
+      (local-set-key (kbd "M-[") 'org-backward-element)
+      (local-set-key (kbd "M-]") 'org-forward-element)
+      (local-set-key (kbd "M-{") 'org-collapse-element)
+      (local-set-key (kbd "M-}") 'org-down-element)
+      )
+    (add-hook 'org-mode-hook
+	      'udh-org-mode-keys)
+    #+END_SRC
+* TODO python mode
+  :PROPERTIES:
+  :NAME:     python_setup
+  :END:
+  ;;;for python
+  ;;enable elpy
+  ;(elpy-enable)
+  ;; set compleat to C-c k
+  ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+  ;; set iedit mode
+  ;(define-key global-map (kbd "C-c o") 'iedit-mode)
+* Possible But Disabled
+** correct M-arrow to move paragraphs rather than single lines
+   (defun org-transpose-paragraphs (arg)
+   (interactive)
+   (when (and (not (or (org-at-table-p) (org-on-heading-p) (org-at-item-p)))
+   (thing-at-point 'sentence))
+   (transpose-paragraphs arg)
+   (backward-paragraph)
+   (re-search-forward "[[:graph:]]")
+   (goto-char (match-beginning 0))
+   t))
+   (add-to-list 'org-metaup-hook
+   (lambda () (interactive) (org-transpose-paragraphs -1)))
+   (add-to-list 'org-metadown-hook
+   (lambda () (interactive) (org-transpose-paragraphs 1)))
+** magit change logs use current org heading as function for description
+   (defun org-log-current-defun ()
+   (save-excursion
+   (org-back-to-heading)
+   (if (looking-at org-complex-heading-regexp)
+   (match-string 4))))
+   (add-hook 'org-mode-hook
+   (lambda ()
+   (make-variable-buffer-local 'add-log-current-defun-function)
+   (setq add-log-current-defun-function 'org-log-current-defun)))
