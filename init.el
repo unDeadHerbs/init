@@ -3,8 +3,17 @@
 ;prevent warning that .dotemacs.org is symlink
 (setq vc-follow-symlinks nil)
 
-					;(require 'org-dotemacs)
-(load-file "~/.emacs.d/elpa/org-dotemacs-0.3/org-dotemacs.el")
+(require 'package)
+(package-initialize)
+(unless (package-installed-p 'org-dotemacs)
+  (progn
+    (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			     ("marmalade" . "https://marmalade-repo.org/packages/")
+			     ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
+			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+    (package-refresh-contents)
+    (package-install 'org-dotemacs)))
+(require 'org-dotemacs)
 (org-dotemacs-load-default)
 ;(org-dotemacs-load-file "/home/udh/.emacs.d/init.org")
 
