@@ -21,13 +21,15 @@ unDeadHerbs's emacs init file
    (package-initialize)
    #+END_SRC
 *** install missing required packages
-    (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs))
-    (unless package-archive-contents
-    (package-refresh-contents))
-    (dolist (package package-list)
-    (unless (package-installed-p package)
-    (ignore-errors
-    (package-install package))))
+    #+BEGIN_SRC emacs-lisp
+      (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs))
+      (unless package-archive-contents
+        (package-refresh-contents))
+      (dolist (package package-list)
+        (unless (package-installed-p package)
+          (ignore-errors
+            (package-install package))))
+    #+END_SRC
 ** Disable Default things
    :PROPERTIES:
    :NAME:     disable_defaults
