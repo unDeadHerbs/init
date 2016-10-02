@@ -16,6 +16,7 @@ The global todo list for uDH_init
   looks good right now
 * init.sh
   1. have install programs that are required
+  2. have the zsh check be more system independent
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc

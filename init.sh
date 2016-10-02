@@ -13,4 +13,4 @@ ln -sf ~/init/xfce4 ~/.config/xfce4
 ln -sf ~/init/.dotemacs.org ~/.dotemacs.org
 ln -sf ~/init/init.el ~/.emacs.d/init.el
 ln -sf ~/init/.screenrc ~/.screenrc
-chsh -s $(which zsh)
+[[ $SHELL = "/bin/zsh" ]] || chsh -s $(which zsh)
