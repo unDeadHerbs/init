@@ -1,0 +1,30 @@
+The global todo list for uDH_init
+
+* global
+  1. probably a license or something?
+* bg
+  It's a folder of backgrounds, what do you want in the todo?
+* .dotemacs.org
+  1. reorganize everything!
+* .fehbg
+  1. i think that the bot is overwriting this file
+* .gitignore
+  1. nothing!
+* .i3
+  1. make more general for other users
+* init.el
+  looks good right now
+* init.sh
+  1. have install programs that are required
+* README.md
+  1. look though others for standard seciotns to indluce
+* .screenrc
+  1. replace with tmux
+* todo
+  dose this file really need a todo list?
+* xfce4
+  I don't think there is much to do here.
+* .xinitrc
+  1. make more general for other users
+* .zshrc
+  1. make more general for other users
