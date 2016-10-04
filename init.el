@@ -13,6 +13,7 @@
 			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
     (package-install 'org-dotemacs)))
+(require 'cl-lib)
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
 ;(org-dotemacs-load-file "/home/udh/.emacs.d/init.org")
