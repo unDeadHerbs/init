@@ -12,7 +12,8 @@
 			     ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
 			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
-    (package-install 'org-dotemacs)))
+    (package-install 'org-dotemacs)
+    (kill-buffer "*Compile-Log*")))
 (require 'cl-lib)
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
