@@ -4,8 +4,9 @@ The global todo list for uDH_init
   1. probably a license or something?
 * bg
   It's a folder of backgrounds, what do you want in the todo?
-* .dotemacs.org
+* .dotemacs.orgDDDDD
   1. reorganize everything!
+  2. make C-x C-c close the window if in a server rather than killing the server
 * .fehbg
   1. i think that the bot is overwriting this file
 * .gitignore
