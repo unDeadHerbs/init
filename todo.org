@@ -12,11 +12,13 @@ The global todo list for uDH_init
   1. nothing!
 * .i3
   1. make more general for other users
+  2. have the configs be links not generated
 * init.el
   looks good right now
 * init.sh
   1. have install programs that are required
   2. have the zsh check be more system independent
+  3. returns wrong error on chsh if zsh not installed
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc
