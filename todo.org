@@ -32,3 +32,5 @@ The global todo list for uDH_init
   1. make more general for other users
 * .zshrc
   1. make more general for other users
+  2. auto start emacs daemon
+     don't do that until .dotemacs is ready
