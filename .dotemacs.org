@@ -13,22 +13,27 @@ unDeadHerbs's emacs init file
    :NAME:     repo_init
    :END:
    #+BEGIN_SRC emacs-lisp
-   (require 'package)
-   (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			    ("marmalade" . "https://marmalade-repo.org/packages/")
-			    ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
-			    ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
-   (package-initialize)
+     (require 'package)
+     (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                              ("marmalade" . "https://marmalade-repo.org/packages/")
+                              ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
+                              ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+     (package-initialize)
+     (defun udh-install-and-load (package)
+       (unless (package-installed-p package)
+         (package-install package))
+       (ignore-errors (require package)))
    #+END_SRC
-*** install missing required packages
+** install and load required packages
     #+BEGIN_SRC emacs-lisp
-      (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs))
+      (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
+                            highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
+                            magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
+			    multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
+			    hideshow hideshowvis whitespace))
       (unless package-archive-contents
         (package-refresh-contents))
-      (dolist (package package-list)
-        (unless (package-installed-p package)
-          (ignore-errors
-            (package-install package))))
+      (mapcar 'udh-install-and-load package-list)
     #+END_SRC
 ** Disable Default things
    :PROPERTIES:
@@ -88,30 +93,6 @@ scratch
 			    (when (and filename (string= "trello" (file-name-extension filename)))
 			    (org-trello-mode)))))
     #+END_SRC
-** TODO Pre-Load Packages to Reduce Hook Time
-   :PROPERTIES:
-   :NAME:     require_packages
-   :END:
-   I'm not acutely sure this helps but some of them are required
-   #+BEGIN_SRC emacs-lisp
-   ;(autoload 'whitespace-mode 'hs-minor-mode 'hideshowvis-minor-mode 'relative-line-numbers-mode 'pretty-mode)
-   ;(require 'whitespace)
-   ;(require 'flymake)
-   ;(require 'hideshow)
-   ;(require 'hideshowvis)
-   ;(require 'relative-line-numbers)
-   ;(require 'pretty-mode)
-   ;(require 'timerfunctions)
-   (require 'org-trello)
-   ;(require 'smart-tab) ; package no longer exists or something
-   (require 'persistent-scratch)
-   (require 'centered-cursor-mode)
-   (require 'multiple-cursors)
-   (require 'calendar)
-   (require 'org-gcal)
-   (require 'yasnippet)
-   (require 'helm-config)
-   #+END_SRC
 ** Tell TRAMP To Use SSH
    :PROPERTIES:
    :NAME:     tramp
