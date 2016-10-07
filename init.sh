@@ -1,8 +1,28 @@
 cd
 alias mdr='mkdir -p'
-# install emacs
-# install i3
-# install zsh
+
+if uname -r|grep -i gentoo
+then
+   alias install='emerge -qvan'
+else if uname -r|grep -i debian
+     then
+	 alias install='apt install'
+fi   fi
+
+if type sudo
+then
+    type emacs || sudo install emacs
+    type i3    || sudo install i3
+    type zsh   || sudo install zsh
+else
+    if { type emacs && type i3 && type zsh }
+    then
+    else
+	su -c 'install emacs i3 zsh'
+    fi
+fi
+
+
 mkdir -p .config
 mkdir -p .emacs.d
 rm -rf ~/.i3

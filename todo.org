@@ -13,7 +13,6 @@ The global todo list for uDH_init
   2. have the configs be links not generated
 * init.el
 * init.sh
-  1. have install programs that are required
   3. returns wrong error on chsh if zsh not installed
   4. have backup existing configs if they exist
 * README.md
