@@ -27,7 +27,7 @@ The global todo list for uDH_init
 * todo
   dose this file really need a todo list?
 * xfce4
-  I don't think there is much to do here.
+  1. this should probably be a copy not a link?
 * .xinitrc
   1. make more general for other users
 * .zshrc
