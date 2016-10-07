@@ -11,10 +11,12 @@ The global todo list for uDH_init
 * .i3
   1. make more general for other users
   2. have the configs be links not generated
+     done for i3 but not i3 status
 * init.el
 * init.sh
-  3. returns wrong error on chsh if zsh not installed
-  4. have backup existing configs if they exist
+  1. returns wrong error on chsh if zsh not installed
+  2. have backup existing configs if they exist
+     done for i3
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc

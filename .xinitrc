@@ -7,11 +7,21 @@
 sleep 2  && bash ~/.fehbg &
 sleep 10 && bash ~/.fehbg &
 
-# generate config files from templates
-cat ~/.i3/config.base > ~/.i3/config
-cat ~/.i3/config.$(hostname) >> ~/.i3/config
+#link the config from their bases
+if [ -e "~/.i3/config.$(hostname)" ]
+then
+    ln -sf ~/.i3/config.$(hostname) ~/.i3/config
+else
+    ln -sf ~/.i3/config.base ~/.i3/config
+fi
 cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
+#if [ -e "~/.i3/status.$(hostname)" ]
+#then
+#    ln -sf ~/.i3/status.$(hostname) ~/.i3status.conf
+#else
+#    ln -sf ~/.i3/status.base ~/.i3status.conf
+#fi
 
 export laptopip=10.0.128.106
 

@@ -161,16 +161,10 @@ bar {
 	status_command i3status --config ~/.i3status.conf
 }
 
-
-
-
-# uDH 7499
-#  this causes the bacground to be resised to fit
-#exec --no-startup-id sh ~/.fehbg
-#uDH 8298: moved to zshrc
-
+##
+# uDH
+##
 new_window none
 new_float none
 hide_edge_borders both
-#tray_output primary
 

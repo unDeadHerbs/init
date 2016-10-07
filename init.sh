@@ -1,6 +1,9 @@
 cd
 alias mdr='mkdir -p'
 
+# remove any links to init file that currently exist
+# this is such that on systems that are being upgreaded this will act the same as a fresh install
+
 if uname -r|grep -i gentoo
 then
    alias install='emerge -qvan'
@@ -22,11 +25,32 @@ else
     fi
 fi
 
-
 mkdir -p .config
 mkdir -p .emacs.d
+
+# if the user has an existing config back it up
+if [-e "~/.i3/config" ]
+then
+    mv ~/.i3/config ~/init/.i3/config.$(hostname)
+fi
 rm -rf ~/.i3
 ln -sf ~/init/.i3 ~/.i3
+# set up the config links
+if [ -e "~/.i3/config.$(hostname)" ]
+then
+    ln -sf ~/.i3/config.$(hostname) ~/.i3/config
+else
+    ln -sf ~/.i3/config.base ~/.i3/config
+fi
+cat ~/.i3/status.base > ~/.i3status.conf
+cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
+#if [ -e "~/.i3/status.$(hostname)" ]
+#then
+#    ln -sf ~/.i3/status.$(hostname) ~/.i3status.conf
+#else
+#    ln -sf ~/.i3/status.base ~/.i3status.conf
+#fi
+
 ln -sf ~/init/.xinitrc ~/.xinitrc
 ln -sf ~/init/.zshrc ~/.zshrc
 ln -sf ~/init/.fehbg ~/.fehbg
