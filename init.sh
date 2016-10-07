@@ -15,4 +15,4 @@ cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 ln -sf ~/init/.dotemacs.org ~/.dotemacs.org
 ln -sf ~/init/init.el ~/.emacs.d/init.el
 ln -sf ~/init/.screenrc ~/.screenrc
-[[ $SHELL = "/bin/zsh" ]] || chsh -s $(which zsh)
+[[ $SHELL = "$(which zsh)" ]] || type zsh && chsh -s $(which zsh)

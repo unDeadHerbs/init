@@ -14,7 +14,6 @@ The global todo list for uDH_init
 * init.el
 * init.sh
   1. have install programs that are required
-  2. have the zsh check be more system independent
   3. returns wrong error on chsh if zsh not installed
   4. have backup existing configs if they exist
 * README.md
