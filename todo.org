@@ -3,7 +3,7 @@ The global todo list for uDH_init
 * global
   1. probably a license or something?
 * bg
-* .dotemacs.orgDDDDD
+* .dotemacs.org
   1. reorganize everything!
   2. make C-x C-c close the window if in a server rather than killing the server
 * .fehbg
