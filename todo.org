@@ -7,7 +7,6 @@ The global todo list for uDH_init
   1. reorganize everything!
   2. make C-x C-c close the window if in a server rather than killing the server
 * .fehbg
-  1. i think that the bot is overwriting this file
 * .gitignore
 * .i3
   1. make more general for other users

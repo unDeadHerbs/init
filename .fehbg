@@ -3,5 +3,5 @@
 [[ $(hostname) = "uDH-deb"   ]] && feh --no-fehbg --bg-scale 'init/bg/1463515420999.jpg'
 [[ $(hostname) = "uDH-tower" ]] && feh --no-fehbg --bg-scale 'init/bg/memento_mori_by_yuumei-d689kc2.jpg'
 [[ $(hostname) = "Kitty" ]] && feh --no-fehbg --bg-scale $(find ~/bg|grep "[.]jpg$"|shuf -n1)
-[[ $(hostname) = "nate-laptop-lenovo" ]] && feh --no-febg --bg-scale 'Pictures/DogWithOnion.jpg'
-[[ $(hostname) = "uDH-Bot" ]] && feh --no-febg --bg-scale 'init/bg/Reiko.jpg'
+[[ $(hostname) = "nate-laptop-lenovo" ]] && feh --no-fehbg --bg-scale 'Pictures/DogWithOnion.jpg'
+[[ $(hostname) = "uDH-Bot" ]] && feh --no-fehbg --bg-scale 'init/bg/Reiko.jpg'
