@@ -285,6 +285,7 @@ alias l="ls -lha"
 alias lt='clear && ls'
 alias la='ls -a'
 alias tl="clear && l"
+exists poweroff && alias turnoff='poweroff'
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
 
