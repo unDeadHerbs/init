@@ -32,7 +32,7 @@ mkdir -p .config
 mkdir -p .emacs.d
 
 # if the user has an existing config back it up
-if [-e "~/.i3/config" ]
+if [ -e "~/.i3/config" ]
 then
     mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
