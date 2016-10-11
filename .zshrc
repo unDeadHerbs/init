@@ -188,7 +188,8 @@ export TERMINAL="xfce4-terminal"
 exists ed    && export EXPORT='ed'
 exists vim   && export EDITOR='vim'
 exists vi    && export EXPORT='vi'
-exists emacs && export EDITOR='emacs -nw '
+exists emacs && export EDITOR='emacs -nw'
+alias e='$(echo $EDITOR)'
 if exists google-chrome-stable
 then
     export BROWSER="google-chrome-stable"
@@ -273,21 +274,16 @@ murrays && alias nano='echo use $EDITOR for editing file '
 if exists emacs
 then
     alias emcl='emacsclient'
-    alias ems='emacs'
-    alias emc='emacs'
-    alias emcs='emacs'
-    alias ens='emacs'
-    alias enc='emacs'
-    alias encs='emacs'
     if echo $EDITOR|grep emacs
     then
 	if ! ps -ef|grep emacs|grep "server-start"
 	then
 	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon
 	fi
-	#start the emacs daemon
+	alias emacs='emacsclient'
     fi
 fi
+
 exists skype && alias skype='apulse skype'
 alias l="ls -lha"
 alias lt='clear && ls'
