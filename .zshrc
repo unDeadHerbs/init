@@ -281,6 +281,7 @@ then
 	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon
 	fi
 	alias emacs='emacsclient'
+	export EDITOR='emacsclient -a "" -tc'
     fi
 fi
 
