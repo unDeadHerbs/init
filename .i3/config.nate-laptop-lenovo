@@ -1,6 +1,8 @@
+exec --no-startup-id feh --bg-fill /home/nate/Pictures/20160623_203018.jpg
+
 #Move Between Workspaces
-bindsym XF86Forward workspace next
-bindsym XF86Back workspace prev
+#bindsym XF86Forward workspace next
+#bindsym XF86Back workspace prev
 
 #Start dmenu
 bindsym $mod+d exec dmenu_run

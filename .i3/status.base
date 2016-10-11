@@ -12,7 +12,7 @@ general {
 }
 
 wireless wlp2s0 {
-        format_up = "%essid @ %signal (%ip)"
+        format_up = "%quality @ %essid (%ip)"
         format_down = "W"
 }
 
