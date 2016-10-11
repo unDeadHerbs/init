@@ -130,16 +130,11 @@ alias running='pidof'
 alias os="uname -r|sed 's/^.*[-]//'"
 alias murrays="hostname|grep uDH"
 
+# lines above here should be changed with caution as they will cause randome jumps when the code moves in the file
+# assuming that zsh dosen't copy it's config out of location to prevent that (like org-dotemacs does)
 # refresh init file on systems
 [[ $(tty) = "/dev/tty1" ]] && ( cd init ; git pull )
 [[ $(tty) = "/dev/tty2" ]] && ( cd init ; git pull )
-
-# Automatically start X on appropriate machines
-[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
-[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
-[[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
-[[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
-[[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
 # Add aliases for programs that are installed on single machines
 if [ $(hostname) = 'uDH-x201' ]
@@ -164,7 +159,7 @@ exists sshfs      && alias sshfs="sshfs -C -o reconnect"
 exists mc         && alias mc="mc -a"
 exists emacs      && alias emacs='emacs -nw '
 exists emacs      && alias emacsclient='emacsclient -a "" -tc '
-exists youtube-dl && alias youtube-dl='youtube-dl -i'
+exists youtube-dl && alias youtube-dl='youtube-dl -i -c'
 exists autossh    && alias autossh='autossh -M 0'
 exists mosh       || alias mosh='ssh'
 exists pianobar   && alias pianobar='pianobar 2> /dev/null'
@@ -188,7 +183,8 @@ export TERMINAL="xfce4-terminal"
 exists ed    && export EXPORT='ed'
 exists vim   && export EDITOR='vim'
 exists vi    && export EXPORT='vi'
-exists emacs && export EDITOR='emacs -nw '
+exists emacs && export EDITOR='emacs -nw'
+alias e='$(echo $EDITOR)'
 if exists google-chrome-stable
 then
     export BROWSER="google-chrome-stable"
@@ -273,18 +269,23 @@ murrays && alias nano='echo use $EDITOR for editing file '
 if exists emacs
 then
     alias emcl='emacsclient'
-    alias ems='emacs'
-    alias emc='emacs'
-    alias emcs='emacs'
-    alias ens='emacs'
-    alias enc='emacs'
-    alias encs='emacs'
+    if echo $EDITOR|grep emacs
+    then
+	if ! ps -ef|grep emacs|grep "server-start"
+	then
+	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon &
+	fi
+	alias emacs='emacsclient'
+	export EDITOR='emacsclient -a "" -tc'
+    fi
 fi
+
 exists skype && alias skype='apulse skype'
 alias l="ls -lha"
 alias lt='clear && ls'
 alias la='ls -a'
 alias tl="clear && l"
+exists poweroff && alias turnoff='poweroff'
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
 
@@ -336,6 +337,14 @@ fi
 
 # enable typo correciton
 setopt correct
+
+# Automatically start X on appropriate machines
+[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
+[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
+[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux
+[[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
+[[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
+[[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
 # MOTD
 clear

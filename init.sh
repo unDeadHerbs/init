@@ -2,6 +2,9 @@ cd
 alias mdr='mkdir -p'
 
 # remove any links to init file that currently exist
+# the next line has a bug for any files with the sym " -> " in their name
+# there should' be any of those because that's dumb
+ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init" 
 # this is such that on systems that are being upgreaded this will act the same as a fresh install
 
 if uname -r|grep -i gentoo
