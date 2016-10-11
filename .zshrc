@@ -273,7 +273,7 @@ then
     then
 	if ! ps -ef|grep emacs|grep "server-start"
 	then
-	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon
+	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon &
 	fi
 	alias emacs='emacsclient'
 	export EDITOR='emacsclient -a "" -tc'
@@ -341,6 +341,7 @@ setopt correct
 # Automatically start X on appropriate machines
 [[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
+[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux
 [[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 [[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
