@@ -175,8 +175,8 @@ hide_edge_borders both
 ##
 
 #Move Between Workspaces
-bindsym XF86Forward workspace next
-bindsym XF86Back workspace prev
+#bindsym XF86Forward workspace next
+#bindsym XF86Back workspace prev
 
 #Start dmenu
 bindsym $mod+d exec dmenu_run
