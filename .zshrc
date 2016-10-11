@@ -130,16 +130,11 @@ alias running='pidof'
 alias os="uname -r|sed 's/^.*[-]//'"
 alias murrays="hostname|grep uDH"
 
+# lines above here should be changed with caution as they will cause randome jumps when the code moves in the file
+# assuming that zsh dosen't copy it's config out of location to prevent that (like org-dotemacs does)
 # refresh init file on systems
 [[ $(tty) = "/dev/tty1" ]] && ( cd init ; git pull )
 [[ $(tty) = "/dev/tty2" ]] && ( cd init ; git pull )
-
-# Automatically start X on appropriate machines
-[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
-[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
-[[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
-[[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
-[[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
 # Add aliases for programs that are installed on single machines
 if [ $(hostname) = 'uDH-x201' ]
@@ -342,6 +337,13 @@ fi
 
 # enable typo correciton
 setopt correct
+
+# Automatically start X on appropriate machines
+[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
+[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
+[[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
+[[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
+[[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
 # MOTD
 clear
