@@ -1,10 +1,15 @@
-#wireless wlp2s0 {
-#	format_up = "%quality @ %essid (%ip)"
-#	format_down = ""
-#}
+wireless wlp2s0 {
+	format_up = "%quality %essid (%ip)"
+	format_down = ""
+}
+
+ethernet enp0s25 {
+	 format_up = "%quality %essid ($ip)"
+	 format_down = ""
+}
 
 battery 0 {
-	format = "%status %percetage %remaining"
+	format = "%status %percentage %remaining"
 	integer_battery_capacity = true
 }
 
@@ -25,7 +30,7 @@ order += "battery 0"
 #order += "run_watch DHCP"
 #order += "run_watch VPN"
 order += "wireless wlp2s0"
-order += "ethernet eth0"
+order += "ethernet enp0s25"
 order += "load"
 order += "tztime local"
 

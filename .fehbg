@@ -1,2 +1,7 @@
-#!/bin/sh
-feh  --bg-fill '/home/nate/Pictures/20160623_203018.jpg'
+#!/bin/bash
+[[ $(hostname) = "uDH-x201"  ]] && feh --no-fehbg --bg-scale 'init/bg/the_sound_and_fury_by_yuumei-d6ys5aw.jpg'
+[[ $(hostname) = "uDH-deb"   ]] && feh --no-fehbg --bg-scale 'init/bg/1463515420999.jpg'
+[[ $(hostname) = "uDH-tower" ]] && feh --no-fehbg --bg-scale 'init/bg/memento_mori_by_yuumei-d689kc2.jpg'
+[[ $(hostname) = "Kitty" ]] && feh --no-fehbg --bg-scale $(find ~/bg|grep "[.]jpg$"|shuf -n1)
+[[ $(hostname) = "nate-laptop-lenovo" ]] && feh --no-fehbg --bg-fill '/home/nate/Pictures/20160623_203018.jpg'
+[[ $(hostname) = "uDH-Bot" ]] && feh --no-fehbg --bg-scale 'init/bg/Reiko.jpg'
