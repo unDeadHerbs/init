@@ -21,7 +21,7 @@ then
     type i3    || sudo install i3
     type zsh   || sudo install zsh
 else
-    if { type emacs && type i3 && type zsh }
+    if type emacs && type i3 && type zsh
     then
     else
 	su -c 'install emacs i3 zsh'
