@@ -1,6 +1,5 @@
 cd
 alias mdr='mkdir -p'
-which sudo || alias sudo='su -c'
 
 # remove any links to init file that currently exist
 # the next line has a bug for any files with the sym " -> " in their name
