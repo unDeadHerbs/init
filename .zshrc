@@ -279,6 +279,14 @@ then
     alias ens='emacs'
     alias enc='emacs'
     alias encs='emacs'
+    if echo $EDITOR|grep emacs
+    then
+	if ! ps -ef|grep emacs|grep "server-start"
+	then
+	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon
+	fi
+	#start the emacs daemon
+    fi
 fi
 exists skype && alias skype='apulse skype'
 alias l="ls -lha"
