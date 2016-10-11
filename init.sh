@@ -9,22 +9,21 @@ ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0
 
 if uname -r|grep -i gentoo
 then
-   alias install='emerge -qvan'
+   export install='emerge -qvan'
 else if uname -r|grep -i debian
      then
-	 alias install='apt install'
+	 export install='apt install'
 fi   fi
 
 if type sudo
 then
-    type emacs || sudo install emacs
-    type i3    || sudo install i3
-    type zsh   || sudo install zsh
+    type emacs || sudo $install emacs
+    type i3    || sudo $install i3
+    type zsh   || sudo $install zsh
 else
-    if type emacs && type i3 && type zsh
+    if ! type emacs && type i3 && type zsh
     then
-    else
-	su -c 'install emacs i3 zsh'
+	su -c '$install emacs i3 zsh'
     fi
 fi
 
