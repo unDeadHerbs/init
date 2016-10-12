@@ -347,5 +347,10 @@ setopt correct
 [[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
 # MOTD
-clear
-exists cowfortune > /dev/null && cowfortune
+if exists cowfortune
+then
+		clear
+		cowfortune
+else
+		clear
+fi
