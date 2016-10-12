@@ -13,15 +13,16 @@ then
 else if uname -r|grep -i debian
      then
 	 export install='apt install'
-fi   fi
+     fi
+fi
 
-if type sudo
+if type sudo|egrep -v "su( |$)"
 then
     type emacs || sudo $install emacs
     type i3    || sudo $install i3
     type zsh   || sudo $install zsh
 else
-    if ! type emacs && type i3 && type zsh
+    if ! { type emacs && type i3 && type zsh }
     then
 	su -c '$install emacs i3 zsh'
     fi
