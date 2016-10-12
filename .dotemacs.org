@@ -20,9 +20,10 @@ unDeadHerbs's emacs init file
                               ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
      (package-initialize)
      (defun udh-install-and-load (package)
-       (unless (package-installed-p package)
-         (package-install package))
-       (ignore-errors (require package)))
+       (ignore-errors
+         (unless (package-installed-p package)
+           (package-install package))
+         (require package)))
    #+END_SRC
 ** install and load required packages
     #+BEGIN_SRC emacs-lisp
