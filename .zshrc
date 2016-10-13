@@ -133,8 +133,8 @@ alias murrays="hostname|grep uDH"
 # lines above here should be changed with caution as they will cause randome jumps when the code moves in the file
 # assuming that zsh dosen't copy it's config out of location to prevent that (like org-dotemacs does)
 # refresh init file on systems
-[[ $(tty) = "/dev/tty1" ]] && ( cd init ; git pull )
-[[ $(tty) = "/dev/tty2" ]] && ( cd init ; git pull )
+[[ $(tty) = "/dev/tty1" ]] && ( cd ~/init ; until git pull ; do ; done)&
+[[ $(tty) = "/dev/tty2" ]] && ( cd ~/init ; until git pull ; do ; done)&
 
 # Add aliases for programs that are installed on single machines
 if [ $(hostname) = 'uDH-x201' ]
