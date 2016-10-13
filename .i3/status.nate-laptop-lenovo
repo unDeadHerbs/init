@@ -34,6 +34,3 @@ order += "ethernet enp0s25"
 order += "load"
 order += "tztime local"
 
-
-
-# a change!
