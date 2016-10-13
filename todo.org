@@ -25,5 +25,5 @@ The global todo list for uDH_init
 * .xinitrc
   1. make more general for other users
 * .zshrc
-  1. make more general for other users
-
+  1. separate into main and per user
+		 have main capture and log behavior
