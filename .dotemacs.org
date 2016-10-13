@@ -31,7 +31,7 @@ unDeadHerbs's emacs init file
                             highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
                             magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
 			    multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
-			    hideshow hideshowvis whitespace))
+			    hideshow hideshowvis whitespace ob-spice))
       (unless package-archive-contents
         (package-refresh-contents))
       (mapcar 'udh-install-and-load package-list)
