@@ -282,7 +282,6 @@ then
 	export EDITOR='emacsclient -a "" -tc'
     fi
 fi
-
 exists skype && alias skype='apulse skype'
 if exists ls
 then
@@ -291,9 +290,12 @@ then
 		alias la='ls -a'
 		alias tl="clear && l"
 fi
-exists poweroff && alias turnoff='poweroff'
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
+# asist for non-computer people
+alias quit='exit'
+exists poweroff && alias turnoff='poweroff'
+
 
 #echo "" | gcc -E -march=native -v - | grep -C 1 -i cc
 [[ $(hostname) = 'uDH-x201' ]] && alias tmpclear='rm -rf ~/tmp/*'
