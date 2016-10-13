@@ -213,16 +213,19 @@ export widgetport='9001'
 # ssh
 #alias sshhome="ssh root@udh.no-ip.org -p 25567"
 #alias sshtower='ssh 10.20.39.13'
-if [ $(hostname) = 'uDH-x201' ]
+if exists ssh
 then
-    alias sshtower='mosh ${toweradd}'
+		if [ $(hostname) = 'uDH-x201' ]
+		then
+				alias sshtower='mosh ${toweradd}'
+		fi
+		alias sshmc='ssh minecraft@${mcadd}'
+		alias sshdb='ssh ${gaussadd}'
+		alias sshgauss='ssh ${gaussadd}'
+		alias sshwidget='ssh ${widgetadd} -p ${widgetport}'
+		alias sshratcht='ssh undeadherbs@ratchtnet.cf'
+		#alias sshmfs='ssh murray.fordyce.sexy'
 fi
-alias sshmc='ssh minecraft@${mcadd}'
-alias sshdb='ssh ${gaussadd}'
-alias sshgauss='ssh ${gaussadd}'
-alias sshwidget='ssh ${widgetadd} -p ${widgetport}'
-alias sshratcht='ssh undeadherbs@ratchtnet.cf'
-#alias sshmfs='ssh murray.fordyce.sexy'
 
 # sshfs
 if exists sshfs
@@ -281,10 +284,13 @@ then
 fi
 
 exists skype && alias skype='apulse skype'
-alias l="ls -lha"
-alias lt='clear && ls'
-alias la='ls -a'
-alias tl="clear && l"
+if exists ls
+then
+		alias l="ls -lha"
+		alias lt='clear && ls'
+		alias la='ls -a'
+		alias tl="clear && l"
+fi
 exists poweroff && alias turnoff='poweroff'
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
