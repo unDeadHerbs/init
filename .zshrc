@@ -303,7 +303,7 @@ exists poweroff && alias turnoff='poweroff'
 #git things
 if exists git
 then
-    alias gitupdate='git pull'
+    alias gitupdate='until git pull; do; done'
     alias gitpush='git add . && git commit && git pull && git push'
     alias gitbranch='git log --pretty=format:"%h %s" --graph'
     alias githistory='gitbranch'
