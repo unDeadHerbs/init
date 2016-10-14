@@ -268,7 +268,7 @@ then
 fi
 
 # renaming things
-murrays && alias nano='echo use $EDITOR for editing file '
+murrays && alias nano='echo use e for editing file '
 if exists emacs
 then
     alias emcl='emacsclient'
