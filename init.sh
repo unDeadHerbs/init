@@ -55,7 +55,12 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 #fi
 
 ln -sf ~/init/.xinitrc ~/.xinitrc
-ln -sf ~/init/.zshrc ~/.zshrc
+
+for zshrc in $(ls .zshrc*)
+do
+		ln -sf ~/init/$zshrc ~/$zshrc
+done
+
 ln -sf ~/init/.fehbg ~/.fehbg
 mdr ~/.config/xfce4/terminal
 cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
