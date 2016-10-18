@@ -70,7 +70,7 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
 fi
 
 ##
-# page up through history
+# Page up through history
 ##
 [[ -n "${key[PageUp]}"   ]]  && bindkey  "${key[PageUp]}"    history-beginning-search-backward
 [[ -n "${key[PageDown]}" ]]  && bindkey  "${key[PageDown]}"  history-beginning-search-forward
@@ -291,6 +291,7 @@ then
 		alias la='ls -a'
 		alias tl="clear && l"
 fi
+exists find     && alias rmdire="find . -type d -empty -delete"
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
 # asist for non-computer people
