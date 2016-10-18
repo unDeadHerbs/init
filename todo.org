@@ -17,6 +17,8 @@ The global todo list for uDH_init
   1. returns wrong error on chsh if zsh not installed
   2. have backup existing configs if they exist
      done for i3
+	3. make the install script work off of a list
+	4. add i3status to the install script
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc
