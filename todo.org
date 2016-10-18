@@ -5,6 +5,7 @@ The global todo list for uDH_init
 * bg
 * .dotemacs.org
   1. reorganize everything!
+	2. on open, if folder && folder is git; then open magit-status as-well
 * .fehbg
 * .gitignore
 * .i3
