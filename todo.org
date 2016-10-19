@@ -6,6 +6,7 @@ The global todo list for uDH_init
 * .dotemacs.org
   1. reorganize everything!
 	2. on open, if folder && folder is git; then open magit-status as-well
+	3. M-! does not use the .zshrc file
 * .fehbg
 * .gitignore
 * .i3
@@ -30,3 +31,5 @@ The global todo list for uDH_init
 * .zshrc
   1. separate into main and per user
 		 have main capture and log behavior
+	2. the startup is to slow, try and make this more optimal
+		 that will be partly fixed by the source division (for most people)
