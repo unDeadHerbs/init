@@ -14,7 +14,7 @@ battery 0 {
 }
 
 tztime local { 
-       format = "%a %b %d %I:%M:%S" 
+       format = "%a %b %d %I:%M:%S"
 }
 
 disk "/" {
@@ -33,4 +33,7 @@ order += "wireless wlp2s0"
 order += "ethernet enp0s25"
 order += "load"
 order += "tztime local"
+<<<<<<< a2abb559c5e833856e70423dffaafc5691edcc38
 
+=======
+>>>>>>> Removed the change statement. Still practicing
