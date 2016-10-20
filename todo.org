@@ -19,7 +19,10 @@ The global todo list for uDH_init
   2. have backup existing configs if they exist
      done for i3
 	3. make the install script work off of a list
-	4. add i3status to the install script
+	4. add required programs to the install script
+		 i3status
+		 dmenu
+		 xfce4-terminal
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc
@@ -33,3 +36,4 @@ The global todo list for uDH_init
 		 have main capture and log behavior
 	2. the startup is to slow, try and make this more optimal
 		 that will be partly fixed by the source division (for most people)
+	3. rename alias that are obstructive or strange to others
