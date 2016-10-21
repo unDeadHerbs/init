@@ -23,6 +23,8 @@ The global todo list for uDH_init
 		 i3status
 		 dmenu
 		 xfce4-terminal
+	5. some form of version numbers
+		 when git pull sucseeds on .zshrc it can re run init.sh
 * README.md
   1. look though others for standard seciotns to indluce
 * .screenrc
@@ -37,3 +39,9 @@ The global todo list for uDH_init
 	2. the startup is to slow, try and make this more optimal
 		 that will be partly fixed by the source division (for most people)
 	3. rename alias that are obstructive or strange to others
+	4. move wget's options to the correct env var
+	5. make sudo alias more consistant with sudo
+		 the real sudo can't accept commands in '' marks
+	6. when posible, prevent re-assiging to a export
+		 the editor variable is reexported 6 times
+
