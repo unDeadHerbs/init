@@ -38,7 +38,6 @@ The global todo list for uDH_init
 		 have main capture and log behavior
 	2. the startup is to slow, try and make this more optimal
 		 that will be partly fixed by the source division (for most people)
-	3. rename alias that are obstructive or strange to others
 	4. move wget's options to the correct env var
 	5. make sudo alias more consistant with sudo
 		 the real sudo can't accept commands in '' marks

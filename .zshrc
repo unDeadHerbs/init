@@ -148,42 +148,43 @@ fi
 
 # Add default options to programs
 # some of these probably don't need checking, but for the sake of autocompleations being correct i will anyway
-exists sdate      && alias sdate="sdate|sed 's/.*\([0-9][0-9][0-9][0-9]\) .*/\1/'"
-exists ls         && alias ls="ls --color"
-exists ssh        && alias ssh='ssh -o ConnectionAttempts=4 -Y'
+exists sdate       && alias sdate="sdate|sed 's/.*\([0-9][0-9][0-9][0-9]\) .*/\1/'"
+exists ls          && alias ls="ls --color"
+exists ssh         && alias ssh='ssh -o ConnectionAttempts=4 -Y'
 #-o ConnectTimeout=1'
-exists nano       && alias nano="nano -w"
-exists wget       && alias wget='wget -c -t 5 --waitretry 60'
-exists ed         && alias ed='ed -p "*"'
-exists sl         && alias sl='sl -l'
-exists sshfs      && alias sshfs="sshfs -C -o reconnect"
-exists mc         && alias mc="mc -a"
-exists emacs      && alias emacs='emacs -nw '
-exists emacs      && alias emacsclient='emacsclient -a "" -tc '
-exists youtube-dl && alias youtube-dl='youtube-dl -i -c'
-exists autossh    && alias autossh='autossh -M 0'
-exists mosh       || alias mosh='ssh'
-exists pianobar   && alias pianobar='pianobar 2> /dev/null'
-exists find       && alias finds='find 2>/dev/null'
+exists nano        && alias nano="nano -w"
+exists wget        && alias wget='wget -c -t 5 --waitretry 60'
+exists ed          && alias ed='ed -p "*"'
+exists sl          && alias sl='sl -l'
+exists sshfs       && alias sshfs="sshfs -C -o reconnect"
+exists mc          && alias mc="mc -a"
+exists emacs       && alias emacs='emacs -nw '
+exists emacsclient && alias emacsclient='emacsclient -a "" -tc '
+exists youtube-dl  && alias youtube-dl='youtube-dl -i -c'
+exists autossh     && alias autossh='autossh -M 0'
+exists mosh        || alias mosh='ssh'
+exists pianobar    && alias pianobar='pianobar 2> /dev/null'
+exists find        && alias finds='find 2>/dev/null'
 
 # Create aliases for programs that  need to be run as root
 ##todo: have that check if in sudoers file
 exists sudo || alias sudo='su -c'
-alias htop="sudo 'screen htop'"
+alias rhtop="sudo htop"
 #alias s2ram="sudo s2ram"
 alias s2ram="sudo 'swapon /dev/sda3 && s2ram && swapoff /dev/sda3'"
-alias reboot="sudo 'reboot'"
-alias poweroff="sudo 'poweroff'"
-alias shutdown='poweroff'
+alias reboot="sudo reboot"
+alias poweroff="sudo poweroff"
 alias dhcpcd-reset="sudo 'dhcpcd && dhcpcd -x && dhcpcd && dhcpcd -x && dhcpcd'"
 exists wicd-curses && alias wicd-restart="sudo 'rc-config restart wicd'"
 
 # Export general values that other programs rely on settings
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
 export TERMINAL="xfce4-terminal"
-exists ed    && export EXPORT='ed'
+exists ed    && export EDITOR='ed'
+exists red   && export EDITOR='red'
+exists ex    && export EDITOR='ex'
 exists vim   && export EDITOR='vim'
-exists vi    && export EXPORT='vi'
+exists vi    && export EDITOR='vi'
 exists emacs && export EDITOR='emacs -nw'
 alias e='$(echo $EDITOR)'
 if exists google-chrome-stable
@@ -194,7 +195,7 @@ else
 fi
 
 #
-exists i3lock && { exists s2ram && alias slep="sudo s2ram && i3lock" || alias slep="i3lock" };
+exists i3lock && { exists s2ram && alias lock="sudo s2ram && i3lock" || alias lock="i3lock" };
 
 #IP addresses
 if [ $(hostname) = 'uDH-x201' ]
@@ -294,10 +295,11 @@ fi
 exists find     && alias rmdire="find . -type d -empty -delete"
 exists sublime  && alias subl="sublime"
 exists sublime2 && alias subl2="sublime2"
+
 # asist for non-computer people
 alias quit='exit'
-exists poweroff && alias turnoff='poweroff'
-
+alias shutdown='poweroff'
+alias turnoff='poweroff'
 
 #echo "" | gcc -E -march=native -v - | grep -C 1 -i cc
 [[ $(hostname) = 'uDH-x201' ]] && alias tmpclear='rm -rf ~/tmp/*'
@@ -307,10 +309,10 @@ if exists git
 then
     alias gitupdate='until git pull; do; done'
     alias gitpush='git add . && git commit && git pull && git push'
-    alias gitbranch='git log --pretty=format:"%h %s" --graph'
-    alias githistory='gitbranch'
+    alias gitbranches='git log --pretty=format:"%h %s" --graph'
+    alias githistory='gitbranches'
     #alias githisemacs="emacs --eval (magit-log 'master)"
-    alias gaussclone='git clone ssh://git@${gaussadd}:2200'
+    #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
 fi
 
 #to sort later
