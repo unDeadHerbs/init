@@ -1,8 +1,7 @@
 The global todo list for uDH_init
 
 * global
-  1. create a testing branch
-  2. probably a license or something?
+  1. probably a license or something?
 * bg
 * .dotemacs.org
   1. reorganize everything!
