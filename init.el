@@ -9,7 +9,7 @@
   (progn
     (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			     ("marmalade" . "https://marmalade-repo.org/packages/")
-			     ("melpa" . "http://stable.melpa.org/packages/") ; milkyPostman's repo
+			     ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
 			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
     (package-install 'org-dotemacs)
