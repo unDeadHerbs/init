@@ -140,9 +140,6 @@ alias murrays="hostname|grep uDH"
 # Add aliases for programs that are installed on single machines
 if [ $(hostname) = 'uDH-x201' ]
 then
-    alias sublime="~/Sublime_Text_3/sublime_text"
-    alias sublime2="~/Sublime_Text_2/sublime_text"
-    alias steam="steam/steam/steam.sh"
     alias torchlite="apulse /usr/local/games/Torchlight/Torchlight.bin.x86"
 fi
 
@@ -170,8 +167,6 @@ exists find        && alias finds='find 2>/dev/null'
 ##todo: have that check if in sudoers file
 exists sudo || alias sudo='su -c'
 alias rhtop="sudo htop"
-#alias s2ram="sudo s2ram"
-alias s2ram="sudo 'swapon /dev/sda3 && s2ram && swapoff /dev/sda3'"
 alias reboot="sudo reboot"
 alias poweroff="sudo poweroff"
 alias dhcpcd-reset="sudo 'dhcpcd && dhcpcd -x && dhcpcd && dhcpcd -x && dhcpcd'"
@@ -179,7 +174,7 @@ exists wicd-curses && alias wicd-restart="sudo 'rc-config restart wicd'"
 
 # Export general values that other programs rely on settings
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
-export TERMINAL="xfce4-terminal"
+export xfce4-terminal && export TERMINAL="xfce4-terminal"
 exists ed    && export EDITOR='ed'
 exists red   && export EDITOR='red'
 exists ex    && export EDITOR='ex'
@@ -203,18 +198,10 @@ then
     export toweradd='10.0.128.107'
     export debadd='10.0.0.53'
     export botadd='10.0.0.54'
-    #export mcadd='107.170.32.101'
-    #export botadd='137.104.208.79'
-    #export gaussadd='107.170.32.101'
 fi
 export gaussadd='bk.gg'
 export mcadd='${gaussadd}'
-export widgetadd='cygwin_ssh@home.widget.dj'
-export widgetport='9001'
 
-# ssh
-#alias sshhome="ssh root@udh.no-ip.org -p 25567"
-#alias sshtower='ssh 10.20.39.13'
 if exists ssh
 then
 		if [ $(hostname) = 'uDH-x201' ]
@@ -232,10 +219,6 @@ fi
 # sshfs
 if exists sshfs
 then
-    alias widget='sshfs ${widgetadd}:/cygdrive/ ~/widget/ -p ${widgetport}'
-    #alias tower='sshfs root@udh.no-ip.org:/ ~/tower/ -p 25567'
-    #alias tower='sshfs udh@172.26.201.64:/ ~/tower/'
-    #alias tower='sshfs udh@10.20.39.13:/ ~/tower/'
     [[ $(hostname) = 'uDH-x201' ]] && alias tower='sshfs udh@${toweradd}:/ ~/tower/'
     alias drinkboot='sshfs udh@${gaussadd}:/ ~/drinkboot/'
 fi
@@ -244,12 +227,6 @@ then
     alias gaussproxy='autossh -M 0 ${gaussadd} -D 1414'
     alias gaussport='ssh -R 2200:localhost:22 ${gaussadd}'
     alias autogaussport='while true; do; gaussport; done'
-fi
-
-# programs on other systems
-if [ $(hostname) = 'uDH-x201' ]
-then
-   alias thundirbird="ssh -Y ${toweradd} -t 'thunderbird'"
 fi
 
 # pipe-able things
@@ -278,12 +255,14 @@ then
     then
 	if ! ps -ef|grep emacs|grep "server-start"
 	then
+	    #should probably move this, wrong major section
 	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon &
 	fi
 	alias emacs='emacsclient'
 	export EDITOR='emacsclient -a "" -tc'
     fi
 fi
+# needs to check if using alsa or pulse
 exists skype && alias skype='apulse skype'
 if exists ls
 then
@@ -301,7 +280,7 @@ alias quit='exit'
 alias shutdown='poweroff'
 alias turnoff='poweroff'
 
-#echo "" | gcc -E -march=native -v - | grep -C 1 -i cc
+#generlize
 [[ $(hostname) = 'uDH-x201' ]] && alias tmpclear='rm -rf ~/tmp/*'
 
 #git things
@@ -333,10 +312,7 @@ then
     alias un7ztree="find|egrep '[.]7z$'|sedesc|sed -e 's/^.*$/( mkdir & \&\& mv & & \&\& ( cd & \&\& 7z x *.7z ) \&\& rm &\/& )/' -e 's/[.]7z[ ][&]/\&/g' -e 's/[.]7z[/]\([^/]*[/]\)*/\//'|sh"
 fi
 
-if exists dwarf-fortress
-then
-    alias dwarf-fortress='dwarf-fortress && clear'
-fi
+exists dwarf-fortress && alias dwarf-fortress='dwarf-fortress && clear'
 
 #to remove commits from git
 #this will revert to commit f9aff53
