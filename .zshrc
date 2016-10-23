@@ -174,7 +174,7 @@ exists wicd-curses && alias wicd-restart="sudo 'rc-config restart wicd'"
 
 # Export general values that other programs rely on settings
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
-export xfce4-terminal && export TERMINAL="xfce4-terminal"
+exists xfce4-terminal && export TERMINAL="xfce4-terminal"
 exists ed    && export EDITOR='ed'
 exists red   && export EDITOR='red'
 exists ex    && export EDITOR='ex'
