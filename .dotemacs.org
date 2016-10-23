@@ -319,6 +319,17 @@ scratch
      ;	  (add-hook 'lisp-mode-hook
      ;		    'rainbow-blocks-mode)
      #+END_SRC
+*** org
+**** disable tabs
+		 :PROPERTIES:
+		 :NAME:     org_tabs
+		 :END:
+		 This is just until i can make it such that one tab is a level of indentation and they are different sizes
+		 #+BEGIN_SRC emacs-lisp
+       (add-hook 'org-mode-hook
+                 (lambda ()
+                   (setq indent-tabs-mode nil)))
+		 #+END_SRC
 ** Minor
    :PROPERTIES:
    :NAME:     minor_prettyness
