@@ -308,11 +308,7 @@ alias turnoff='poweroff'
 if exists git
 then
     alias gitupdate='until git pull; do; done'
-    alias gitpush='git add . && git commit && git pull && git push'
-    alias gitbranches='git log --pretty=format:"%h %s" --graph'
-    alias githistory='gitbranches'
-    #alias githisemacs="emacs --eval (magit-log 'master)"
-    #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
+    alias githistory='git log --pretty=format:"%h %s" --graph'
 fi
 
 #to sort later
