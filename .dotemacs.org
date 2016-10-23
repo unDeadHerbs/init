@@ -171,18 +171,18 @@ scratch
      :NAME:     whitespace_mode
      :END:
     #+BEGIN_SRC emacs-lisp
-      (add-hook 'after-change-major-mode-hook
-		'(lambda () (if (display-graphic-p)
-				(progn (whitespace-mode 1)
-				       (setq whitespace-style
-					     '(face tabs spaces trailing space-before-tab
-						    newline indentation empty space-after-tab
-						    space-mark tab-mark newline-mark)))
-			      (progn (whitespace-mode 1)
-				     (setq whitespace-style
-					   '(face tabs trailing space-before-tab
-						  newline indentation empty
-						  space-mark tab-mark newline-mark))))))
+      (add-hook 'whitespace-load-hook
+                '(lambda () (if (display-graphic-p)
+                                (progn (whitespace-mode 1)
+                                       (setq whitespace-style
+                                             '(face tabs spaces trailing space-before-tab
+                                                    newline indentation empty space-after-tab
+                                                    space-mark tab-mark newline-mark)))
+                              (progn (whitespace-mode 1)
+                                     (setq whitespace-style
+                                           '(face tabs trailing space-before-tab
+                                                  newline indentation empty
+                                                  space-mark tab-mark newline-mark))))))
       (setq whitespace-empty-at-eob-regexp "^
       \\([
 
