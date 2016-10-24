@@ -7,6 +7,7 @@ The global todo list for uDH_init
   1. reorganize everything!
 	2. on open, if folder && folder is git; then open magit-status as-well
 	3. M-! does not use the .zshrc file
+  4. have tab size and indent mode be buffer local
 * .fehbg
 * .gitignore
 * .i3
