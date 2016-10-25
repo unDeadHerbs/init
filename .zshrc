@@ -287,7 +287,7 @@ alias turnoff='poweroff'
 if exists git
 then
     alias gitupdate='until git pull; do; done'
-    alias githistory='git log --pretty=format:"%h %s" --graph'
+    alias githistory='git log --graph --all --oneline --decorate'
 fi
 
 #to sort later
