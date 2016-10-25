@@ -256,7 +256,7 @@ then
 	if ! ps -ef|grep emacs|grep "server-start"
 	then
 	    #should probably move this, wrong major section
-	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon &
+	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon >/dev/null 2>/dev/null &
 	fi
 	alias emacs='emacsclient'
 	export EDITOR='emacsclient -a "" -tc'
