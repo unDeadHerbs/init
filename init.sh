@@ -47,12 +47,6 @@ else
 fi
 cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
-#if [ -e "~/.i3/status.$(hostname)" ]
-#then
-#    ln -sf ~/.i3/status.$(hostname) ~/.i3status.conf
-#else
-#    ln -sf ~/.i3/status.base ~/.i3status.conf
-#fi
 
 ln -sf ~/init/.xinitrc ~/.xinitrc
 
