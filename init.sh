@@ -1,12 +1,12 @@
+##
+# Setup environment
+##
 cd
 alias mdr='mkdir -p'
 
-# remove any links to init file that currently exist
-# the next line has a bug for any files with the sym " -> " in their name
-# there should' be any of those because that's dumb
-ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init" 
-# this is such that on systems that are being upgreaded this will act the same as a fresh install
-
+##
+# install missing programs
+##
 if uname -r|grep -i gentoo
 then
    export install='emerge -qvan'
@@ -28,17 +28,37 @@ else
     fi
 fi
 
-mkdir -p .config
-mkdir -p .emacs.d
+##
+# remove links to configs
+##
 
+# remove any links to init file that currently exist
+# the next line has a bug for any files with the sym " -> " in their name
+# there should' be any of those because that's dumb
+ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init" 
+# this is such that on systems that are being upgreaded this will act the same as a fresh install
+
+
+##
 # if the user has an existing config back it up
+##
 if [ -e "~/.i3/config" ]
 then
     mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
 rm -rf ~/.i3
 ln -sf ~/init/.i3 ~/.i3
+
+
+##
+# set up space for configs
+##
+mkdir -p .config
+mkdir -p .emacs.d
+
+##
 # set up the config links
+##
 if [ -e "~/.i3/config.$(hostname)" ]
 then
     ln -sf ~/.i3/config.$(hostname) ~/.i3/config
@@ -61,4 +81,8 @@ cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 ln -sf ~/init/.dotemacs.org ~/.dotemacs.org
 ln -sf ~/init/init.el ~/.emacs.d/init.el
 ln -sf ~/init/.screenrc ~/.screenrc
+
+##
+# Setup system settings
+##
 [[ $SHELL = "$(which zsh)" ]] || type zsh && chsh -s $(which zsh)
