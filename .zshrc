@@ -301,6 +301,7 @@ then
     alias bluetoothoff="sudo 'rfkill block 0;rfkill block 1'"
     alias bluetoothon="sudo 'rfkill unblock 0;rfkill unblock 1'"
 fi
+alias r='cd $(pwd)'
 exists cowsay && exists fortune && alias cowfortune='clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))'
 
 # these still need debugging for the & no fork
