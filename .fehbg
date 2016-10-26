@@ -1,5 +1,4 @@
 #!/bin/bash
 [[ -e ~/bg ]] && feh --no-fehbg --bg-scale $(find ~/bg|grep "[.]jpg$"|shuf -n1)
 [[ -e ~/init/bg/$(hostname).jpg ]] && feh --no-fehbg --bg-scale "init/bg/$(hostname).jpg"
-[[ $(hostname) = "nate-laptop-lenovo" ]] && feh --no-fehbg --bg-fill '/home/nate/Pictures/20160623_203018.jpg'
 
