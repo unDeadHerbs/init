@@ -22,12 +22,12 @@ fi
 
 if type sudo|egrep -v "su( |$)"
 then
-		for prog in programs
+		for prog in "$programs"
 		do
 				type $prog || sudo $install $prog
 		done
 else
-		for prog in programs
+		for prog in "$programs"
 		do
 				if ! type $prog
 				then
