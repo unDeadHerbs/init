@@ -83,12 +83,7 @@ cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 
 l ~/init/.xinitrc ~/.xinitrc
-
-for zshrc in $(ls .zshrc*)
-do
-		l ~/init/$zshrc ~/$zshrc
-done
-
+l ~/init/.zshrc ~/.zshrc
 l ~/init/.fehbg ~/.fehbg
 l ~/init/.dotemacs.org ~/.dotemacs.org
 l ~/init/init.el ~/.emacs.d/init.el
