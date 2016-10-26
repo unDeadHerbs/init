@@ -5,6 +5,7 @@ cd
 alias mdr='mkdir -p'
 alias l='ln -sf'
 alias r='rm -rf'
+alias c='cp'
 
 ##
 # install missing programs
@@ -88,7 +89,7 @@ l ~/init/.fehbg ~/.fehbg
 l ~/init/.dotemacs.org ~/.dotemacs.org
 l ~/init/init.el ~/.emacs.d/init.el
 l ~/init/.screenrc ~/.screenrc
-cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
+c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 
 ##
 # Setup system settings
