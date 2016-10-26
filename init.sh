@@ -58,7 +58,7 @@ if [ -e "~/.i3/config" ]
 then
     mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
-r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc
+r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
 
 
 ##
