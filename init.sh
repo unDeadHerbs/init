@@ -9,29 +9,37 @@ alias r='rm -rf'
 ##
 # install missing programs
 ##
+programs="emacs i3 zsh dmenu xfce4-terminal i3status"
+
 if uname -r|grep -i gentoo
 then
    export install='emerge -qvan'
 else if uname -r|grep -i debian
      then
-	 export install='apt install'
+				 export install='apt install'
      fi
 fi
 
 if type sudo|egrep -v "su( |$)"
 then
-    type emacs || sudo $install emacs
-    type i3    || sudo $install i3
-    type zsh   || sudo $install zsh
+		for prog in programs
+		do
+				type $prog || sudo $install $prog
+		done
 else
-    if ! { type emacs && type i3 && type zsh }
-    then
-	su -c '$install emacs i3 zsh'
-    fi
+		for prog in programs
+		do
+				if ! type $prog
+				then
+						su -c '$install $programs'
+				fi
+		done
 fi
 
 ##
-# remove links to configs
+# Remove Links to Configs
+##
+# So that they don't get backed up or can be replaced.
 ##
 
 # remove any links to init file that currently exist
@@ -42,9 +50,9 @@ ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0
 
 
 ##
-# Existing configs
+# Existing Configs
 ##
-# if it needs backing up or deleting, do so
+# If a config needs backing up or deleting, do so.
 ##
 if [ -e "~/.i3/config" ]
 then
@@ -54,13 +62,15 @@ r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc
 
 
 ##
-# set up space for configs
+# Set Up Space for the Configs
 ##
+mdr ~/.config/xfce4/terminal
 mdr .config
 mdr .emacs.d
 
+
 ##
-# set up the config links
+# Set Up the Config Links
 ##
 l ~/init/.i3 ~/.i3
 if [ -e "~/.i3/config.$(hostname)" ]
@@ -80,11 +90,10 @@ do
 done
 
 l ~/init/.fehbg ~/.fehbg
-mdr ~/.config/xfce4/terminal
-cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 l ~/init/.dotemacs.org ~/.dotemacs.org
 l ~/init/init.el ~/.emacs.d/init.el
 l ~/init/.screenrc ~/.screenrc
+cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 
 ##
 # Setup system settings
