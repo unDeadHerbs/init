@@ -3,6 +3,7 @@
 ##
 cd
 alias mdr='mkdir -p'
+alias l='ln -sf'
 
 ##
 # install missing programs
@@ -40,25 +41,30 @@ ls -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0
 
 
 ##
-# if the user has an existing config back it up
+# Existing configs
+##
+# if it needs backing up or deleting, do so
 ##
 if [ -e "~/.i3/config" ]
 then
     mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
 rm -rf ~/.i3
-ln -sf ~/init/.i3 ~/.i3
+rm -rf ~/.fehbg
+rm -rf ~/.dotemacs.org
+rm -rf ~/.screenrc
 
 
 ##
 # set up space for configs
 ##
-mkdir -p .config
-mkdir -p .emacs.d
+mdr .config
+mdr .emacs.d
 
 ##
 # set up the config links
 ##
+ln -sf ~/init/.i3 ~/.i3
 if [ -e "~/.i3/config.$(hostname)" ]
 then
     ln -sf ~/.i3/config.$(hostname) ~/.i3/config
