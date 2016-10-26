@@ -98,4 +98,4 @@ cp ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 ##
 # Setup system settings
 ##
-[[ $SHELL = "$(which zsh)" ]] || type zsh && chsh -s $(which zsh)
+[[ $SHELL = "$(which zsh)" ]] || { type zsh && chsh -s $(which zsh) }
