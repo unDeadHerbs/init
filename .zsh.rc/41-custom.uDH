@@ -1,0 +1,13 @@
+source ~/init/.zsh.rc/01-local
+alias rot13="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m'5-90-4"
+alias sedesc="sed 's/[] ()'\''\\\\[&;]/\\\\&/g'"
+alias sedquote="sed 's/^./\"&/'|sed 's/.$/&\"/'"
+alias sedtack="sed 's/[-]/\\-/g'"
+alias toascii="perl -ne 'chomp if eof;for(unpack(\"C*\")){print\"\$_ \"}print\"\\n\"if eof'"
+alias spaceseperate="sed 's/./& /g'"
+alias unspaceseperate="sed 's/\(.\) /\1/g'"
+alias firstline="perl -pe '<>'"
+[[ $(hostname) = 'uDH-x201' ]] && alias delta="~/ai/cpp/stream/delta"
+exists espeak && alias toipa='espeak --stdin -q --ipa'
+alias buffer="sed''|perl -ne '\$a[\$n++]=\$_;if(eof){for(@a){print}}'|sed''"
+#alias reverse="perl -ne 'something fancy'"

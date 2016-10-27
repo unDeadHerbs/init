@@ -1,3 +1,6 @@
+# this fils is a coleciton of general settings for configureing the zsh environment
+
+
 ##
 # The following lines were added by compinstall
 ##
@@ -120,3 +123,4 @@ then
     PS1='$ '
 fi
 
+setopt correct

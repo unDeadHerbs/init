@@ -1,1 +1,3 @@
-alias testzshrc='echo x201'
+source ~/init/.zsh.rc/20-alias.uDH
+
+alias torchlite="apulse /usr/local/games/Torchlight/Torchlight.bin.x86"
