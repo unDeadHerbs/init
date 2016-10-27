@@ -5,9 +5,9 @@ This folder is a modular zshrc file.
 Behavior
 --------
 1. Sources the scripts into the environment in numeric order.
-2. Only sources scripts that are either marked as "base" or the current hostname.
-3. If there are two with the same number, the one that is host specific will be preferred.
-  (the base is skipped.)
+2. Only sources scripts that are either marked as "base", the current HOST, or the current USER.
+3. If there are two with the same number, the one that is most specific will be preferred.
+  (user, host, base is the order of specificity.)
 
 Modification
 ------------
