@@ -10,7 +10,7 @@ alias c='cp'
 ##
 # install missing programs
 ##
-programs="emacs i3 zsh dmenu xfce4-terminal i3status"
+programs="emacs i3 zsh dmenu xfce4-terminal i3status feh"
 
 if uname -r|grep -i gentoo
 then
