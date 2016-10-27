@@ -1,6 +1,6 @@
 # check if $HOST and $USER are system independant, otherwise switch to $(hostname) and $(whoami)
 for file in $(ls ~/init/.zsh.rc|
-										 sed 's/./~\/.zsh.rc\/&/'|
+										 sed 's/./~\/init\/.zsh.rc\/&/'|
 										 egrep "(base|$HOST|$USER)$"|
 						         sed 's/-.*//'|
 						         uniq|
