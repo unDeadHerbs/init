@@ -1,9 +1,9 @@
 for file in $(ls ~/init/.zsh.rc|
 										 sed 's/./~\/.zsh.rc\/&/'|
-										 egrep "(base|$(hostname)|$USER)$"|
+										 egrep "(base|$HOST|$USER)$"|
 						         sed 's/-.*//'|
 						         uniq|
-						         sed 's/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$(hostname) ] ; then echo &-*.$(hostname) ; else echo &-*.base ; fi fi/'|
+						         sed 's/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/'|
 										 sh)
 do
 		source $file
