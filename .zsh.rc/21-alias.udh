@@ -1,12 +1,6 @@
 source ~/init/.zsh.rc/01-local
 alias nano='echo use e for editing file '
 
-if [ $(hostname) = 'uDH-x201' ]
-then
-    alias bluetoothoff="sudo 'rfkill block 0;rfkill block 1'"
-    alias bluetoothon="sudo 'rfkill unblock 0;rfkill unblock 1'"
-fi
-
 if exists sox
 then
     alias cleenmic='sox -d -n trim 0 .1 noiseprof|sox -d -d noisered'
@@ -14,3 +8,13 @@ then
 fi
 
 exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
+
+if exists git
+then
+    alias gitupdate='until git pull; do; done'
+    alias gitpush='git add . && git commit && git pull && git push'
+    alias gitbranches='git log --pretty=format:"%h %s" --graph'
+    alias githistory='gitbranches'
+    #alias githisemacs="emacs --eval (magit-log 'master)"
+    #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
+fi

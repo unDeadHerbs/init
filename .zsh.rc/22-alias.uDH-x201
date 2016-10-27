@@ -1,3 +1,6 @@
 source ~/init/.zsh.rc/21-alias.uDH
 
+alias bluetoothoff="sudo 'rfkill block 0;rfkill block 1'"
+alias bluetoothon="sudo 'rfkill unblock 0;rfkill unblock 1'"
+
 alias torchlite="apulse /usr/local/games/Torchlight/Torchlight.bin.x86"

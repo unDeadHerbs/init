@@ -13,15 +13,6 @@ fi
 #echo "" | gcc -E -march=native -v - | grep -C 1 -i cc
 
 #git things
-if exists git
-then
-    alias gitupdate='until git pull; do; done'
-    alias gitpush='git add . && git commit && git pull && git push'
-    alias gitbranches='git log --pretty=format:"%h %s" --graph'
-    alias githistory='gitbranches'
-    #alias githisemacs="emacs --eval (magit-log 'master)"
-    #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
-fi
 
 # these still need debugging for the & no fork
 if murrays
