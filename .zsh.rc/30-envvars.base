@@ -1,0 +1,16 @@
+# set up the enviorment variables that other programs use for settings
+source ~/init/.zsh.rc/01-local
+
+[[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
+export TERMINAL="xfce4-terminal"
+exists nano  && export EDITOR='nano'
+exists vim   && export EDITOR='vim'
+exists vi    && export EDITOR='vi'
+exists emacs && export EDITOR='emacs -nw'
+alias e='$(echo $EDITOR)'
+if exists google-chrome-stable
+then
+    export BROWSER="google-chrome-stable"
+else
+    exists firefox && export BROWSER="firefox"
+fi
