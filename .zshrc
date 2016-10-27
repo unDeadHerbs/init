@@ -12,9 +12,9 @@ done
 
 clear
 
-if [[ -e ~/init/.zsh.rc/99-motd.$(hostname) ]]
+if [[ -e ~/init/.zsh.rc/motd.$(hostname) ]]
 then
-		~/init/.zsh.rc/99-motd.$(hostname)
+		~/init/.zsh.rc/motd.$(hostname)
 else
-		[[ -e ~/init/.zsh.rc/99-motd.base ]] && ~/init/.zsh.rc/99-motd
+		[[ -e ~/init/.zsh.rc/motd.base ]] && ~/init/.zsh.rc/motd.base
 fi
