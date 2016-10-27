@@ -23,11 +23,3 @@ then
     alias un7ztree="find|egrep '[.]7z$'|sedesc|sed -e 's/^.*$/( mkdir & \&\& mv & & \&\& ( cd & \&\& 7z x *.7z ) \&\& rm &\/& )/' -e 's/[.]7z[ ][&]/\&/g' -e 's/[.]7z[/]\([^/]*[/]\)*/\//'|sh"
 fi
 
-#to remove commits from git
-#this will revert to commit f9aff53
-#git reset --hard f9aff53
-#git push origin --force
-
-# enable typo correciton
-
-# MOTD
