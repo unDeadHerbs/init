@@ -256,7 +256,7 @@ then
 	if ! ps -ef|grep emacs|grep "server-start"
 	then
 	    #should probably move this, wrong major section
-	    emacs --eval "(if (not (server-running-p)) (server-start))" --daemon >/dev/null 2>/dev/null &
+	    'emacs' -nw --eval "(if (not (server-running-p)) (server-start))" --daemon >/dev/null 2>/dev/null &
 	fi
 	alias emacs='emacsclient'
 	export EDITOR='emacsclient -a "" -tc'
@@ -287,7 +287,7 @@ alias turnoff='poweroff'
 if exists git
 then
     alias gitupdate='until git pull; do; done'
-    alias githistory='git log --pretty=format:"%h %s" --graph'
+    alias githistory='git log --graph --all --oneline --decorate'
 fi
 
 #to sort later
@@ -301,6 +301,7 @@ then
     alias bluetoothoff="sudo 'rfkill block 0;rfkill block 1'"
     alias bluetoothon="sudo 'rfkill unblock 0;rfkill unblock 1'"
 fi
+alias r='cd $(pwd)'
 exists cowsay && exists fortune && alias cowfortune='clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))'
 
 # these still need debugging for the & no fork
