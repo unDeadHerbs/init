@@ -1,1 +1,8 @@
+# set the leader key to C-z instead of C-a because C-a is actually useful
 escape ^Zz
+
+# increase the size of the paper roll
+defscrollback 100000
+
+# enable utf8 by default
+defutf8 on
