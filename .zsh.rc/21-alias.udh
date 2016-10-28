@@ -17,3 +17,5 @@ then
     #alias githisemacs="emacs --eval (magit-log 'master)"
     #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
 fi
+
+alias e.='e .'
