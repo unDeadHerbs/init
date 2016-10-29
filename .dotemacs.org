@@ -107,6 +107,7 @@ scratch
    :END:
    #+BEGIN_SRC emacs-lisp
    ;(global-smart-tab-mode 1) ; package no longer exists or something
+   (setq-default tab-width 2)
    #+END_SRC
 ** Ask-Before-Closing
    :PROPERTIES:
