@@ -14,12 +14,12 @@ programs="emacs i3 zsh dmenu xfce4-terminal i3status feh"
 
 if uname -r|grep -i gentoo
 then
-   export install='emerge -qvan'
+	 export install='emerge -qvan'
 else
 		if uname -r|grep -i debian
-    then
+		then
 				export install='apt install'
-    fi
+		fi
 fi
 
 if type sudo|egrep -v "su( |$)"
@@ -47,7 +47,7 @@ fi
 # remove any links to init file that currently exist
 # the next line has a bug for any files with the sym " -> " in their name
 # there should' be any of those because that's dumb
-ls ~ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init" 
+ls ~ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"
 # this is such that on systems that are being upgreaded this will act the same as a fresh install
 
 
@@ -58,7 +58,7 @@ ls ~ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *
 ##
 if [ -e "~/.i3/config" ]
 then
-    mv ~/.i3/config ~/init/.i3/config.$(hostname)
+		mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
 r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
 
@@ -77,9 +77,9 @@ mdr .emacs.d
 l ~/init/.i3 ~/.i3
 if [ -e "~/.i3/config.$(hostname)" ]
 then
-    l ~/.i3/config.$(hostname) ~/.i3/config
+		l ~/.i3/config.$(hostname) ~/.i3/config
 else
-    l ~/.i3/config.base ~/.i3/config
+		l ~/.i3/config.base ~/.i3/config
 fi
 cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
