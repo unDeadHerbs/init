@@ -15,10 +15,11 @@ programs="emacs i3 zsh dmenu xfce4-terminal i3status feh"
 if uname -r|grep -i gentoo
 then
    export install='emerge -qvan'
-else if uname -r|grep -i debian
-     then
-				 export install='apt install'
-     fi
+else
+		if uname -r|grep -i debian
+    then
+				export install='apt install'
+    fi
 fi
 
 if type sudo|egrep -v "su( |$)"
