@@ -44,13 +44,14 @@ fi
 # So that they don't get backed up or can be replaced.
 ##
 
-# remove any links to init file that currently exist
-# the next line has a bug for any files with the sym " -> " in their name
-# there should' be any of those because that's dumb
-ls ~/ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"|sed 's/ [-][>] .*//'|sed 's/./rm -rf ~\/&/'|sh
-ls ~/.config -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"|sed 's/ [-][>] .*//'|sed 's/./rm -rf ~\/.config\/&/'|sh
-# this is such that on systems that are being upgreaded this will act the same as a fresh install
-
+# This section has a bug for some files with the sym " -> " in their name
+# There should' be any of those because that's dumb so I have not fixed it
+alias escpath="sed 's/\\//\\\\&/g'"
+alias lv="'ls' -la|sed 's/[-dlrwx?]* *[0-9?]* *\w* *\w* *[0-9?]* *\w* *[0-9?]* *[0-9?]*:*[0-9]* *[?]* *//'"
+alias rml='lv|grep " [-][>] "|grep "$HOME/init"|sed "s/ [-][>] .*//"|sed "s/./rm -f $(pwd|escpath)\/&/"'
+(cd ~;rml)
+(cd ~/.config;rml)
+# this will just echo the commands as i am not yet on a testing system
 
 ##
 # Existing Configs
