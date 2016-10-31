@@ -47,7 +47,8 @@ fi
 # remove any links to init file that currently exist
 # the next line has a bug for any files with the sym " -> " in their name
 # there should' be any of those because that's dumb
-ls ~ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"
+ls ~/ -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"|sed 's/ [-][>] .*//'|sed 's/./rm -rf ~\/&/'|sh
+ls ~/.config -la|grep " [-][>] "|sed 's/[-lrwx]* *[0-9] *\w* *\w* *[0-9]* *\w* *[0-9]* *[0-9]*:*[0-9]* *//'|grep "$(pwd)/init"|sed 's/ [-][>] .*//'|sed 's/./rm -rf ~\/.config\/&/'|sh
 # this is such that on systems that are being upgreaded this will act the same as a fresh install
 
 
@@ -96,3 +97,4 @@ c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 # Setup system settings
 ##
 [[ $SHELL = "$(which zsh)" ]] || { type zsh && chsh -s $(which zsh) }
+
