@@ -84,12 +84,11 @@ fi
 cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 
-l ~/init/.xinitrc ~/.xinitrc
-l ~/init/.zshrc ~/.zshrc
-l ~/init/.fehbg ~/.fehbg
-l ~/init/.dotemacs.org ~/.dotemacs.org
-l ~/init/init.el ~/.emacs.d/init.el
-l ~/init/.screenrc ~/.screenrc
+files=(".xinitrc" ".zshrc" ".fehbg" ".dotemacs" ".screenrc" ".emacs.d/init.el")
+for file in $file
+do
+		echo l ~/init/$file ~/$file
+done
 c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 
 ##
