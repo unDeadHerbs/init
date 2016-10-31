@@ -64,14 +64,12 @@ then
 fi
 r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
 
-
 ##
 # Set Up Space for the Configs
 ##
 mdr ~/.config/xfce4/terminal
 mdr .config
 mdr .emacs.d
-
 
 ##
 # Set Up the Config Links
@@ -97,5 +95,5 @@ c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 ##
 # Setup system settings
 ##
-[[ $SHELL = "$(which zsh)" ]] || { type zsh && chsh -s $(which zsh) }
+echo $SHELL|grep zsh || { type zsh && chsh -s $(which zsh) }
 
