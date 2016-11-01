@@ -88,7 +88,7 @@ fi
 
 if [ $(hostname) = 'L' ]
 then
-    sleep 10 && qsynergy
+    sleep 1 && qsynergy &
 fi
     
 
