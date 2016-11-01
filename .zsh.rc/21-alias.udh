@@ -1,0 +1,21 @@
+source ~/init/.zsh.rc/01-local
+alias nano='echo use e for editing file '
+
+if exists sox
+then
+    alias cleenmic='sox -d -n trim 0 .1 noiseprof|sox -d -d noisered'
+    alias trimsilence='sox - - silence -l 1 0.3 1% -1 2.0 1%'
+fi
+
+exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
+
+if exists git
+then
+    alias gitupdate='until git pull; do; done'
+    alias gitpush='git add . && git commit && git pull && git push'
+		alias githistory='git log --graph --all --oneline --decorate --full-history --date-order'
+    #alias githisemacs="emacs --eval (magit-log 'master)"
+    #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
+fi
+
+alias e.='e .'

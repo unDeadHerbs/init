@@ -1,0 +1,7 @@
+if exists cowfortune
+then
+		clear
+		cowfortune
+else
+		clear
+fi

@@ -86,5 +86,11 @@ then
     sleep   1 && synergyc $laptopip &
 fi
 
+if [ $(hostname) = 'L' ]
+then
+    sleep 1 && synergyc 192.168.1.106 &
+fi
+    
+
 #emacs --daemon
 exec i3
