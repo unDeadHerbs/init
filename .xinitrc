@@ -88,7 +88,7 @@ fi
 
 if [ $(hostname) = 'L' ]
 then
-    sleep 1 && synergyc 192.168.1.106 &
+    sleep 1 && qsynergy
 fi
     
 
