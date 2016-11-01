@@ -1,7 +1,4 @@
-if exists cowfortune
+if exists cowfortune > /dev/null
 then
-		clear
 		cowfortune
-else
-		clear
 fi
