@@ -13,9 +13,9 @@ done
 
 clear
 
-if [[ -e ~/init/.zsh.rc/motd.$(hostname) ]]
+if [[ -e ~/init/motd/motd.$(hostname) ]]
 then
-		source ~/init/.zsh.rc/motd.$(hostname)
+		source ~/init/motd/motd.$(hostname)
 else
-		[[ -e ~/init/.zsh.rc/motd.base ]] && source ~/init/.zsh.rc/motd.base
+		[[ -e ~/init/motd/motd.base ]] && source ~/init/motd/motd.base
 fi
