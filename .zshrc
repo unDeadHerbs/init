@@ -1,3 +1,4 @@
+mkdir -p ~/init/logs
 # check if $HOST and $USER are system independant, otherwise switch to $(hostname) and $(whoami)
 for file in $(ls ~/init/.zsh.rc|
 										 sed 's/./~\/init\/.zsh.rc\/&/'|
@@ -7,7 +8,7 @@ for file in $(ls ~/init/.zsh.rc|
 						         sed 's/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/'|
 										 sh)
 do
-		source $file
+		source $file > ~/init/logs/$(date +"0%Y-%m-%dT%H:%M:%S").log
 done
 
 clear
