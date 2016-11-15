@@ -1,0 +1,16 @@
+# Set the prefix to ^Z.
+set-option -g prefix C-z
+bind-key -T prefix C-z next-window
+
+bind-key -T prefix z send-prefix
+
+# Bind appropriate commands similar to screen.
+# lockscreen ^X x 
+bind-key -T prefix x lock-server
+#bind-key -T prefix k confirm-before "kill-window"
+bind-key -T prefix k confirm-before -p "kill-pane #P? (y/n)" kill-pane
+
+bind-key -T prefix s split-window -v
+bind-key -T prefix | split-window -h
+
+bind-key -T prefix ; command-prompt
