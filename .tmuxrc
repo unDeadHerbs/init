@@ -1,4 +1,9 @@
 # Set the prefix to ^Z.
+set-option -g prefix C-z
+#bind-key -T prefix C-z
+#bind-key -T prefix h split-window
+
+# Set the prefix to ^Z.
 unbind C-b
 unbind ^Z
 set -g prefix ^Z
