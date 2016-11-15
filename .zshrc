@@ -8,7 +8,9 @@ for file in $(ls ~/init/.zsh.rc|
 						         sed 's/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/'|
 										 sh)
 do
-		source $file > ~/init/logs/$(date +"0%Y-%m-%dT%H:%M:%S").log
+		source $file
+		#|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").log
+		#2>&1|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").error.log
 done
 
 clear
