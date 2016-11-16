@@ -14,3 +14,5 @@ bind-key -T prefix s split-window -v
 bind-key -T prefix | split-window -h
 
 bind-key -T prefix ; command-prompt
+
+# fix the 'Prefix C-<arrow>' and 'Prefix M-<arrow>' commands
