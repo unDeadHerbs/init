@@ -19,3 +19,6 @@ bind-key -T prefix ; command-prompt
 # or at least disable Prefix Space that keeps happening
 
 #change the date format in the corner
+set -ag status-interval 5
+set -ag status-right "\"$(hostname)\" 0%Y-%m-%dT%H:%M:%S"
+#this doesn't replace yet
