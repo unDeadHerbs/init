@@ -13,12 +13,12 @@ bind-key -T prefix k confirm-before -p "kill-pane #P? (y/n)" kill-pane
 bind-key -T prefix s split-window -v
 bind-key -T prefix | split-window -h
 
-bind-key -T prefix ; command-prompt
+#bind-key -T prefix ; command-prompt
 
 # fix the 'Prefix C-<arrow>' and 'Prefix M-<arrow>' commands
 # or at least disable Prefix Space that keeps happening
 
 #change the date format in the corner
 set -ag status-interval 5
-set -ag status-right "\"$(hostname)\" 0%Y-%m-%dT%H:%M:%S"
-#this doesn't replace yet
+#set -ag status-right "#(echo $HOST) 0%Y-%m-%dT%H:%M:%S"
+set -g status-right '#(echo $USER)@#H 0%Y-%m-%d#[fg=white]T#[default]%H:%M:%S '
