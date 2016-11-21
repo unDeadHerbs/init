@@ -12,4 +12,4 @@ alias firstline="perl -pe '<>'"
 exists espeak && alias toipa='espeak --stdin -q --ipa'
 alias buffer="sed''|perl -ne '\$a[\$n++]=\$_;if(eof){for(@a){print}}'|sed''"
 #alias reverse="perl -ne 'something fancy'"
-exists httrack && alias htmirror="httrack -w +* -Y -q -r9999 -s0
+#exists httrack && alias htmirror="httrack -w +* -Y -q -r9999 -s0
