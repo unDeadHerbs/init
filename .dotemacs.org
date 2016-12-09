@@ -397,24 +397,28 @@ scratch
     :NAME:     c_mode_keys
     :END:
     #+BEGIN_SRC emacs-lisp
-    (defun udh-c-mode-keys ()
-      (local-set-key (kbd "C-t") 'hs-toggle-hiding)
-      (local-set-key (kbd "C-M-t") 'hs-hide-level)
-      (local-set-key (kbd "M-{") 'hs-hide-block)
-      (local-set-key (kbd "M-}") 'hs-show-block)
-      (local-set-key (kbd "C-S-b") (lambda () (interactive)
-				     (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
-				     (flymake-mode -1) (flymake-mode 1)
-				     (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-				     (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-				     )) ;find some way of move makefile error to minibuffer
-      (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-				      (flycheck-mode -1) (flymake-mode -1)
-				      (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-      (setq tags-revert-without-query 1)
-    )
-    (add-hook 'c-mode-common-hook
-	     'udh-c-mode-keys)
+    	(defun udh-c-mode-keys ()
+    		(local-set-key (kbd "C-t") 'hs-toggle-hiding)
+    		(local-set-key (kbd "C-M-t") 'hs-hide-level)
+    		(local-set-key (kbd "M-{") 'hs-hide-block)
+    		(local-set-key (kbd "M-}") 'hs-show-block)
+    		(local-set-key (kbd "C-S-b") (lambda () (interactive)
+    					 (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
+    					 (flymake-mode -1) (flymake-mode 1)
+    					 (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+    					 (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+    					 )) ;find some way of move makefile error to minibuffer
+    		(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+    						(flycheck-mode -1) (flymake-mode -1)
+    						(local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+    		(setq tags-revert-without-query 1)
+    	)
+    	(add-hook 'c-mode-common-hook
+    		 'udh-c-mode-keys)
+    	(add-hook 'c++-mode-hook
+    						(lambda ()
+    							(flyspell-prog-mode)
+    							))
     #+END_SRC
 *** org-mode
     :PROPERTIES:
