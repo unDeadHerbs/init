@@ -30,9 +30,8 @@ if [ $(hostname) = "uDH-tower" ]
 then
     # position screens
     sleep   1 && xrandr --output DVI-0 --rotate right
-
     sleep   1 && synergyc $laptopip &
-    autogaussport &
+    #autogaussport &
     #sleep   1 && i3-msg 'workspace  1; exec xfce4-terminal --command=pianobar' &
 		sleep  10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
     #sleep  15 && i3-msg 'workspace  2; exec thunderbird' &
@@ -46,15 +45,15 @@ then
 
     sleep  25 && i3-msg 'workspace  2; exec thunderbird' &
     #sleep 30 && i3-msg 'workspace  3; exec skype' &
-    sleep  5 && i3-msg 'workspace 11; exec xfce4-terminal --command=alsamixer' &
-    sleep  7 && i3-msg 'exec xfce-terminal --command=pianobar' &
+    #sleep  5 && i3-msg 'workspace 11; exec xfce4-terminal --command=alsamixer' &
+    #sleep  7 && i3-msg 'exec xfce-terminal --command=pianobar' &
     #splitv
     sleep 62 && i3-msg 'workspace 12; exec kvirc4 --nosplash' &
     sleep 64 && i3-msg 'layout tabbed' &
     sleep 70 && i3-msg 'workspace 11' &
     #sleep 60 && i3-msg 'workspace 12; exec firefox' &
     #sleep 68 && i3-msg 'layout tabbed' &
-    sleep 75 && i3-msg 'workspace 11; exec xfce4-terminal --command="zsh -c autogaussport"' &
+    #sleep 75 && i3-msg 'workspace 11; exec xfce4-terminal --command="zsh -c autogaussport"' &
     sleep 80 && i3-msg 'workspace  3; exec google-chrome-stable' &
     sleep 100 && i3-msg 'layout tabbed' &
     sleep 120 && i3-msg 'workspace  2' &
