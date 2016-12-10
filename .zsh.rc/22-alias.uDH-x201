@@ -1,4 +1,4 @@
-source ~/init/.zsh.rc/21-alias.uDH
+source ~/init/.zsh.rc/21-alias.udh
 
 alias bluetoothoff="sudo 'rfkill block 0;rfkill block 1'"
 alias bluetoothon="sudo 'rfkill unblock 0;rfkill unblock 1'"
