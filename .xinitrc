@@ -34,6 +34,7 @@ then
     sleep   1 && synergyc $laptopip &
     autogaussport &
     #sleep   1 && i3-msg 'workspace  1; exec xfce4-terminal --command=pianobar' &
+		sleep  10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
     #sleep  15 && i3-msg 'workspace  2; exec thunderbird' &
     #sleep  30 && i3-msg 'workspace 11; exec skype' &
     #sleep  40 && i3-msg 'workspace 11; exec python2.7 skypestart.py ' &
