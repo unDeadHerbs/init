@@ -13,19 +13,50 @@ alias c='cp'
 ##
 # install missing programs
 ##
-programs="emacs i3 zsh dmenu xfce4-terminal i3status feh"
 
-if uname -r|grep -i gentoo
-then
-	 export install='emerge -qvan'
-else
-		if uname -r|grep -i debian
-		then
-				export install='apt install'
+function install_command(){
+		if [ `uname -r|grep -i gentoo` ]; then
+				echo 'emerge -qvan'
+		elif [ `uname -r|grep -i debian` ]; then
+				echo 'apt install'
+		else
+				exit 1
 		fi
-fi
+}
 
-if type sudo|egrep -v "su( |$)"
+function needed_programs(){
+		for prog in "emacs" "i3" "zsh" "dmenu" "xfce4-terminal" "i3status" "feh" "meaow"
+		do
+				type $prog 1>/dev/null 2>/dev/null ||
+						echo $prog
+		done|
+		# one line them
+		xargs echo
+}
+
+function install_needed_programs(){
+		if [ `needed_programs` ]; then
+				echo "some progams are needed"
+				#check that my bad sudo alias isn't running
+				if type sudo|egrep -v "su( |$)" 2>/dev/null ; then
+						{
+								install_command
+								needed_programs
+						}|xargs echo sudo
+				else
+						su -c "`install_command` `needed_programs`"
+				fi
+		fi
+}
+
+install_command
+needed_programs
+install_needed_programs
+
+#comment the rest of that
+exit 0
+
+if [`type sudo|egrep -v "su( |$)"`]
 then
 		for prog in "$programs"
 		do
