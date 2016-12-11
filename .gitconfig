@@ -1,0 +1,9 @@
+[push]
+	default = simple
+[core]
+	editor = emacs
+	excludesfile = /home/udh/.gitignore_global
+[color]
+	ui = auto
+[alias]
+	l = "!git log --graph --all --oneline --decorate --full-history --date-order --color|less -FXRS"

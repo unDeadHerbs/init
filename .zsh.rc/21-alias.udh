@@ -11,9 +11,8 @@ exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
 
 if exists git
 then
-    alias gitupdate='until git pull; do; done'
-    alias gitpush='git add . && git commit && git pull && git push'
-		alias githistory='git log --graph --all --oneline --decorate --full-history --date-order'
+    #alias gitupdate='until git pull; do; done'
+    #alias gitpush='git add . && git commit && git pull && git push'
     #alias githisemacs="emacs --eval (magit-log 'master)"
     #alias gaussclone='git clone ssh://git@${gaussadd}:2200'
 fi
