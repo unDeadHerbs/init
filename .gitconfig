@@ -6,4 +6,4 @@
 [color]
 	ui = auto
 [alias]
-	l = log --graph --all --oneline --decorate --full-history --date-order
+	l = "!git log --graph --all --oneline --decorate --full-history --date-order --color|less -FXRS"
