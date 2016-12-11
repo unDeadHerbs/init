@@ -1,6 +1,9 @@
+#!/bin/bash
+
 ##
 # Setup environment
 ##
+set -e
 cd
 alias mdr='mkdir -p'
 alias l='ln -sf'
