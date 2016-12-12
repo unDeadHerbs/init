@@ -477,3 +477,40 @@ scratch
    (lambda ()
    (make-variable-buffer-local 'add-log-current-defun-function)
    (setq add-log-current-defun-function 'org-log-current-defun)))
+
+(add-to-list 'org-latex-classes
+						 '("udh-books"
+							 "\\documentclass{book}
+                \\usepackage{braket}"
+							 ("\\part{%s}" . "\\part*{%s}")
+							 ("\\chapter{%s}" . "\\chapter*{%s}")
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+(add-to-list 'org-latex-classes
+						 '("udh-article"
+							 "\\documentclass{scrartcl}
+                \\usepackage{braket}"
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+							 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+							 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+						 '("udh-pub"
+							 "\\documentclass{book}
+                \\usepackage{braket}"
+							 ("\\chapter{%s}" . "\\chapter*{%s}")
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+							 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+							 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+																				; Forward/Preface
+																				; Table of Contents
+																				; Introduction
+																				; Chapter 1
+																				; ...
