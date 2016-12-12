@@ -7,3 +7,5 @@
 	ui = auto
 [alias]
 	l = "!git log --graph --all --oneline --decorate --full-history --date-order --color|less -FXRS"
+[merge]
+	ff = false
