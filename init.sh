@@ -59,11 +59,22 @@ install_needed_programs
 
 # This section has a bug for some files with the sym " -> " in their name
 # There should' be any of those because that's dumb so I have not fixed it
-alias escpath="sed 's/\\//\\\\&/g'"
-alias lv="'ls' -la|sed 's/[-dlrwx?]* *[0-9?]* *\w* *\w* *[0-9?]* *\w* *[0-9?]* *[0-9?]*:*[0-9]* *[?]* *//'"
-alias rml='lv|grep " [-][>] "|grep "$HOME/init"|sed "s/ [-][>] .*//"|sed "s/./rm -f $(pwd|escpath)\/&/"'
-(cd ~;rml)
-(cd ~/.config;rml)
+escpath="sed 's/\//\\&/g'"
+function list_something(){
+		'ls' -la|sed 's/[-dlrwx?]* *[0-9?]* *\w* *\w* *[0-9?]* *\w* *[0-9?]* *[0-9?]*:*[0-9]* *[?]* *//'
+		}
+function list_links(){
+		list_something|
+				grep " [-][>] "|
+				grep "$HOME/init"|
+				sed "s/ [-][>] .*//"|
+				sed "s/./rm -f $(pwd|sed 's/\//\\&/g')\/&/"
+}
+cd ~
+list_links
+cd ~/.config
+list_links
+cd
 # this will just echo the commands as i am not yet on a testing system
 
 ##
