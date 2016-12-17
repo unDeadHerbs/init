@@ -5,10 +5,10 @@
 ##
 set -e
 cd
-alias mdr='mkdir -p'
-alias l='ln -sf'
-alias r='rm -rf'
-alias c='cp'
+mdr='mkdir -p'
+l='ln -sf'
+r='rm -rf'
+c='cp'
 
 ##
 # install missing programs
@@ -89,24 +89,24 @@ if [ -e "~/.i3/config" ]
 then
 		mv ~/.i3/config ~/init/.i3/config.$(hostname)
 fi
-r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
+$r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
 
 ##
 # Set Up Space for the Configs
 ##
-mdr ~/.config/xfce4/terminal
-mdr .config
-mdr .emacs.d
+$mdr ~/.config/xfce4/terminal
+$mdr .config
+$mdr .emacs.d
 
 ##
 # Set Up the Config Links
 ##
-l ~/init/.i3 ~/.i3
+$l ~/init/.i3 ~/.i3
 if [ -e "~/.i3/config.$(hostname)" ]
 then
-		l ~/.i3/config.$(hostname) ~/.i3/config
+		$l ~/.i3/config.$(hostname) ~/.i3/config
 else
-		l ~/.i3/config.base ~/.i3/config
+		$l ~/.i3/config.base ~/.i3/config
 fi
 cat ~/.i3/status.base > ~/.i3status.conf
 cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
@@ -114,9 +114,9 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 files=(".xinitrc" ".zshrc" ".fehbg" ".dotemacs" ".screenrc" ".emacs.d/init.el")
 for file in $file
 do
-		echo l ~/init/$file ~/$file
+		echo $l ~/init/$file ~/$file
 done
-c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
+$c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 
 ##
 # Setup system settings
