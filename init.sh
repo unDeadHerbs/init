@@ -25,7 +25,7 @@ function install_command(){
 }
 
 function needed_programs(){
-		for prog in "emacs" "i3" "zsh" "dmenu" "xfce4-terminal" "i3status" "feh" "meaow"
+		for prog in "emacs" "i3" "zsh" "dmenu" "xfce4-terminal" "i3status" "feh"
 		do
 				type $prog 1>/dev/null 2>/dev/null ||
 						echo $prog
@@ -42,35 +42,14 @@ function install_needed_programs(){
 						{
 								install_command
 								needed_programs
-						}|xargs echo sudo
+						}|xargs sudo
 				else
 						su -c "`install_command` `needed_programs`"
 				fi
 		fi
 }
 
-install_command
-needed_programs
 install_needed_programs
-
-#comment the rest of that
-exit 0
-
-if [`type sudo|egrep -v "su( |$)"`]
-then
-		for prog in "$programs"
-		do
-				type $prog || sudo $install $prog
-		done
-else
-		for prog in "$programs"
-		do
-				if ! type $prog
-				then
-						su -c '$install $programs'
-				fi
-		done
-fi
 
 ##
 # Remove Links to Configs
