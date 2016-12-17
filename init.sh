@@ -66,16 +66,19 @@ function list_something(){
 function list_links(){
 		list_something|
 				grep " [-][>] "|
-				grep "$HOME/init"|
+				grep "$HOME/init"
+}
+function rm_links(){
+		list_links|
 				sed "s/ [-][>] .*//"|
-				sed "s/./rm -f $(pwd|sed 's/\//\\&/g')\/&/"
+				sed "s/./rm -f $(pwd|sed 's/\//\\&/g')\/&/"|
+				sh
 }
 cd ~
-list_links
+rm_links
 cd ~/.config
-list_links
+rm_links
 cd
-# this will just echo the commands as i am not yet on a testing system
 
 ##
 # Existing Configs
