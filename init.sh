@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##
-# Setup environment
+echo "Setup environment install"
 ##
 set -e
 cd
@@ -11,7 +11,7 @@ r='rm -rf'
 c='cp'
 
 ##
-# install missing programs
+echo "Installing missing programs"
 ##
 
 function install_command(){
@@ -52,13 +52,14 @@ function install_needed_programs(){
 install_needed_programs
 
 ##
-# Remove Links to Configs
+echo "Removing Sym-Links to Configs"
 ##
-# So that they don't get backed up or can be replaced.
+# So that they don't get backed up and can be replaced with the new ones.
 ##
 
-# This section has a bug for some files with the sym " -> " in their name
-# There should' be any of those because that's dumb so I have not fixed it
+# TODO: This section has a bug for some files with the sym " -> " in their name.
+#       There should' be any of those because that's dumb so I have not fixed it.
+#       There is probably a way to list only links in find.
 escpath="sed 's/\//\\&/g'"
 function list_something(){
 		'ls' -la|sed 's/[-dlrwx?]* *[0-9?]* *\w* *\w* *[0-9?]* *\w* *[0-9?]* *[0-9?]*:*[0-9]* *[?]* *//'
@@ -81,7 +82,7 @@ rm_links
 cd
 
 ##
-# Existing Configs
+echo "Saving Existing Configs"
 ##
 # If a config needs backing up or deleting, do so.
 ##
@@ -92,14 +93,14 @@ fi
 $r ~/.i3 ~/.fehbg ~/.dotemacs.org ~/.screenrc ~/.config/xfce4/terminal
 
 ##
-# Set Up Space for the Configs
+echo "Createing Folders for the Configs"
 ##
 $mdr ~/.config/xfce4/terminal
 $mdr .config
 $mdr .emacs.d
 
 ##
-# Set Up the Config Links
+echo "Creating Links to Config files"
 ##
 $l ~/init/.i3 ~/.i3
 if [ -e "~/.i3/config.$(hostname)" ]
@@ -119,7 +120,8 @@ done
 $c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 
 ##
-# Setup system settings
+echo "Seting up user settings"
 ##
 echo $SHELL|grep zsh || { type zsh && chsh -s $(which zsh) }
+
 
