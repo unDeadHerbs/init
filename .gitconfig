@@ -6,6 +6,8 @@
 [color]
 	ui = auto
 [alias]
-	l = "!git log --graph --all --oneline --decorate --full-history --date-order --color|less -FXRS"
+	l  = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXRS"
+	lt = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXRS"
+	lr = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXRS"
 [merge]
 	ff = false
