@@ -14,3 +14,7 @@ then
 else
     exists firefox && export BROWSER="firefox"
 fi
+
+# so that GPG works for git
+GPG_TTY=$(tty)
+export GPG_TTY
