@@ -6,8 +6,25 @@
 [color]
 	ui = auto
 [alias]
-	l  = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXRS"
-	lt = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXRS"
-	lr = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXRS"
+	d     = "!git diff HEAD --color|less -FXRS"
+	cm    = "commit -S -m"
+	b     = "branch"
+	a     = "add"
+	ad    = "!git add --all && git d"
+	amd   = "commit --amend --reuse-message=HEAD"
+	r     = "reset"
+	r1    = "reset HEAD^"
+	rh    = "reset --hard"
+	s     = "stash"
+	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
+	l     = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXRS"
+	ll    = "!git log --graph --all -20 --numstat   --oneline --decorate --full-history --date-order --color|less -FXRS"
+	lt    = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXRS"
+	ltt   = "!git log --graph --all -40             --oneline --decorate --full-history --date-order --color|less -FXRS"
+	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXRS"
+[apply]
+	whitespace = fix
 [merge]
 	ff = false
+[commit]
+	gpgsign = true
