@@ -95,4 +95,4 @@ c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 # Setup system settings
 ##
 echo $SHELL|grep zsh || { type zsh && chsh -s $(which zsh) }
-
+#git config --global core.excludesfile '~/.gitignore'
