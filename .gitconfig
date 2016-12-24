@@ -23,6 +23,7 @@
 	lt    = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXRS"
 	ltt   = "!git log --graph --all -40             --oneline --decorate --full-history --date-order --color|less -FXRS"
 	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXRS"
+	ls    = "!f(){ if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree $@; fi }; f"
 [apply]
 	whitespace = fix
 [merge]
