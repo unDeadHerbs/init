@@ -13,7 +13,7 @@
 	bc    = "rev-parse --abbrev-ref HEAD"
 	a     = "add"
 	ad    = "!f(){ if [ $# -eq 0 ];then git add --all && git d;else git add $@ && git d; fi }; f"
-	amd   = "commit --amend --reuse-message=HEAD"
+	amd   = "commit -S --amend --reuse-message=HEAD"
 	r     = "!f(){ if [ $# -eq 0 ];then git reset HEAD --hard; else git reset $@; fi }; f"
 	r1    = "reset HEAD^"
 	rh    = "reset --hard"
