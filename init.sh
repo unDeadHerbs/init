@@ -96,3 +96,4 @@ c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 ##
 echo $SHELL|grep zsh || { type zsh && chsh -s $(which zsh) }
 #git config --global core.excludesfile '~/.gitignore'
+#git config --local include.path "$PWD/.gitconfig"
