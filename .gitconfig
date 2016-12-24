@@ -9,6 +9,8 @@
 	d     = "!git diff HEAD --color|less -FXRS"
 	cm    = "commit -S -m"
 	b     = "branch"
+	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
+	bc    = "rev-parse --abbrev-ref HEAD"
 	a     = "add"
 	ad    = "!f(){ if [ $# -eq 0 ];then git add --all && git d;else git add $@ && git d; fi }; f"
 	amd   = "commit --amend --reuse-message=HEAD"
