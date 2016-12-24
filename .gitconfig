@@ -10,7 +10,7 @@
 	cm    = "commit -S -m"
 	b     = "branch"
 	a     = "add"
-	ad    = "!git add --all && git d"
+	ad    = "!f(){ if [ $# -eq 0 ];then git add --all && git d;else git add $@ && git d; fi }; f"
 	amd   = "commit --amend --reuse-message=HEAD"
 	r     = "!f(){ if [ $# -eq 0 ];then git reset HEAD --hard; else git reset $@; fi }; f"
 	r1    = "reset HEAD^"
