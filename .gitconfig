@@ -26,7 +26,7 @@
 	chk   = "!f(){ git checkout -b $@ || git checkout $@ ; git f }; f"
 	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
 	l     = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXR"
-	ll    = "!git log --graph --all -10 --numstat   --oneline --decorate --full-history --date-order --color|less -FXR"
+	ll    = "!git log --graph --all -5  --numstat   --oneline --decorate --full-history --date-order --color|less -FXR"
 	lt    = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXR"
 	ltt   = "!git log --graph --all -40             --oneline --decorate --full-history --date-order --color|less -FXR"
 	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXR"
