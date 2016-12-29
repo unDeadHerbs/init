@@ -47,3 +47,5 @@ The global todo list for uDH_init
   6. disable the motd on ssh if it's just the cow
      that fills up the buffer and the clear is annoying
   7. remove the wget settings and create a .wgetrc
+* .gitconfig
+  1. have the commands lt and ll look at how big my terminal is
