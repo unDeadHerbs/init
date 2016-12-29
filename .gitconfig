@@ -7,7 +7,7 @@
 	ui = auto
 [alias]
 	d     = "!git diff HEAD --color|less -FXR"
-	cm    = "commit -S -m"
+	cm    = "!f(){ if [ $# -eq 0 ];then git commit -S; else git commit -S -m \"$@\"; fi }; f"
 	b     = "branch"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
 	bc    = "rev-parse --abbrev-ref HEAD"
@@ -22,6 +22,7 @@
 	p     = "!f(){ if [ $# -eq 0 ];then git push -u origin $(g bc); else git push $@; fi }; f"
 	pa    = "push --all"
 	f     = "!git pull --ff-only||git pull"
+	chk   = "!f(){ git checkout -b $@ || git checkout $@ ; git f }; f"
 	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
 	l     = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXR"
 	ll    = "!git log --graph --all -10 --numstat   --oneline --decorate --full-history --date-order --color|less -FXR"
