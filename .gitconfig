@@ -19,7 +19,7 @@
 	rh    = "reset --hard"
 	s     = "stash"
 	pop   = "stash pop"
-	p     = "!f(){ if [ $# -eq 0 ];then git push -u origin $(g bc); else git push $@; fi }; f"
+	p     = "!f(){ if [ $# -eq 0 ];then git push -u origin $(git bc); else git push $@; fi }; f"
 	pa    = "push --all"
 	f     = "!git pull --ff-only||git pull"
 	chk   = "!f(){ git checkout -b $@ || git checkout $@ ; git f }; f"
