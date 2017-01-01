@@ -26,7 +26,7 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 export laptopip=192.168.1.103
 if hostname|grep uDH|grep -v "uDH-x201"
 then
-		{ sleep 30 && synergyc laptopip ; } &
+		{ sleep 3 && synergyc $laptopip ; } &
 fi
 
 if [ $(hostname) = "uDH-tower" ]
