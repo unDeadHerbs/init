@@ -23,7 +23,7 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 #    ln -sf ~/.i3/status.base ~/.i3status.conf
 #fi
 
-export laptopip=10.0.128.106
+export laptopip=192.168.1.103
 [[ $(hostname|grep uDH) != "uDH-x201" ]] && sleep 3 && synergyc $laptopip &
 
 if [ $(hostname) = "uDH-tower" ]
