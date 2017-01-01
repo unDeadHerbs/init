@@ -123,5 +123,5 @@ $c ~/init/xfce4/terminal/terminalrc ~/.config/xfce4/terminal
 echo "Seting up user settings"
 ##
 echo $SHELL|grep zsh || { type zsh && chsh -s $(which zsh) }
-
-
+#git config --global core.excludesfile '~/.gitignore'
+#git config --global include.path "~/init/.gitconfig"
