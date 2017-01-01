@@ -24,6 +24,7 @@ function install_command(){
 		fi
 }
 
+#TODO: https://wiki.gentoo.org/wiki/Avahi
 function needed_programs(){
 		for prog in "emacs" "i3" "zsh" "dmenu" "xfce4-terminal" "i3status" "feh"
 		do
