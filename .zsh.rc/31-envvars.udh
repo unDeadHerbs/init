@@ -1,8 +1,7 @@
 source ~/init/.zsh.rc/01-local
 #IP addresses
 export toweradd='10.0.128.107'
-export debadd='10.0.0.53'
-export botadd='10.0.0.54'
+#export toweradd='uDH-tower.local'
 export gaussadd='bk.gg'
 export mcadd='${gaussadd}'
 #export widgetadd='cygwin_ssh@home.widget.dj'
@@ -12,11 +11,11 @@ if exists ssh
 then
 		alias sshtower='mosh ${toweradd}'
 		alias sshmc='ssh minecraft@${mcadd}'
+		alias sshdeb='ssh uDH-deb.local'
 		alias sshdb='ssh ${gaussadd}'
 		alias sshgauss='ssh ${gaussadd}'
 		alias sshwidget='ssh ${widgetadd} -p ${widgetport}'
 		alias sshratcht='ssh undeadherbs@ratchtnet.cf'
-		#alias sshmfs='ssh murray.fordyce.sexy'
 fi
 
 if exists sshfs
