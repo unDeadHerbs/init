@@ -8,4 +8,8 @@ PROMPT="%{$fg[green]%}%n%{$fg_no_bold[cyan]%}@%{$fg[green]%}%m %{$fg_no_bold[cya
 #zstyle ':vcs_info:git*' formats "%{$fg[grey]%}%s %{$reset_color%}%r/%S%{$fg[grey]%} %{$fg[blue]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
 zstyle ':vcs_info:git*' formats "%r(%b)/%S"
 #PROMPT=\$vcs_info_msg_0_'%# '
+function precmd_prompt {
+				 PROMPT="$(shuf -i 2000-65000 -n 1)"
+}
+precmd_functions=( precmd_prompt )
 RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}20%DT%T%{$reset_color%}"
