@@ -51,7 +51,7 @@ scratch
    (menu-bar-mode -1)
    (tool-bar-mode -1)
    (scroll-bar-mode -1)
-   (global-unset-key (kbd "C-z")) ; was suspend-frame
+   ;(global-unset-key (kbd "C-z")) ; was suspend-frame
    #+END_SRC
 *** TODO unset (kbd "C-[") from ESC
     :PROPERTIES:
