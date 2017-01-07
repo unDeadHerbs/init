@@ -53,3 +53,5 @@ The global todo list for uDH_init
      fmff="find divergence with upstream, move back to it, re-base all new commits on origin"
      that might just be the re-base command if i do it right
      
+* tmux
+  make the name in the left status the terminal title
