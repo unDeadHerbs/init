@@ -1,3 +1,5 @@
+;;; init.el --- user init file      -*- no-byte-compile: t -*-
+
 ;;https://github.com/vapniks/org-dotemacs
 
 ;prevent warning that .dotemacs.org is symlink

@@ -25,6 +25,15 @@ unDeadHerbs's emacs init file
            (package-install package))
          (require package)))
    #+END_SRC
+** Compile on load
+   :PROPERTIES:
+   :NAME:     auto_compile
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   	(setq load-prefer-newer t)
+   	(udh-install-and-load 'auto-compile)
+   	(auto-compile-on-load-mode)
+   #+END_SRC
 ** install and load required packages
     #+BEGIN_SRC emacs-lisp
       (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
