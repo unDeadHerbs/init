@@ -19,10 +19,18 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
     	(require 'package)
     	(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-    													 ("marmalade" . "https://marmalade-repo.org/packages/")
-    													 ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
-    													 ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+                							 ("marmalade" . "https://marmalade-repo.org/packages/")
+                							 ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
+                							 ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
     	(package-initialize)
+    	;;(require 'async)
+    	;;(defun udh-install-and-load (package)
+    	;;	(ignore-errors (async-start
+    	;;  								`(lambda() (set 'package ,package)
+    	;;                  (require 'package)
+    	;;																	 (unless (package-installed-p package)
+    	;;																		 (package-install package)))
+    	;;  								(lambda()(require package)))))
     	(defun udh-install-and-load (package)
     		(ignore-errors
     			(unless (package-installed-p package)
@@ -38,13 +46,24 @@ unDeadHerbs's emacs init file
     	(udh-install-and-load 'auto-compile)
     	(auto-compile-on-load-mode)
     #+END_SRC
+*** Package Utilities
+    :PROPERTIES:
+    :NAME:     pack_utils
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    	(udh-install-and-load package-utils)
+      (package-utils-upgrade-all)
+    #+END_SRC
 *** install and load required packages
+    :PROPERTIES:
+    :NAME:     get_packages
+    :END:
     #+BEGIN_SRC emacs-lisp
     	(setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
-    												highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
-    												magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
-    			multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
-    			hideshow hideshowvis whitespace ob-spice))
+    														 highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
+    														 magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
+    														 multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
+    														 hideshow hideshowvis whitespace ob-spice))
     	(unless package-archive-contents
     		(package-refresh-contents))
     	(mapcar 'udh-install-and-load package-list)
