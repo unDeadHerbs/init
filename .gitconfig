@@ -10,7 +10,7 @@
 	cm    = "!f(){ if [ $# -eq 0 ];then git commit -S; else git commit -S -m \"$@\"; fi }; f"
 	b     = "branch"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
-	bc    = "rev-parse --abbrev-ref HEAD"
+	bc    = "!{ git rev-parse --abbrev-ref HEAD || echo ; } 2>/dev/null"
 	a     = "add"
 	ad    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git add --all && git d;else git add $@ && git d; fi }; f"
 	amd   = "!f(){ if [ $# -eq 0 ];then git commit -S --amend --reuse-message=HEAD; else git commit -S --amend -m \"$@\"; fi }; f"
