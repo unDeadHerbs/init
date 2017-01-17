@@ -66,8 +66,6 @@ unDeadHerbs's emacs init file
     														 magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
     														 multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
     														 hideshow hideshowvis whitespace ob-spice smart-tabs-mode))
-    	(unless package-archive-contents
-    		(package-refresh-contents))
     	(mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
 ** Disable Default things
