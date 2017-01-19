@@ -23,7 +23,7 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 #    ln -sf ~/.i3/status.base ~/.i3status.conf
 #fi
 
-export laptopip=192.168.1.103
+export laptopip=uDH-x201.local
 if hostname|grep uDH|grep -v "uDH-x201"
 then
 		{ sleep 3 && synergyc $laptopip ; } &
