@@ -8,6 +8,7 @@ The global todo list for uDH_init
 	2. on open, if folder && folder is git; then open magit-status as-well
 	3. M-! does not use the .zshrc file
   4. have tab size and indent mode be buffer local
+  5. make lisp mode not use tabs
 * .fehbg
 * .gitignore
 * .i3
@@ -47,6 +48,7 @@ The global todo list for uDH_init
   6. disable the motd on ssh if it's just the cow
      that fills up the buffer and the clear is annoying
   7. remove the wget settings and create a .wgetrc
+  8. stop staring gpg-agent if already up
 * .gitconfig
   1. have the commands lt and ll look at how big my terminal is
   2. Fetch-Merge-FastForward
