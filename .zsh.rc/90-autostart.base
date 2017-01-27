@@ -16,7 +16,8 @@ fi
 [[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 
-if [ -x /usr/bin/gpg-agent ]
-then
-		eval "$(/usr/bin/gpg-agent --daemon)"
+if [ -x /usr/bin/gpg-agent ]; then
+    if ! pidof gpg-agent; then
+	eval "$(/usr/bin/gpg-agent --daemon)"
+    fi
 fi
