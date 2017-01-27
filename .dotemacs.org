@@ -510,7 +510,7 @@ scratch
    (lambda ()
    (make-variable-buffer-local 'add-log-current-defun-function)
    (setq add-log-current-defun-function 'org-log-current-defun)))
-
+** org-export latex settings
 (add-to-list 'org-latex-classes
 						 '("udh-books"
 							 "\\documentclass{book}
@@ -538,12 +538,16 @@ scratch
 							 ("\\chapter{%s}" . "\\chapter*{%s}")
 							 ("\\section{%s}" . "\\section*{%s}")
 							 ("\\subsection{%s}" . "\\subsection*{%s}")
-							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-							 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-							 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+							 ;("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+							 ;("\\paragraph{%s}" . "\\paragraph*{%s}")
+							 ;("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+               ))
 
 																				; Forward/Preface
 																				; Table of Contents
 																				; Introduction
 																				; Chapter 1
 																				; ...
+** org-babel-octave
+   (require `ob-octave)
+   (setq org-confirm-babel-evaluate nil)
