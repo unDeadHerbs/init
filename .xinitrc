@@ -78,11 +78,16 @@ if [ $(hostname) = 'uDH-x201' ]
 then
     sleep  1 && qsynergy &
     sleep  1 && i3-msg "workspace  1; exec xfce4-terminal" &
-    sleep  2 && i3-msg "workspace  1; split v" &
-    sleep  3 && i3-msg "workspace  1; exec xfce4-terminal -e 'pianobar'" &
-    sleep  4 && i3-msg "workspace  1; exec xfce4-terminal -e 'alsamixer'" &
-    sleep  5 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic \"e todo\"'" &
-    sleep  6 && i3-msg "workspace  1; move right" &
+    sleep  2 && i3-msg "split v" &
+    sleep  3 && i3-msg "exec xfce4-terminal -e 'pianobar'" &
+    sleep  4 && i3-msg "exec xfce4-terminal -e 'alsamixer'" &
+    sleep  5 && i3-msg "exec xfce4-terminal -e 'zsh -ic \"e todo\"'" &
+    sleep  6 && i3-msg "move right" &
+    sleep  7 && i3-msg "workspace  0; exec xfce4-terminal -e 'zsh -ic \"su\"'" &
+    sleep  8 && i3-msg "exec xfce4-terminal -e 'zsh -ic \"rhtop\"'" &
+    sleep  9 && i3-msg "move up" &
+    sleep 10 && i3-msg "resize shrink height 30 px or 30 ppt" &
+    sleep 11 && i3-msg "workspace 1" &
     #sleep 20 && i3-msg 'workspace 14; layout tabbed' &
     #sleep 23 && i3-msg 'exec xfce-terminal; split h; layout tabbed' &
     #sleep 25 && i3-msg 'focus parent; exec xfce-terminal; layout tabbed; focus parent; exec xfce-terminal --command=skype; layout tabbed' &
