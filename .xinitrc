@@ -26,7 +26,7 @@ cat ~/.i3/status.$(hostname) >> ~/.i3status.conf
 export laptopip=uDH-x201.local
 if hostname|grep uDH|grep -v "uDH-x201"
 then
-		{ sleep 3 && synergyc $laptopip ; } &
+    { sleep 3 && synergyc $laptopip ; } &
 fi
 
 if [ $(hostname) = "uDH-tower" ]
@@ -77,6 +77,12 @@ fi
 if [ $(hostname) = 'uDH-x201' ]
 then
     sleep  1 && qsynergy &
+    sleep 11 && i3-msg "workspace  1; exec xfce4-terminal" &
+    sleep 12 && i3-msg "workspace  1; split v" &
+    sleep 13 && i3-msg "workspace  1; exec xfce4-terminal" &
+    sleep 14 && i3-msg "workspace  1; exec xfce4-terminal" &
+    sleep 15 && i3-msg "workspace  1; exec xfce4-terminal" &
+    sleep 16 && i3-msg "workspace  1; move right' &
     #sleep 20 && i3-msg 'workspace 14; layout tabbed' &
     #sleep 23 && i3-msg 'exec xfce-terminal; split h; layout tabbed' &
     #sleep 25 && i3-msg 'focus parent; exec xfce-terminal; layout tabbed; focus parent; exec xfce-terminal --command=skype; layout tabbed' &
