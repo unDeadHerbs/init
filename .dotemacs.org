@@ -65,7 +65,7 @@ unDeadHerbs's emacs init file
     														 highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
     														 magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
     														 multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
-    														 hideshow hideshowvis whitespace ob-spice smart-tabs-mode))
+    														 hideshow hideshowvis whitespace ob-spice smart-tabs-mode evil))
     	(mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
 ** Disable Default things
@@ -425,6 +425,21 @@ scratch
    :PROPERTIES:
    :NAME:     major_keys
    :END:
+*** text-mode
+    :PROPERTIES:
+    :NAME:     text_mode_setings
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun lizzy-interface-default-modes ()
+        (progn
+          (flyspell-prog-mode)
+          (evil-mode 1)
+          (linum-mode 1)))
+      (when (string= system-name "umbra")
+        (mapcar
+         (lambda (mode) (ad-hook mode 'lizzy-interface-default-modes)))
+        '(c-mode-common-hook))
+    #+END_SRC
 *** c-mode
     :PROPERTIES:
     :NAME:     c_mode_keys
