@@ -425,9 +425,9 @@ scratch
    :PROPERTIES:
    :NAME:     major_keys
    :END:
-*** text-mode
+*** lizzy-mode
     :PROPERTIES:
-    :NAME:     text_mode_setings
+    :NAME:     lizzy_mode_setings
     :END:
     #+BEGIN_SRC emacs-lisp
       (defun lizzy-interface-default-modes ()
@@ -437,7 +437,7 @@ scratch
           (linum-mode 1)))
       (when (string= system-name "umbra")
         (mapcar
-         (lambda (mode) (ad-hook mode 'lizzy-interface-default-modes)))
+         (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
         '(c-mode-common-hook))
     #+END_SRC
 *** c-mode
