@@ -425,6 +425,21 @@ scratch
    :PROPERTIES:
    :NAME:     major_keys
    :END:
+*** text-mode
+    :PROPERTIES:
+    :NAME:     text_mode_setings
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun lizzy-interface-default-modes ()
+        (progn
+          (flyspell-prog-mode)
+          (evil-mode 1)
+          (linum-mode 1)))
+      (when (string= system-name "umbra")
+        (mapcar
+         (lambda (mode) (ad-hook mode 'lizzy-interface-default-modes)))
+        '(c-mode-common-hook))
+    #+END_SRC
 *** c-mode
     :PROPERTIES:
     :NAME:     c_mode_keys
