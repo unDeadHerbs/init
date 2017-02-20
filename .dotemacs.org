@@ -435,7 +435,10 @@ scratch
           (flyspell-prog-mode)
           (evil-mode 1)
           (linum-mode 1)
-          (whitespace-mode 1)))
+          (whitespace-mode 1)
+          (setq-default indent-tabs-mode nil)
+          (setq indent-tabs-mode nil)
+          ))
       (when (string= system-name "umbra")
         (mapcar
          (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
