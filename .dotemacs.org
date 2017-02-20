@@ -438,7 +438,7 @@ scratch
       (when (string= system-name "umbra")
         (mapcar
          (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
-        '(c-mode-common-hook))
+        '(c-mode-common-hook asm-mode-hook))
     #+END_SRC
 *** c-mode
     :PROPERTIES:
