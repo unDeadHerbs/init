@@ -434,7 +434,8 @@ scratch
         (progn
           (flyspell-prog-mode)
           (evil-mode 1)
-          (linum-mode 1)))
+          (linum-mode 1)
+          (whitespace-mode 1)))
       (when (string= system-name "umbra")
         (mapcar
          (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
