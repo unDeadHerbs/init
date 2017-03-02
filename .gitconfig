@@ -11,7 +11,7 @@
 	b     = "branch"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
 	bc    = "rev-parse --abbrev-ref HEAD"
-	a     = "add"
+	a     = "!f(){ if [ $# -eq 0 ];then git add --all; else git add \"$@\"; fi }; f"
 	ad    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git add --all && git d;else git add $@ && git d; fi }; f"
 	amd   = "!f(){ if [ $# -eq 0 ];then git commit -S --amend --reuse-message=HEAD; else git commit -S --amend -m \"$@\"; fi }; f"
 	ac    = "!f(){ cd ${GIT_PREFIX:-.} ; git a ${@:1:$(($#-1))}; git cm \"${@:$#}\" ; }; f"
@@ -30,6 +30,7 @@
 	lt    = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXR"
 	ltt   = "!git log --graph --all -40             --oneline --decorate --full-history --date-order --color|less -FXR"
 	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXR"
+	lsd   = "!git lt && echo && git status && echo && git d"
 	ls    = "!f(){ if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree $@; fi }; f"
 [apply]
 	whitespace = fix
