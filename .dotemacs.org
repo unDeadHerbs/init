@@ -61,12 +61,20 @@ unDeadHerbs's emacs init file
     :NAME:     get_packages
     :END:
     #+BEGIN_SRC emacs-lisp
-    	(setq udh-package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
-    														 highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
-    														 magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
-    														 multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
-    														 hideshow hideshowvis whitespace ob-spice smart-tabs-mode))
-    	(mapcar 'udh-install-and-load udh-package-list)
+      (setq udh-package-list '(org-dotemacs
+                               ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
+                               highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses linum-relative
+                               magit magit-filenotify magit-popup magit-tramp
+                               tramp-term
+                               markdown-mode
+                               org org-bullets org-trello org-preview-html
+                               multiple-cursors calendar yasnippet helm-config centered-cursor-mode persistent-scratch
+                               hideshow hideshowvis whitespace smart-tabs-mode
+                               ob-spice ob-async ob-diagrams
+                               evil evil-visualstar evil-org org-evil
+                               vagrant vagrant-tramp
+                               ))
+      (mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
 ** Disable Default things
    :PROPERTIES:
@@ -425,6 +433,25 @@ scratch
    :PROPERTIES:
    :NAME:     major_keys
    :END:
+*** lizzy-mode
+    :PROPERTIES:
+    :NAME:     lizzy_mode_setings
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun lizzy-interface-default-modes ()
+        (progn
+          (flyspell-prog-mode)
+          (evil-mode 1)
+          (linum-mode 1)
+          (whitespace-mode 1)
+          (setq-default indent-tabs-mode nil)
+          (setq indent-tabs-mode nil)
+          ))
+      (when (string= system-name "umbra")
+        (mapcar
+         (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
+        '(c-mode-common-hook asm-mode-hook))
+    #+END_SRC
 *** c-mode
     :PROPERTIES:
     :NAME:     c_mode_keys
