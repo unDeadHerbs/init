@@ -6,6 +6,7 @@
 	d     = "!git diff HEAD --color|less -FXR"
 	cm    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git commit ; else git commit -m \"$@\"; fi }; f"
 	b     = "branch"
+	mn    = "merge --no-edit"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
 	bc    = "rev-parse --abbrev-ref HEAD"
 	a     = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git add --all; else git add \"$@\"; fi }; f"
