@@ -23,6 +23,7 @@ exists autossh     && alias autossh='autossh -M 0'
 exists mosh        || alias mosh='ssh'
 exists pianobar    && alias pianobar='pianobar 2> /dev/null'
 exists find        && alias finds='find 2>/dev/null'
+exists less        && alias less='less -FXR'
 
 # Create aliases for programs that  need to be run as root
 ##todo: have that check if in sudoers file
