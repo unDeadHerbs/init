@@ -100,6 +100,11 @@ then
 		echo #nothing
 fi
 
+if [ $(hostname) = 'Kitty' ]
+then
+		sleep  1 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
+fi
+
 if [ $(hostname) = 'L' ]
 then
     sleep 1 && synergyc 192.168.1.106 &
