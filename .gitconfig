@@ -19,7 +19,7 @@
 	pop   = "stash pop"
 	p     = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git push -u origin $(git bc); else git push \"$@\"; fi }; f"
 	pa    = "push --all"
-	f     = "!f(){ cd ${GIT_PREFIX:-.} ; git pull --ff-only \"$@\" || git pull \"$@\" }; f"
+	f     = "!f(){ cd ${GIT_PREFIX:-.} ; git pull --ff-only \"$@\" || git pull \"$@\" ; }; f"
 	chk   = "!f(){ cd ${GIT_PREFIX:-.} ; git checkout -b \"$@\" || git checkout \"$@\" ; git f ; }; f"
 	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
 	l     = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXR"
