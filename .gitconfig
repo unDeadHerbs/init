@@ -1,13 +1,10 @@
 [push]
 	default = simple
-[core]
-	editor = emacs
-	excludesfile = /home/udh/.gitignore_global
 [color]
 	ui = auto
 [alias]
 	d     = "!git diff HEAD --color|less -FXR"
-	cm    = "!f(){ if [ $# -eq 0 ];then git commit -S; else git commit -S -m \"$@\"; fi }; f"
+	cm    = "!f(){ if [ $# -eq 0 ];then git commit ; else git commit -m \"$@\"; fi }; f"
 	b     = "branch"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
 	bc    = "rev-parse --abbrev-ref HEAD"
@@ -35,5 +32,3 @@
 	whitespace = fix
 [merge]
 	ff = false
-[commit]
-	gpgsign = true
