@@ -35,7 +35,7 @@
 	svn-push  = "svn dcommit"
 	svn-clone = "svn clone"
 
-  c-rand = "!git cm \"$(curl http://whatthecommit.com/index.txt)\""
+  c-rand = "!git cm \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt))\""
 [apply]
 	whitespace = fix
 [merge]
