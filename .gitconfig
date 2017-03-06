@@ -29,6 +29,9 @@
 	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXR"
 	lsd   = "!git lt && echo && git status && echo && git d"
 	ls    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree \"$@\"; fi }; f"
+
+	svn-pull = "svn rebase"
+	svn-push = "svn dcommit"
 [apply]
 	whitespace = fix
 [merge]
