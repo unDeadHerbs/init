@@ -1,9 +1,11 @@
 source ~/init/.zsh.rc/01-local
 
-function vi(){
-		if [ 9599 -gt	30000 ]; then
+function vim(){
+		if [ $RANDOM -gt 20000 ]; then
 				echo 'Bad kitty. Use e for editing the file '
 		else
-				/bin/vim $@
+				/usr/bin/vim $@
 		fi
 }
+
+alias vi='vim'
