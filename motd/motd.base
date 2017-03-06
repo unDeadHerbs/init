@@ -1,0 +1,4 @@
+if exists cowfortune > /dev/null
+then
+		cowfortune
+fi

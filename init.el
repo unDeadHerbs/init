@@ -1,9 +1,12 @@
+;;; init.el --- user init file      -*- no-byte-compile: t -*-
+
 ;;https://github.com/vapniks/org-dotemacs
 
 ;prevent warning that .dotemacs.org is symlink
 (setq vc-follow-symlinks nil)
 
 (require 'package)
+(require 'cl-lib)
 (package-initialize)
 (unless (package-installed-p 'org-dotemacs)
   (progn
@@ -14,7 +17,6 @@
     (package-refresh-contents)
     (package-install 'org-dotemacs)
     (kill-buffer "*Compile-Log*")))
-(require 'cl-lib)
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
 ;(org-dotemacs-load-file "/home/udh/.emacs.d/init.org")
@@ -31,3 +33,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'magit-clean 'disabled nil)

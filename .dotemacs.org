@@ -8,33 +8,73 @@ unDeadHerbs's emacs init file
   :PROPERTIES:
   :NAME:    back_end_settings
   :END:
-** Setup Package Repositories
+** Setup Packages
    :PROPERTIES:
-   :NAME:     repo_init
+   :NAME:     packages
    :END:
-   #+BEGIN_SRC emacs-lisp
-     (require 'package)
-     (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                              ("marmalade" . "https://marmalade-repo.org/packages/")
-                              ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
-                              ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
-     (package-initialize)
-     (defun udh-install-and-load (package)
-       (ignore-errors
-         (unless (package-installed-p package)
-           (package-install package))
-         (require package)))
-   #+END_SRC
-** install and load required packages
+*** Repositories
+    :PROPERTIES:
+    :NAME:     repo_init
+    :END:
     #+BEGIN_SRC emacs-lisp
-      (setq package-list '(ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
-                            highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses
-                            magit magit-filenotify magit-popup markdown-mode org org-bullets org-dotemacs
-			    multiple-cursors  calendar yasnippet helm-config centered-cursor-mode persistent-scratch org-trello
-			    hideshow hideshowvis whitespace ob-spice))
-      (unless package-archive-contents
+      (require 'package)
+      (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+    			   ("marmalade" . "https://marmalade-repo.org/packages/")
+    			   ("melpa" . "http://melpa.org/packages/") ; milkyPostman's rep
+    			   ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+      (package-initialize)
+      (when (not package-archive-contents)
         (package-refresh-contents))
-      (mapcar 'udh-install-and-load package-list)
+      ;;(require 'async)
+      ;;(defun udh-install-and-load (package)
+      ;;	(ignore-errors (async-start
+      ;;  								`(lambda() (set 'package ,package)
+      ;;                  (require 'package)
+      ;;																	 (unless (package-installed-p package)
+      ;;																		 (package-install package)))
+      ;;  								(lambda()(require package)))))
+      (defun udh-install-and-load (package)
+        (ignore-errors
+          (unless (package-installed-p package)
+    	(package-install package))
+          (require package)))
+    #+END_SRC
+*** Compile on load
+    :PROPERTIES:
+    :NAME:     auto_compile
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    	(setq load-prefer-newer t)
+    	(udh-install-and-load 'auto-compile)
+    	(auto-compile-on-load-mode)
+    #+END_SRC
+*** Package Utilities
+    :PROPERTIES:
+    :NAME:     pack_utils
+    :END:
+    #+BEGIN_SRC emacs-lisp
+    	(udh-install-and-load 'package-utils)
+      (package-utils-upgrade-all)
+    #+END_SRC
+*** install and load required packages
+    :PROPERTIES:
+    :NAME:     get_packages
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (setq udh-package-list '(org-dotemacs
+                               ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
+                               highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses linum-relative
+                               magit magit-filenotify magit-popup magit-tramp
+                               tramp-term
+                               markdown-mode
+                               org org-bullets org-trello org-preview-html
+                               multiple-cursors calendar yasnippet helm-config centered-cursor-mode persistent-scratch
+                               hideshow hideshowvis whitespace smart-tabs-mode
+                               ob-spice ob-async ob-diagrams
+                               evil evil-visualstar evil-org org-evil
+                               vagrant vagrant-tramp
+                               ))
+      (mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
 ** Disable Default things
    :PROPERTIES:
@@ -51,7 +91,7 @@ scratch
    (menu-bar-mode -1)
    (tool-bar-mode -1)
    (scroll-bar-mode -1)
-   (global-unset-key (kbd "C-z")) ; was suspend-frame
+   ;(global-unset-key (kbd "C-z")) ; was suspend-frame
    #+END_SRC
 *** TODO unset (kbd "C-[") from ESC
     :PROPERTIES:
@@ -101,12 +141,14 @@ scratch
    #+BEGIN_SRC emacs-lisp
    (setq tramp-default-method "ssh")
    #+END_SRC
-** Use Tabs and Spaces
+** COMMENT Use Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
    :END:
    #+BEGIN_SRC emacs-lisp
-   ;(global-smart-tab-mode 1) ; package no longer exists or something
+   	(global-smart-tab-mode 1)
+   	(smart-tabs-insinuate 'c 'javascript)
+   	(setq-default tab-width 2)
    #+END_SRC
 ** Ask-Before-Closing
    :PROPERTIES:
@@ -391,29 +433,52 @@ scratch
    :PROPERTIES:
    :NAME:     major_keys
    :END:
+*** lizzy-mode
+    :PROPERTIES:
+    :NAME:     lizzy_mode_setings
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun lizzy-interface-default-modes ()
+        (progn
+          (flyspell-prog-mode)
+          (evil-mode 1)
+          (linum-mode 1)
+          (whitespace-mode 1)
+          (setq-default indent-tabs-mode nil)
+          (setq indent-tabs-mode nil)
+          ))
+      (when (string= system-name "umbra")
+        (mapcar
+         (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
+        '(c-mode-common-hook asm-mode-hook))
+    #+END_SRC
 *** c-mode
     :PROPERTIES:
     :NAME:     c_mode_keys
     :END:
     #+BEGIN_SRC emacs-lisp
-    (defun udh-c-mode-keys ()
-      (local-set-key (kbd "C-t") 'hs-toggle-hiding)
-      (local-set-key (kbd "C-M-t") 'hs-hide-level)
-      (local-set-key (kbd "M-{") 'hs-hide-block)
-      (local-set-key (kbd "M-}") 'hs-show-block)
-      (local-set-key (kbd "C-S-b") (lambda () (interactive)
-				     (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
-				     (flymake-mode -1) (flymake-mode 1)
-				     (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-				     (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-				     )) ;find some way of move makefile error to minibuffer
-      (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-				      (flycheck-mode -1) (flymake-mode -1)
-				      (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-      (setq tags-revert-without-query 1)
-    )
-    (add-hook 'c-mode-common-hook
-	     'udh-c-mode-keys)
+    	(defun udh-c-mode-keys ()
+    		(local-set-key (kbd "C-t") 'hs-toggle-hiding)
+    		(local-set-key (kbd "C-M-t") 'hs-hide-level)
+    		(local-set-key (kbd "M-{") 'hs-hide-block)
+    		(local-set-key (kbd "M-}") 'hs-show-block)
+    		(local-set-key (kbd "C-S-b") (lambda () (interactive)
+    					 (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
+    					 (flymake-mode -1) (flymake-mode 1)
+    					 (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+    					 (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+    					 )) ;find some way of move makefile error to minibuffer
+    		(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+    						(flycheck-mode -1) (flymake-mode -1)
+    						(local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+    		(setq tags-revert-without-query 1)
+    	)
+    	(add-hook 'c-mode-common-hook
+    		 'udh-c-mode-keys)
+    	(add-hook 'c++-mode-hook
+    						(lambda ()
+    							(flyspell-prog-mode)
+    							))
     #+END_SRC
 *** org-mode
     :PROPERTIES:
@@ -472,3 +537,44 @@ scratch
    (lambda ()
    (make-variable-buffer-local 'add-log-current-defun-function)
    (setq add-log-current-defun-function 'org-log-current-defun)))
+** org-export latex settings
+(add-to-list 'org-latex-classes
+						 '("udh-books"
+							 "\\documentclass{book}
+                \\usepackage{braket}"
+							 ("\\part{%s}" . "\\part*{%s}")
+							 ("\\chapter{%s}" . "\\chapter*{%s}")
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+(add-to-list 'org-latex-classes
+						 '("udh-article"
+							 "\\documentclass{scrartcl}
+                \\usepackage{braket}"
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+							 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+							 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+						 '("udh-pub"
+							 "\\documentclass{book}
+                \\usepackage{braket}"
+							 ("\\chapter{%s}" . "\\chapter*{%s}")
+							 ("\\section{%s}" . "\\section*{%s}")
+							 ("\\subsection{%s}" . "\\subsection*{%s}")
+							 ;("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+							 ;("\\paragraph{%s}" . "\\paragraph*{%s}")
+							 ;("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+               ))
+
+																				; Forward/Preface
+																				; Table of Contents
+																				; Introduction
+																				; Chapter 1
+																				; ...
+** org-babel-octave
+   (require `ob-octave)
+   (setq org-confirm-babel-evaluate nil)

@@ -1,0 +1,12 @@
+source ~/init/.zsh.rc/01-local
+#IP addresses
+export gaussadd='bk.gg'
+
+if exists ssh
+then
+		alias sshgauss='ssh ${gaussadd}'
+fi
+
+alias gaussport='ssh -R 2048:localhost:22 udh@${gaussadd}'
+alias autogaussport='while true; do; gaussport; done'
+

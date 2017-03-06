@@ -1,90 +1,23 @@
 # Set the prefix to ^Z.
-unbind C-b
-unbind ^Z
-set -g prefix ^Z
-bind z send-prefix
+set-option -g prefix C-z
+bind-key -T prefix C-z next-window
+
+bind-key -T prefix z send-prefix
 
 # Bind appropriate commands similar to screen.
 # lockscreen ^X x 
-unbind ^X
-bind ^X lock-server
-unbind x
-bind x lock-server
+bind-key -T prefix x lock-server
+bind-key -T prefix k confirm-before -p "kill-pane #P? (y/n)" kill-pane
 
-# screen ^C c 
-unbind ^C
-bind ^C new-window
-unbind c
-bind c new-window
+bind-key -T prefix s split-window -v
+bind-key -T prefix | split-window -h
 
-# detach ^D d
-unbind ^D
-bind ^D detach
+#bind-key -T prefix ; command-prompt
 
-# displays * 
-unbind *
-bind * list-clients
+# fix the 'Prefix C-<arrow>' and 'Prefix M-<arrow>' commands
+# or at least disable Prefix Space that keeps happening
 
-# next ^@ ^N sp n 
-unbind ^@
-bind ^@ next-window
-unbind ^N
-bind ^N next-window
-unbind " "
-bind " " next-window
-unbind n
-bind n next-window
-
-# title A
-unbind A
-bind A command-prompt "rename-window %%"
-
-# other ^A
-unbind ^A
-bind ^A last-window
-
-# prev ^H ^P p ^? 
-unbind ^H
-bind ^H previous-window
-unbind ^P
-bind ^P previous-window
-unbind p
-bind p previous-window
-unbind BSpace
-bind BSpace previous-window
-
-# windows ^W w 
-unbind ^W
-bind ^W list-windows
-unbind w
-bind w list-windows
-
-# quit \ 
-unbind '\'
-bind '\' confirm-before "kill-server"
-
-# kill K k 
-unbind K
-bind K confirm-before "kill-window"
-unbind k
-bind k confirm-before "kill-window"
-
-# redisplay ^L l 
-unbind ^L
-bind ^L refresh-client
-unbind l
-bind l refresh-client
-
-# split -v |
-unbind |
-bind | split-window
-
-# :kB: focus up
-unbind Tab
-bind Tab select-pane -t:.+
-unbind BTab
-bind BTab select-pane -t:.-
-
-# " windowlist -b
-unbind '"'
-bind '"' choose-window
+#change the date format in the corner
+set -ag status-interval 10
+set -g status-right-length 100
+set -g status-right "#(acpi|awk '{print $3}'|sed 's/,//') #(dc -e \".$(acpi|awk '{print $4}'|sed 's/%,//') .$(acpi -i|grep 'last'|awk '{print $13}'|sed 's/%//') 100 **p\"|grep '[1-9]'|sed 's/[.][0-9]*/%/')#(acpi|sed 's/.*%,//'|egrep '(until|remaining)'|sed 's/ [^0-9].*//'|egrep -v '^ $') | #(echo $USER)@#H | #(ifconfig -a|grep 'inet '|awk '{print  $2}'|grep -v 127.0.0.1|paste -d' ' -s) | #(top -b -n1|grep 'load average:'|awk '{print $10}'|sed 's/,//') #(acpi -t|awk '{print $4\"C\"}') | 0%Y-%m-%d#[fg=white]T#[default]%H:%M "
