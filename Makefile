@@ -1,12 +1,11 @@
-.PHONY: progams configs
-all: progams configs
+.PHONY: zsh i3 emacs xinitrc zshrc fehbg screenrc tmux.conf git
+all: zsh i3 emacs xinitrc zshrc fehbg screenrc tmux.conf git
 
-progams:
-#not sure how to do this part yet
-#emacs i3 zsh dmenu xfce4-terminal i3status feh
+install:
+	install zsh i3 dmenu xfce4-terminal i3status emacs xinit feh screen tmux git
 
-.PHONY: i3 emacs xinitrc zshrc fehbg screenrc tmux.conf git
-configs: i3 emacs xinitrc zshrc fehbg screenrc tmux.conf git
+zsh:
+	echo $$SHELL|grep zsh || chsh -s $$(which zsh)
 
 i3:
 	-mv ~/.i3/config ~/init/.i3/config.$$HOSTNAME -nv
