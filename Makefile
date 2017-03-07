@@ -14,7 +14,7 @@ i3:
 
 emacs:
 	mkdir -p ~/.emacs.d
-	ln -sf ~/init/init.sh ~/.emacs.d/init.sh
+	ln -sf ~/init/init.el ~/.emacs.d/init.el
 	ln -sf ~/init/.dotemacs.org ~/.dotemacs.org
 
 xinitrc:
