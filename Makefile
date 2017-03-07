@@ -2,7 +2,7 @@
 all: zsh i3 emacs xinitrc zshrc fehbg screenrc tmux.conf git
 
 install:
-	install zsh i3 dmenu xfce4-terminal i3status emacs xinit feh screen tmux git
+	./install zsh i3 dmenu xfce4-terminal i3status emacs xinit feh screen tmux git
 
 zsh:
 	echo $$SHELL|grep zsh || chsh -s $$(which zsh)
