@@ -148,7 +148,7 @@ scratch
    #+BEGIN_SRC emacs-lisp
    	(global-smart-tab-mode 1)
    	(smart-tabs-insinuate 'c 'javascript)
-   	(setq-default tab-width 2)
+   	;(setq-default tab-width 2)
    #+END_SRC
 ** Ask-Before-Closing
    :PROPERTIES:
@@ -262,8 +262,8 @@ scratch
       ;(glasses-mode 1)
       (require 'flymake-cursor)
       (setq-default c-basic-offset 2
-		    tab-width 2
-		    indent-tabs-mode t)
+		    ;tab-width 2
+		    );indent-tabs-mode t)
       (hs-minor-mode 1)
       (hideshowvis-minor-mode 1)
       (hideshowvis-symbols)
