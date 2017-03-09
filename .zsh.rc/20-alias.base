@@ -29,6 +29,7 @@ exists less        && alias less='less -FXR'
 ##todo: have that check if in sudoers file
 exists sudo || alias sudo='su -c'
 alias rhtop="sudo htop"
+#TODO:make a function for umount as root
 #alias s2ram="sudo s2ram"
 alias s2ram="sudo 'swapon /dev/sda3 && s2ram && swapoff /dev/sda3'"
 alias reboot="sudo reboot"
