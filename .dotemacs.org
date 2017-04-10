@@ -514,6 +514,7 @@ scratch
     	    (lambda (nick host-name reason)
     		;; Re-establish the connection even if the server closed it.
     		(setq erc-server-error-occurred nil)))
+      (setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
     #+END_SRC
 * TODO python mode
   :PROPERTIES:
