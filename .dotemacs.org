@@ -71,7 +71,7 @@ unDeadHerbs's emacs init file
                                multiple-cursors calendar yasnippet helm-config centered-cursor-mode persistent-scratch
                                hideshow hideshowvis whitespace smart-tabs-mode
                                ob-spice ob-async ob-diagrams
-                               evil evil-visualstar evil-org org-evil
+                               evil evil-visualstar
                                vagrant vagrant-tramp
                                ))
       (mapcar 'udh-install-and-load udh-package-list)
