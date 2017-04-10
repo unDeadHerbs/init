@@ -501,6 +501,20 @@ scratch
     (add-hook 'org-mode-hook
 	      'udh-org-mode-keys)
     #+END_SRC
+*** COMMENT erc-mode
+    :PROPERTIES:
+    :NAME:     erc_mode
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'erc-mode-hook
+    	(lambda ()
+        	  (flyspell-mode 1)
+        	  ))
+      (add-hook 'erc-disconnected-hook
+    	    (lambda (nick host-name reason)
+    		;; Re-establish the connection even if the server closed it.
+    		(setq erc-server-error-occurred nil)))
+    #+END_SRC
 * TODO python mode
   :PROPERTIES:
   :NAME:     python_setup
