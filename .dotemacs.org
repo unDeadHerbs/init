@@ -507,14 +507,19 @@ scratch
     :END:
     #+BEGIN_SRC emacs-lisp
       (add-hook 'erc-mode-hook
-    	(lambda ()
-        	  (flyspell-mode 1)
-        	  ))
+        (lambda ()
+                  (flyspell-mode 1)
+                  ))
       (add-hook 'erc-disconnected-hook
-    	    (lambda (nick host-name reason)
+        (lambda (nick host-name reason)
     		;; Re-establish the connection even if the server closed it.
     		(setq erc-server-error-occurred nil)))
       (setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
+      (setq erc-log-channels-directory "~/.erc/logs/")
+      (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
+    					  ;that might make erc slow
+    					  ;the forums are unsure
+    					  ;https://www.emacswiki.org/emacs/ErcLogging#toc6
     #+END_SRC
 * TODO python mode
   :PROPERTIES:
