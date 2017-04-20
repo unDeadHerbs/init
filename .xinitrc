@@ -116,11 +116,6 @@ then
     sleep   1 && xrandr --output VGA-1 --rotate left
 fi
 
-if [xrandr --output VGA1 $(hostname) = 'Kitty' ]
-then
-    sleep 1 &
-fi
-
 if [ $(hostname) = 'uDH-Bot' ]
 then
     echo #nothing
@@ -131,9 +126,4 @@ then
 		sleep 10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
 fi
 
-if [ $(hostname) = 'L' ]
-then
-    sleep 1 && synergyc 192.168.1.106 &
-fi
-    
 exec i3
