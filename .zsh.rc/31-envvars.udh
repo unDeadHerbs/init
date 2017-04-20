@@ -26,5 +26,5 @@ then
 fi
 alias gaussproxy='autossh -M 0 ${gaussadd} -D 1414'
 alias gaussport='ssh -R 2200:localhost:22 ${gaussadd} -t "ssh 127.0.0.1 -p 2200 -t \"while true; do sleep 3600; done\""'
-alias autogaussport='while true; do; gaussport; done'
+alias autogaussport='while true; do; gaussport; echo reconnecting; done'
 
