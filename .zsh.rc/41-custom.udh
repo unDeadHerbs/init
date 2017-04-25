@@ -1,3 +1,4 @@
+#! /bin/zsh
 source ~/init/.zsh.rc/01-local
 alias rot13="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m'5-90-4"
 alias sedesc="sed 's/[] ()'\''\\\\[&;]/\\\\&/g'"

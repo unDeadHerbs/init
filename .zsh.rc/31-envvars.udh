@@ -1,3 +1,4 @@
+#! /bin/zsh
 source ~/init/.zsh.rc/01-local
 #IP addresses
 export toweradd='10.0.128.107'

@@ -1,3 +1,4 @@
+#! /bin/zsh
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
 		if [[ "$TERM" != "dumb" ]]; then
 				screen -dr >/dev/null && exit
