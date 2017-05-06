@@ -472,7 +472,7 @@ scratch
     					 (flymake-mode -1) (flymake-mode 1)
     					 (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
     					 (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-    					 )) ;find some way of move makefile error to minibuffer
+					 ))
     		(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
     						(flycheck-mode -1) (flymake-mode -1)
     						(local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
@@ -485,6 +485,7 @@ scratch
     							(flyspell-prog-mode)
     							))
     #+END_SRC
+**** TODO Move flymake errors to mini-buffer and have them not terminate the mode
 *** org-mode
     :PROPERTIES:
     :NAME:     org_keys
