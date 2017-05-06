@@ -27,6 +27,7 @@
 	ll    = "!git log --graph --all -5  --numstat   --oneline --decorate --full-history --date-order --color --show-signature|less -FXR"
 	lt    = "!git log --graph --all -20             --oneline --decorate --full-history --date-order --color|less -FXR"
 	ltt   = "!git log --graph --all -40             --oneline --decorate --full-history --date-order --color|less -FXR"
+	lvl   = "!git log --graph --all -100            --oneline --decorate --full-history --date-order --color|less -FXR"
 	lr    = "!git log --graph --all --since=1.weeks --oneline --decorate --full-history --date-order --color|less -FXR"
 	lsd   = "!git lt && echo && git status && echo && git d"
 	ls    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree \"$@\"; fi }; f"
