@@ -141,14 +141,19 @@ scratch
    #+BEGIN_SRC emacs-lisp
    (setq tramp-default-method "ssh")
    #+END_SRC
-** COMMENT Use Tabs and Spaces
+** Use Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
    :END:
    #+BEGIN_SRC emacs-lisp
-   	(global-smart-tab-mode 1)
-   	(smart-tabs-insinuate 'c 'javascript)
-   	;(setq-default tab-width 2)
+     (global-smart-tab-mode 1)
+     (smart-tabs-insinuate 'c 'javascript)
+     (setq-default tab-width 2)
+     (setq tab-width 2)
+     (make-variable-buffer-local 'tab-width)
+     (setq-default indent-tabs-mode t)
+     (setq indent-tabs-mode t)
+     (make-variable-buffer-local 'indent-tabs-mode)
    #+END_SRC
 ** Ask-Before-Closing
    :PROPERTIES:
