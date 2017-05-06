@@ -531,6 +531,10 @@ scratch
                 			      ;https://www.emacswiki.org/emacs/ErcLogging#toc6
 
     #+END_SRC
+*** lisp-mode
+    #+BEGIN_SRC emacs-lisp
+      (setq indent-tabs-mode nil)
+    #+END_SRC
 * TODO python mode
   :PROPERTIES:
   :NAME:     python_setup
