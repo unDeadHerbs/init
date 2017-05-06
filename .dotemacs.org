@@ -531,10 +531,23 @@ unDeadHerbs's emacs init file
 
     #+END_SRC
 *** lisp-mode
+    :PROPERTIES:
+    :NAME:     lisp_mode
+    :END:
     #+BEGIN_SRC emacs-lisp
       (add-hook 'lisp-mode
                 (lambda ()
                   (setq indent-tabs-mode nil)
+                  ))
+    #+END_SRC
+*** shell-script-mode
+    :PROPERTIES:
+    :NAME:     shell_script_mode
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'shell-script-mode
+                (lambda ()
+                  (setq indent-tabs-mode nill)
                   ))
     #+END_SRC
 * TODO python mode
