@@ -449,7 +449,6 @@ scratch
           (evil-mode 1)
           (linum-mode 1)
           (whitespace-mode 1)
-          (setq-default indent-tabs-mode nil)
           (setq indent-tabs-mode nil)
           ))
       (when (string= system-name "umbra")
