@@ -272,74 +272,8 @@ unDeadHerbs's emacs init file
                                               ;(highlight-current-line-minor-mode 1)
                                               ;(highline-mode 1)
         )
-      (defun udh-c-mode-prettify ()
-        (pretty-mode 1)
-        (pretty-regexp "--" "↧");"↓"
-        (pretty-regexp "[+][+]" "↥");"↑"
-        (pretty-regexp " *> > >" "⋙")
-        (pretty-regexp "< < < *" "⋘")
-        (pretty-regexp " *> >" "≫")
-        (pretty-regexp "< < *" "≪")
-        (pretty-regexp "<<" "《");"⩽"
-                                              ;(pretty-regexp "< < <" "⫹")
-        (pretty-regexp ">>" "》");"⩾"
-                                              ;(pretty-regexp "> > >" "⫺")
-        (pretty-regexp ">=" "≥")
-        (pretty-regexp "<=" "≤")
-        (pretty-regexp "!=" "≠")
-        (pretty-regexp "==" "≡")
-        (pretty-regexp "!" "¬")
-        (pretty-regexp "||" "∥")
-        (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
-        (pretty-regexp "true" "⊨")
-        (pretty-regexp "bool" "⊢");"╠";"├";"¤"
-        (pretty-regexp "float" "ℝ")
-        (pretty-regexp "int" "ℤ")
-        (pretty-regexp "char" "¶")
-        (pretty-regexp "void" "Ø")
-        (pretty-regexp "//" "⑊")
-                                              ;(pretty-regexp "const" "𝌸")
-                                              ;(pretty-regexp "[/][/][*]" "∫∮" )
-                                              ;(pretty-regexp "[*][/][/]" "∮∫" )
-                                              ;(pretty-regexp "[*][/]" "∮" )
-                                              ;(pretty-regexp "[/][*]" "∮" )
-                                              ;(pretty-regexp "[/][/]" "∬" )
-                                              ;(pretty-regexp "[.]unlock()" "")
-                                              ;(pretty-regexp "[.]lock()" "")
-        (pretty-regexp "std::deque" "ℚ");ɋʠ
-        (pretty-regexp "std::function" "ℱ");∳ƒⁿ
-        (pretty-regexp "std::ostream" "水");⇴⌫⼮
-        (pretty-regexp "std::atomic" "⚛");⌬
-        (pretty-regexp "std::thread" "⎇");↛ ⇶
-        (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
-        (pretty-regexp "std::map" "↦");"≔"
-        (pretty-regexp "std::pair" "⑵");"②";"ʭ"
-        (pretty-regexp "std::make_pair" "mk⑵")
-        (pretty-regexp "std::vector" "→")
-        (pretty-regexp "std::cin" "⌨")
-                                              ;(pretty-regexp "std::buffer" "𝌖")
-        (pretty-regexp "[.]second" "₂")
-        (pretty-regexp "[.]first" "₁")
-        (pretty-regexp "template" "◳")
-        (pretty-regexp "()" "≬")
-        (pretty-regexp "std" "§");"準"
-        (pretty-regexp "::" "∷");"⁞"
-        (pretty-regexp "symbol" "※")
-        (pretty-regexp "Symbol" "⁜")
-        (pretty-regexp "Stream" "川")
-        (pretty-regexp "Thread" "⇶")
-        (pretty-regexp "Array" "⇻")
-        (pretty-regexp "Tree" "ᛘ");𝌎
-                                              ;(pretty-regexp "Key" "🔑")
-        (pretty-regexp "[*]" "∗")
-        (pretty-mode -1)
-        (pretty-mode -1)
-        )
       (add-hook 'c-mode-common-hook
                 'udh-c-mode-layout)
-      (add-hook 'c-mode-common-hook
-                '(lambda () (local-set-key (kbd "C-M-S-p")
-                                           '(lambda () (interactive) (udh-c-mode-prettify)))))
     #+END_SRC
 ** Major
    :PROPERTIES:
