@@ -247,17 +247,6 @@ unDeadHerbs's emacs init file
    :PROPERTIES:
    :NAME:     mode_classes
    :END:
-*** Text Mode
-    :PROPERTIES:
-    :NAME:     text_mode
-    :END:
-**** Fly Spell
-     :PROPERTIES:
-     :NAME:     fly_spell
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       (add-hook 'text-mode-hook 'turn-on-flyspell)
-     #+END_SRC
 *** C Common Mode
     :PROPERTIES:
     :NAME:     cpp_pretty
@@ -457,6 +446,17 @@ unDeadHerbs's emacs init file
          (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
         '(c-mode-common-hook asm-mode-hook))
     #+END_SRC
+*** Text Mode
+    :PROPERTIES:
+    :NAME:     text_mode
+    :END:
+**** Fly Spell
+     :PROPERTIES:
+     :NAME:     fly_spell
+     :END:
+     #+BEGIN_SRC emacs-lisp
+       (add-hook 'text-mode-hook 'turn-on-flyspell)
+     #+END_SRC
 *** c-mode
     :PROPERTIES:
     :NAME:     c_mode_keys
