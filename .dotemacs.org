@@ -353,7 +353,7 @@ unDeadHerbs's emacs init file
       (global-set-key (kbd "C-c c") 'org-capture)
       (global-set-key (kbd "C-c b") 'org-iswitchb)
     #+END_SRC
-* Mode Settings
+* Mode Behind the Scenes
 ** Major
    :PROPERTIES:
    :NAME:     major_keys
@@ -413,9 +413,7 @@ unDeadHerbs's emacs init file
       (add-hook 'c-mode-common-hook
                 'udh-c-mode-keys)
       (add-hook 'c++-mode-hook
-                (lambda ()
-                  (flyspell-prog-mode)
-                  ))
+                'flyspell-prog-mode)
     #+END_SRC
 **** TODO Move flymake errors to mini-buffer and have them not terminate the mode
 *** org-mode
