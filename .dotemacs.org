@@ -272,7 +272,8 @@ unDeadHerbs's emacs init file
         (hs-minor-mode 1)
         (hideshowvis-minor-mode 1)
         (hideshowvis-symbols)
-        (relative-line-numbers-mode 1)
+        ;(relative-line-numbers-mode 1)
+        (linum-relative-mode 1)
                                               ;make current line number the line number
         (require 'centered-cursor-mode)
         (centered-cursor-mode 1)
