@@ -270,6 +270,8 @@ unDeadHerbs's emacs init file
         )
       (add-hook 'c-mode-common-hook
                 'udh-c-mode-layout)
+      (add-hook 'c++-mode-hook
+                'flyspell-prog-mode)
     #+END_SRC
 ** Major
    :PROPERTIES:
@@ -353,6 +355,31 @@ unDeadHerbs's emacs init file
       (global-set-key (kbd "C-c c") 'org-capture)
       (global-set-key (kbd "C-c b") 'org-iswitchb)
     #+END_SRC
+*** c-mode
+    :PROPERTIES:
+    :NAME:     c_mode_keys
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun udh-c-mode-keys ()
+        (local-set-key (kbd "C-t") 'hs-toggle-hiding)
+        (local-set-key (kbd "C-M-t") 'hs-hide-level)
+        (local-set-key (kbd "M-{") 'hs-hide-block)
+        (local-set-key (kbd "M-}") 'hs-show-block)
+        (local-set-key (kbd "C-S-b") (lambda () (interactive)
+                                       (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
+                                       (flymake-mode -1) (flymake-mode 1)
+                                       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+                                       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+                                       ))
+        (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+                                         (flycheck-mode -1) (flymake-mode -1)
+                                         (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+        (c-toggle-auto-state 1)
+        (c-toggle-hungry-state 1)
+        )
+      (add-hook 'c-mode-common-hook
+                'udh-c-mode-keys)
+    #+END_SRC
 * Mode Behind the Scenes
 ** Major
    :PROPERTIES:
@@ -389,31 +416,14 @@ unDeadHerbs's emacs init file
      #+END_SRC
 *** c-mode
     :PROPERTIES:
-    :NAME:     c_mode_keys
+    :NAME:     c_mode_behavior
     :END:
     #+BEGIN_SRC emacs-lisp
-      (defun udh-c-mode-keys ()
-        (local-set-key (kbd "C-t") 'hs-toggle-hiding)
-        (local-set-key (kbd "C-M-t") 'hs-hide-level)
-        (local-set-key (kbd "M-{") 'hs-hide-block)
-        (local-set-key (kbd "M-}") 'hs-show-block)
-        (local-set-key (kbd "C-S-b") (lambda () (interactive)
-                                       (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
-                                       (flymake-mode -1) (flymake-mode 1)
-                                       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-                                       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-                                       ))
-        (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-                                         (flycheck-mode -1) (flymake-mode -1)
-                                         (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+      (defun udh-c-mode-behavior ()
         (setq tags-revert-without-query 1)
-        (c-toggle-auto-state 1)
-        (c-toggle-hungry-state 1)
         )
       (add-hook 'c-mode-common-hook
-                'udh-c-mode-keys)
-      (add-hook 'c++-mode-hook
-                'flyspell-prog-mode)
+                'udh-c-mode-behavior )
     #+END_SRC
 **** TODO Move flymake errors to mini-buffer and have them not terminate the mode
 *** org-mode
