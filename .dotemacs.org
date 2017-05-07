@@ -477,6 +477,8 @@ unDeadHerbs's emacs init file
                                          (flycheck-mode -1) (flymake-mode -1)
                                          (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
         (setq tags-revert-without-query 1)
+        (c-toggle-auto-state 1)
+        (c-toggle-hungry-state 1)
         )
       (add-hook 'c-mode-common-hook
                 'udh-c-mode-keys)
