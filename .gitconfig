@@ -47,3 +47,6 @@
 	whitespace = fix
 [merge]
 	ff = false
+[rerere]
+	enabled = true
+	autoupdate = true
