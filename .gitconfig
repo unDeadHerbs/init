@@ -1,9 +1,11 @@
 [push]
 	default = current
+	recurseSubmodules = on-demand
 [color]
 	ui = auto
 [alias]
-	d     = "!git diff HEAD --color|less -FXR"
+	d     = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git diff HEAD --color ; else git diff --color \"$@\" ; fi | less -FXR ; }; f"
+	ds    = "submodule foreach --recursive \"git d\""
 	cm    = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git commit ; else git commit -m \"$@\"; fi }; f"
 	b     = "branch"
 	mn    = "merge --no-edit"
@@ -23,6 +25,7 @@
 	p     = "!f(){ cd ${GIT_PREFIX:-.} ; if [ $# -eq 0 ];then git push -u origin $(git bc); else git push \"$@\"; fi }; f"
 	pa    = "push --all"
 	f     = "!f(){ cd ${GIT_PREFIX:-.} ; git pull --ff-only \"$@\" || git pull \"$@\" ; }; f"
+	fs    = "!f(){ cd ${GIT_PREFIX:-.} ; git f ; git submodule sync ; git submodule update --init --recursive ; }; f"
 	chk   = "!f(){ cd ${GIT_PREFIX:-.} ; git checkout -b \"$@\" || git checkout \"$@\" ; git f ; }; f"
 	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
 	l     = "!git log --graph --all                 --oneline --decorate --full-history --date-order --color|less -FXR"
@@ -47,6 +50,8 @@
 	whitespace = fix
 [merge]
 	ff = false
+[status]
+	submodulesummary = true
 [rerere]
 	enabled = true
 	autoupdate = true
