@@ -9,6 +9,7 @@ The global todo list for uDH_init
 	3. M-! does not use the .zshrc file
   4. have tab size and indent mode be buffer local
   5. make lisp mode not use tabs
+  6. have magit status refresh on M-!
 * .fehbg
 * .gitignore
 * .i3
