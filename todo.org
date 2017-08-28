@@ -11,6 +11,7 @@ The global todo list for uDH_init
   5. make lisp mode not use tabs
   6. have magit status refresh on M-!
   7. have tab mode be buffer local and ban tabs from org mode
+  8. have flycheck-clang-language-standard set by inspecting make
 * .fehbg
 * .gitignore
 * .i3

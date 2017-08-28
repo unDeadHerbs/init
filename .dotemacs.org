@@ -467,7 +467,7 @@ unDeadHerbs's emacs init file
         (local-set-key (kbd "M-{") 'hs-hide-block)
         (local-set-key (kbd "M-}") 'hs-show-block)
         (local-set-key (kbd "C-S-b") (lambda () (interactive)
-                                       (flycheck-mode 1) (flycheck-select-checker 'c/c++-cppcheck)
+                                       ;(flycheck-select-checker 'c/c++-cppcheck)
                                        (flymake-mode -1) (flymake-mode 1)
                                        (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
                                        (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
@@ -482,6 +482,8 @@ unDeadHerbs's emacs init file
       (add-hook 'c++-mode-hook
                 (lambda ()
                   (flyspell-prog-mode)
+                  (setq flycheck-clang-language-standard "c++1z")
+                  (flycheck-mode 1)
                   ))
     #+END_SRC
 **** TODO Move flymake errors to mini-buffer and have them not terminate the mode
