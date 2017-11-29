@@ -122,6 +122,7 @@ unDeadHerbs's emacs init file
    :NAME:     file_extentions
    :END:
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.tcc\\'" . c++-mode))
      (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
      (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
      (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
