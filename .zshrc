@@ -5,7 +5,7 @@ for file in $(ls ~/init/.zsh.rc|
                      egrep "(base|$HOST|$USER)$"|
                      sed 's/-.*//'|
                      uniq|
-                     sed 's/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/'|
+                     sed "s/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/"|
                      sh)
 do
     source $file

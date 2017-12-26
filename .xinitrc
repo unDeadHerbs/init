@@ -44,7 +44,7 @@ then
     ##
     
     sleep   1 && widget &
-    sleep  10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
+    #sleep  10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
 
     ##
     # Programs
