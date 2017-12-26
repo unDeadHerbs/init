@@ -10,6 +10,7 @@ then
 fi
 
 # Automatically start X on appropriate machines
+[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty1" ]] && autogaussport
 [[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux && exit
