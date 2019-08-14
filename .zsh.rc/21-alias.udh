@@ -25,5 +25,9 @@ function sleep_until {
     #echo "Sleeping for $seconds seconds"
     sleep $seconds
 }
-
 # sleep_until "7:00 tomorrow"
+
+if exists cmatrix
+then
+    alias cmatrix='cmatrix -abu 2'
+fi
