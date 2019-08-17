@@ -54,7 +54,7 @@
 	# Local Manipulation #
 	######################
 
-	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout -b \"$@\" || git checkout \"$@\" ; } && git fetch-and-ff-pull ; }; f"
+	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout \"$@\" || git checkout -b \"$@\" ; } && git fetch-and-ff-pull ; }; f"
 
 	add-verbose                    = "add -v"
 	add-verbose-opt-all            = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
