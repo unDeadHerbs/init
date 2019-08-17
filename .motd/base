@@ -1,0 +1,20 @@
+if exists cowfortune > /dev/null
+then
+    cowfortune
+fi
+
+# TODO: make this `alias whereami=...`
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]
+then
+    echo
+    if type figlet > /dev/null
+    then
+	figlet -f script "Hello $USER.  Welcome to $HOST." -t
+    elif type toilet > /dev/null
+    then
+	toilet -f script "Hello $USER.  Welcome to $HOST." -t
+    else
+	curl "artii.herokuapp.com/make?text="$USER"%20@%20OB"$HOST""
+	echo
+    fi
+fi
