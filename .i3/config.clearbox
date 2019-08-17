@@ -137,10 +137,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym b resize shrink width 1 px or 1 ppt
-        bindsym n resize grow height 1 px or 1 ppt
-        bindsym p resize shrink height 1 px or 1 ppt
-        bindsym f resize grow width 1 px or 1 ppt
+        bindsym b resize shrink width 10 px or 10 ppt
+        bindsym n resize grow height 10 px or 10 ppt
+        bindsym p resize shrink height 10 px or 10 ppt
+        bindsym f resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -161,10 +161,35 @@ bar {
 	status_command i3status --config ~/.i3status.conf
 }
 
+
+
 ##
 # uDH
 ##
+
 new_window none
 new_float none
 hide_edge_borders both
 
+# tower spesific
+workspace 1 output DVI-0
+workspace 2 output DVI-0
+workspace 3 output DVI-0
+workspace 4 output DVI-0
+workspace 5 output DVI-0
+workspace 6 output DVI-0
+workspace 7 output DVI-0
+workspace 8 output DVI-0
+workspace 9 output DVI-0
+workspace 0 output DVI-0
+
+workspace 11 output DVI-1
+workspace 12 output DVI-1
+workspace 13 output DVI-1
+workspace 14 output DVI-1
+workspace 15 output DVI-1
+workspace 16 output DVI-1
+workspace 17 output DVI-1
+workspace 18 output DVI-1
+workspace 19 output DVI-1
+workspace 10 output DVI-1

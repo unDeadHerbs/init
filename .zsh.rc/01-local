@@ -1,3 +1,4 @@
+#! /bin/zsh
 # This file is a set of alise used for making the others more readable
 
 alias exists='type'
