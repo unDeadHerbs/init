@@ -1,3 +1,4 @@
+#! /bin/zsh
 ##
 # Alias section by uDH
 ##
@@ -7,7 +8,7 @@ source ~/init/.zsh.rc/01-local
 # Add default options to programs
 # some of these probably don't need checking, but for the sake of autocompleations being correct i will anyway
 exists sdate       && alias sdate="sdate|sed 's/.*\([0-9][0-9][0-9][0-9]\) .*/\1/'"
-exists ls          && alias ls="ls --color"
+exists ls          && alias ls="ls --color=auto"
 exists ssh         && alias ssh='ssh -o ConnectionAttempts=4 -Y'
 #-o ConnectTimeout=1'
 exists nano        && alias nano="nano -w"
@@ -23,11 +24,13 @@ exists autossh     && alias autossh='autossh -M 0'
 exists mosh        || alias mosh='ssh'
 exists pianobar    && alias pianobar='pianobar 2> /dev/null'
 exists find        && alias finds='find 2>/dev/null'
+exists less        && alias less='less -FXR'
 
 # Create aliases for programs that  need to be run as root
 ##todo: have that check if in sudoers file
 exists sudo || alias sudo='su -c'
 alias rhtop="sudo htop"
+#TODO:make a function for umount as root
 #alias s2ram="sudo s2ram"
 alias s2ram="sudo 'swapon /dev/sda3 && s2ram && swapoff /dev/sda3'"
 alias reboot="sudo reboot"

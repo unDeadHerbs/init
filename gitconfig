@@ -1,0 +1,156 @@
+[push]
+	default = current
+	recurseSubmodules = on-demand
+[color]
+	ui = auto
+[alias]
+
+	debug = "!GIT_TRACE=1 git"
+
+	######################
+	# General Inspection #
+	######################
+
+	log-standard       = "log --graph --all --oneline --decorate --full-history --date-order --color"
+	log-full           = "!git log-standard | less -FXR"
+	log-long-form      = "!git log-standard -5 --numstat -show-signature | less -FXR"
+	log-top-twenty     = "!git log-standard -20 | less -FXR"
+	log-top-fourty     = "!git log-standard -40 | less -FXR"
+	log-recent         = "!git log-standard -40 --since=1.weeks | less -FXR"
+	log-stashes        = "!git log-standard $(git reflog show --format="%h" stash)"
+	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP)/ || !/[0-9a-f]{7}/; END{print}' | less -FXR"
+	ref-from-branch    = "rev-parse --short"
+
+	####################
+	# Local Inspection #
+	####################
+
+	list-files-opt-path  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree \"$@\"; fi }; f"
+	diff-standard        = "diff --color"
+	diff-output          = "!git diff-standard | less -FXR"
+	diff-opt-commit      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi | less -FXR ; }; f"
+	# TODO this should find if `HEAD` or `master` is closer and then use that instead
+	diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
+	branch-name          = "rev-parse --abbrev-ref HEAD"
+
+	#########
+	# Stats #
+	#########
+
+	count-lines = "!git ls|cut -f 2 -|sed 's/[] ()'\\''\\\\[&;]/\\\\&/g'|sed 's/.*/cat &|wc -l \\&\\& echo \"+0\"/'|sh|xargs|sed 's/ //g'|bc"
+
+	#######################
+	# Remote Manipulation #
+	#######################
+
+	# TODO: look up the dangers of pull over fetch and make sure they are prevented
+	fetch-and-ff-pull = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch --all && { git pull --ff-only \"$@\" || git pull \"$@\" ; } ; }; f"
+	push-opt-branch   = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git push -u origin $(git bc); else git push \"$@\"; fi }; f"
+	push-all          = "push --all"
+	delete-remote-branch = "push --delete" # $1 remote $2 branch
+	delete-opt-branch-opt-remote = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ]; then git delete-remote-branch origin $(git branch-name); elif [ $# -eq 1 ]; then git delete-remote-branch origin $1; elif [ $# -eq 2 ]; then git delete-remote-branch $2 $1; else echo 'wrong number of arguments to delete-opt-branch-opt-remote'; fi }; f"
+
+	######################
+	# Local Manipulation #
+	######################
+
+	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout -b \"$@\" || git checkout \"$@\" ; } && git fetch-and-ff-pull ; }; f"
+
+	add-verbose                    = "add -v"
+	add-verbose-opt-all            = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
+	amend-with-staged              = "commit-standard --amend --reuse-message=HEAD"
+	amend-with-staged-opt-message  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard --amend --reuse-message=HEAD; else git commit-standard --amend -m \"$@\"; fi }; f"
+	add-to-last-commit             = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-all \"$@\" && git amend-with-staged ; }; f"
+	unstage-all                    = "reset -q"
+
+	commit-standard              = "commit -S"
+	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
+
+	stash-staged  = "stash --keep-index"
+	stash-tracked = "stash"
+	stash-all     = "stash --include-untracked"
+	stash-ignored = "stash --all"
+	stash-tracked-verbose = "!git unstage-all && git add-verbose-opt-all && git stash-tracked"
+
+	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
+	reset-up-one             = "reset HEAD^"
+	reset-hard               = "!git r && git clean -d -f"
+
+	##############
+	# Submodules #
+	##############
+
+	#TODO: make a recurse macro for arbitary commands
+	ds = "submodule foreach --recursive \"git d\""
+	fs = "!f(){ cd \"${GIT_PREFIX:-.}\" && git f && git submodule sync && git submodule update --init --recursive ; }; f"
+
+	#######
+	# SVN #
+	#######
+
+	svn-pull  = "svn rebase"
+	svn-push  = "svn dcommit"
+	svn-clone = "svn clone"
+
+	##################
+	# Glued Together #
+	##################
+
+	log-status-diff       = "!git log-top-twenty && echo && git status && echo && git diff-output"
+	add-and-diff          = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-all \"$@\" && git diff-output;}; f"
+	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
+	add-and-commit        = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-all \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
+	list-status           = "!git log-top-twenty && echo && git status"
+
+	##############
+	# Shorthands #
+	##############
+
+	chk  = "checkout-or-create"
+	ad   = "add-and-diff"
+	ac   = "add-and-commit"
+	d    = "diff-opt-commit"
+	b    = "branch"
+	f    = "fetch-and-ff-pull"
+	cm   = "commit-with-optional-message"
+	a    = "add-verbose-opt-all"
+	p    = "push-opt-branch"
+	pa   = "push-all"
+	s    = "stash-tracked-verbose"
+	pop  = "stash pop"
+	lsd  = "log-status-diff"
+	stat = "status"
+	l    = "log-full"
+	ll   = "log-long-form"
+	lt   = "log-top-twenty"
+	ltt  = "log-top-fourty"
+	lr   = "log-recent"
+	lts  = "list-status"
+	pov  = "project-over-view"
+	amd  = "add-and-amend-message"
+	r    = "reset-opt-file-or-commit"
+	r1   = "reset-up-one"
+	rh   = "reset-hard"
+	ls   = "list-files-opt-path"
+	drm  = "delete-opt-branch-opt-remote"
+
+	############
+	# Unsorted #
+	############
+
+	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt))\""
+	mn     = "merge --no-edit"
+	#bc     = "!git branch | grep \* | cut -d ' ' -f2"
+	#bc     = "rev-parse --abbrev-ref HEAD"
+	bc     = "!{ git rev-parse --abbrev-ref HEAD || echo ; } 2>/dev/null"
+	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
+
+[apply]
+	whitespace = fix
+[merge]
+	ff = false
+[status]
+	submodulesummary = true
+[rerere]
+	enabled = true
+	autoupdate = true
