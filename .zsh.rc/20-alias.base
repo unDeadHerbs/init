@@ -8,7 +8,7 @@ source ~/init/.zsh.rc/01-local
 # Add default options to programs
 # some of these probably don't need checking, but for the sake of autocompleations being correct i will anyway
 exists sdate       && alias sdate="sdate|sed 's/.*\([0-9][0-9][0-9][0-9]\) .*/\1/'"
-exists ls          && alias ls="ls --color"
+exists ls          && alias ls="ls --color=auto"
 exists ssh         && alias ssh='ssh -o ConnectionAttempts=4 -Y'
 #-o ConnectTimeout=1'
 exists nano        && alias nano="nano -w"

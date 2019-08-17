@@ -10,12 +10,14 @@ then
 fi
 
 # Automatically start X on appropriate machines
+[[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty1" ]] && autogaussport
 [[ $(hostname) = "uDH-tower" ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux && exit
 [[ $(hostname) = "uDH-deb"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
 [[ $(hostname) = "Kitty"     ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-Bot"   ]] && [[ $(tty) = "/dev/tty2" ]] && exec startx
+[[ $(hostname) = "L"         ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 
 if [ -x /usr/bin/gpg-agent ]; then
     if ! pidof gpg-agent; then
