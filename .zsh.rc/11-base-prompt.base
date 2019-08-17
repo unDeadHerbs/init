@@ -1,15 +1,17 @@
 autoload -U colors
 colors
 autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
+precmd()  { vcs_info }
+#precmd_vcs_info() { vcs_info }
+#precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
 PROMPT="%{$fg[green]%}%n%{$fg_no_bold[cyan]%}@%{$fg[green]%}%m %{$fg_no_bold[cyan]%}%~ %#%{$reset_color%} "
 #zstyle ':vcs_info:git*' formats "%{$fg[grey]%}%s %{$reset_color%}%r/%S%{$fg[grey]%} %{$fg[blue]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
-zstyle ':vcs_info:git*' formats "%r(%b)/%S"
+zstyle ':vcs_info:git:*' formats '%{$fg[cyan]%}%r(%{$fg[green]%}%b%{$fg[cyan]%})/%S%{$reset_color%}'
 #PROMPT=\$vcs_info_msg_0_'%# '
-function precmd_prompt {
-				 PROMPT="$(shuf -i 2000-65000 -n 1)"
-}
-precmd_functions=( precmd_prompt )
+#function precmd_prompt {
+#}
+PROMPT='/${PWD/#$HOME/~} ${vcs_info_msg_0_} > '
+#precmd_functions=( precmd_prompt )
+setopt PROMPT_SUBST
 RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}20%DT%T%{$reset_color%}"
