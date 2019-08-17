@@ -143,6 +143,13 @@ unDeadHerbs's emacs init file
    #+BEGIN_SRC emacs-lisp
      (setq tramp-default-method "ssh")
    #+END_SRC
+** Text Preference
+   :PROPERTIES:
+   :NAME:     text_preferenes
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (setq sentence-end-double-space t)
+   #+END_SRC
 ** Use Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
