@@ -68,7 +68,7 @@ if type git > /dev/null
 then
     git config --global include.path "$DIR/gitconfig"
     git config --global core.excludesFile "$DIR/gitignore"
-    [[ "$(git config --global user.signingkey)" != "" ] &&
+    [[ "$(git config --global user.signingkey)" != "" ]] &&
 	 git config --global commit.gpgsign true
 else
     toInstall="$toInstall git"
