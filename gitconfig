@@ -63,7 +63,7 @@
 	add-to-last-commit             = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-all \"$@\" && git amend-with-staged ; }; f"
 	unstage-all                    = "reset -q"
 
-	commit-standard              = "commit -S"
+	commit-standard              = "commit"
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
 
 	stash-staged  = "stash --keep-index"
