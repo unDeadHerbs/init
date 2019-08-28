@@ -7,5 +7,5 @@ Install
 =======
 
 ```bash
-./init.sh
+./install.sh
 ```
