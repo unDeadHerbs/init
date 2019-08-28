@@ -14,3 +14,5 @@ exists espeak && alias toipa='espeak --stdin -q --ipa'
 alias buffer="sed''|perl -ne '\$a[\$n++]=\$_;if(eof){for(@a){print}}'|sed''"
 #alias reverse="perl -ne 'something fancy'"
 #exists httrack && alias htmirror="httrack -w +* -Y -q -r9999 -s0"
+alias weather='curl -s wttr.in|head -n 7'
+alias forcast='curl -s wttr.in|tail -n +8|head -n -2'
