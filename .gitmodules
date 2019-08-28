@@ -1,0 +1,9 @@
+[submodule ".zsh.rc/plugins/oh-my-zsh"]
+	path = .zsh.rc/plugins/oh-my-zsh
+	url = git@github.com:robbyrussell/oh-my-zsh.git
+[submodule ".zsh.rc/plugins/zsh-syntax-highlighting"]
+	path = .zsh.rc/plugins/zsh-syntax-highlighting
+	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
+[submodule ".zsh.rc/plugins/zsh-autosuggestions"]
+	path = .zsh.rc/plugins/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
