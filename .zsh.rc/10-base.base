@@ -1,7 +1,6 @@
 #! /bin/zsh
 # this fils is a coleciton of general settings for configureing the zsh environment
 
-
 ##
 # The following lines were added by compinstall
 ##
@@ -79,13 +78,17 @@ fi
 [[ -n "${key[PageUp]}"   ]]  && bindkey  "${key[PageUp]}"    history-beginning-search-backward
 [[ -n "${key[PageDown]}" ]]  && bindkey  "${key[PageDown]}"  history-beginning-search-forward
 
+# end of lines from arch wiki
+
 ##
 # prompt colouring
 ##
 autoload -U colors
 colors
-PROMPT="%{$fg[green]%}%n%{$fg_no_bold[cyan]%}@%{$fg[green]%}%m %{$fg_no_bold[cyan]%}%~ %#%{$reset_color%} "
-RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}20%DT%T%{$reset_color%}"
+setopt PROMPT_SUBST
+PROMPT="%l %{$fg[green]%}%n%{$fg_no_bold[cyan]%}@%{$fg[green]%}%m %{$fg_no_bold[cyan]%}%~ %#%{$reset_color%} "
+RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}020%DT%T%{$reset_color%}"
+precmd_functions=()
 
 # Fish-Like syntax hilighting
 # source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -95,7 +98,6 @@ RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}20%DT%
 ##
 setopt nohashdirs
 setopt nohashcmds
-# End of lines from Arch Wiki
 
 # http://blog.pengyifan.com/how-to-set-terminal-title-dynamically-to-the-current-working-directory/
 

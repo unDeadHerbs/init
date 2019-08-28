@@ -1,0 +1,10 @@
+source ~/.zsh.rc/plugins/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
+zstyle :prompt:shrink_path fish yes
+setopt PROMPT_SUBST
+
+function precmd_promt_expand(){
+    PROMPT="%{$fg[green]%}%n%{$fg_no_bold[cyan]%}@%{$fg[green]%}%m %{$fg_no_bold[cyan]%}%~ %#%{$reset_color%} "
+    PROMPT="%n@%m $(shrink_path -f)>"
+    RPROMPT="$(git branch-name 2>/dev/null) %(1j,bg=%j ,)[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}020%DT%T%{$reset_color%}"
+}
+precmd_functions+=precmd_promt_expand
