@@ -2,6 +2,10 @@
 # set up the enviorment variables that other programs use for settings
 source ~/init/.zsh.rc/01-local
 
+if [ -d "$HOME/bin" ]; then
+    export PATH="$HOME/bin:$PATH"
+fi
+
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
 export TERMINAL="xfce4-terminal"
 exists nano  && export EDITOR='nano'
