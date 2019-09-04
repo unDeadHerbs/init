@@ -18,6 +18,7 @@
 	log-top-fourty     = "!git log-standard -40 | less -FXR"
 	log-recent         = "!git log-standard -40 --since=1.weeks | less -FXR"
 	log-stashes        = "!git log-standard $(git reflog show --format="%h" stash)"
+	log-lost           = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
 	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP)/ || !/[0-9a-f]{7}/; END{print}' | less -FXR"
 	ref-from-branch    = "rev-parse --short"
 
