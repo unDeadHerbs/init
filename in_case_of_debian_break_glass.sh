@@ -1,6 +1,10 @@
 #!/bin/sh
 
-# This script builds a clang, git, and emacs as user files and then removes them from the base system.  This is done because debian and its children (ubuntu) don't have updated versions of theses programs and I reliy on their "newer" (2 year old) features. (And backports (the "correct" solution) don't always exist.)
+# This script builds a clang, git, and emacs as user files and then
+# removes them from the base system.  This is done because debian and
+# its children (ubuntu) don't have updated versions of theses programs
+# and I reliy on their "newer" (2 year old) features. (And backports
+# (the "correct" solution) don't always exist.)
 
 mkdir -p ~/bin
 export PATH="$HOME/bin:$PATH"
@@ -15,7 +19,7 @@ sudo apt install -y gcc
 ##
 #  Install Clang
 ##
-if false
+if [ $(( `awk '/^MemTotal:/{print $2}' /proc/meminfo` / 1024 / 1024 )) -ge 20 ]
 then
 cd ~/build_dir
 git clone https://github.com/llvm/llvm-project.git
