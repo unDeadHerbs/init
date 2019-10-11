@@ -1,0 +1,6 @@
+[submodule ".vim/pack/tpope/start/repeat"]
+	path = .vim/pack/tpope/start/repeat
+	url = https://tpope.io/vim/repeat.git
+[submodule ".vim/pack/tpope/start/surround"]
+	path = .vim/pack/tpope/start/surround
+	url = https://tpope.io/vim/surround.git
