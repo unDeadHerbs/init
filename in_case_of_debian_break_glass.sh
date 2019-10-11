@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 # This script builds a clang, git, and emacs as user files and then
 # removes them from the base system.  This is done because debian and
 # its children (ubuntu) don't have updated versions of theses programs
@@ -53,9 +55,9 @@ sudo apt remove git -y
 #  Install Emacs
 ##
 cd ~/build_dir
-git clone git://git.sv.gnu.org/emacs.git
+~/bin/git clone git://git.sv.gnu.org/emacs.git
 cd emacs
-git checkout emacs-26.3
+~/bin/git checkout emacs-26.3
 sudo apt install -y libxpm-dev libjpeg-dev libgif-dev libtiff-dev gnutls-dev autoconf texinfo libpng-dev
 ./autogen.sh
 ./configure --with-x-toolkit=no
