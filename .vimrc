@@ -42,3 +42,5 @@ set number                     " Show current line number
 set relativenumber             " Show relative line numbers
 set autoread
 au CursorHold,CursorHoldI * checktime
+
+set so=999                     " keep the cursor in the middle of the screen if posible
