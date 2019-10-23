@@ -3,7 +3,12 @@
 source ~/init/.zsh.rc/01-local
 
 if [ -d "$HOME/bin" ]; then
-    export PATH="$HOME/bin:$PATH"
+    #export PATH="$HOME/bin:$PATH"
+    for file in $(find -L ~/bin -maxdepth 4 -type d)
+    do
+	    PATH="$file:$PATH"
+    done
+
 fi
 
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0

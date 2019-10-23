@@ -58,6 +58,10 @@ backup_then_link "$DIR/init.el" "$HOME/.emacs.d/init.el"
 mkdir -p "$HOME/.config/xfce4/terminal"
 backup_then_link "$DIR/terminalrc" "$HOME/.config/xfce4/terminal/terminalrc"
 
+# add local bin to use bin
+mkdir -p "$HOME/bin"
+backup_then_link "$DIR/bin/" "$HOME/bin/bin"
+
 ###################################
 # check for reqs and setup things #
 ###################################
