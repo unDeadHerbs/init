@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null 2>&1 && pwd )"
 
 #################
 # link dotfiles #
@@ -57,6 +57,8 @@ backup_then_link "$DIR/init.el" "$HOME/.emacs.d/init.el"
 # file.
 mkdir -p "$HOME/.config/xfce4/terminal"
 backup_then_link "$DIR/terminalrc" "$HOME/.config/xfce4/terminal/terminalrc"
+# TODO: Move `mkdir -p` into `backup_then_link` and add a recursive
+#       option so that structures can be linked.
 
 # add local bin to use bin
 mkdir -p "$HOME/bin"
@@ -68,25 +70,26 @@ backup_then_link "$DIR/bin/" "$HOME/bin/bin"
 
 toInstall=""
 
-if type git > /dev/null
+if type git > /dev/null 2>&1
 then
     git config --global include.path "$DIR/gitconfig"
     git config --global core.excludesFile "$DIR/gitignore"
     [[ "$(git config --global user.signingkey)" != "" ]] &&
-	 git config --global commit.gpgsign true
+	git config --global commit.gpgsign true
+    git config --global init.templatedir "$DIR/git_templates"
 else
     toInstall="$toInstall git"
 fi
 
-if type zsh > /dev/null
+if type zsh > /dev/null 2>&1
 then
     [[ "$SHELL" = "$(which zsh)" ]] || chsh -s $(which zsh)
 else
     toInstall="$toInstall zsh"
 fi
 
-if [[ "" -ne "$toInstall" ]]
+if ! [ -z "$toInstall" ]
 then
-    echo "Install $toInstall"
-    echo "Then rerun setup"
+    echo "Install$toInstall"
+    echo "Then rerun $0"
 fi
