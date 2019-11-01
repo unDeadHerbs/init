@@ -14,3 +14,6 @@
 TAGS
 *.o
 *.bin
+.d/
+html/
+latex/
