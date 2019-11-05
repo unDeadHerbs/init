@@ -23,8 +23,9 @@ compinit
 # Lines configured by zsh-newuser-install
 ##
 HISTFILE=~/.histfile
-pHISTSIZE=1000
-SAVEHIST=10000000000
+export HISTSIZE=10000000000
+export SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
 setopt appendhistory
 unsetopt notify
 bindkey -e
