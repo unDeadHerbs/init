@@ -21,6 +21,7 @@ sudo apt install -y gcc
 ##
 #  Install Clang
 ##
+if ! [ -e "$HOME/bin/clang" ]; then
 if [ $(( `awk '/^MemTotal:/{print $2}' /proc/meminfo` / 1024 / 1024 )) -ge 20 ]
 then
 cd ~/build_dir
@@ -39,22 +40,28 @@ ln -sf ~/bin/clang ~/bin/cc
 sudo apt remove gcc -y
 sudo apt remove clang -y
 fi
+fi
 
 ##
 #  Install Git
 ##
+if ! [ -e "$HOME/bin/git" ]; then
 cd ~/build_dir
-git clone git@github.com:git/git
+rm -rf git
+git clone http://github.com/git/git.git
 cd git
-sudo apt install -y libssl-dev zlib1g-dev libcurl4-openssl-dev gettext libexpat1-dev
+sudo apt install -y libssl-dev zlib1g-dev libcurl4-openssl-dev gettext libexpat1-dev libncurses-dev
 make
 ln -sf ~/build_dir/git/bin-wrappers/git ~/bin
 sudo apt remove git -y
+fi
 
 ##
 #  Install Emacs
 ##
+if ! [ -e "$HOME/bin/emacs" ]; then
 cd ~/build_dir
+rm -rf emacs
 ~/bin/git clone git://git.sv.gnu.org/emacs.git
 cd emacs
 ~/bin/git checkout emacs-26.3
@@ -67,3 +74,4 @@ ln -sf ~/build_dir/emacs/lib-src/ctags ~/bin
 ln -sf ~/build_dir/emacs/lib-src/etags ~/bin
 ln -sf ~/build_dir/emacs/lib-src/emacsclient ~/bin
 sudo apt remove emacs -y
+fi
