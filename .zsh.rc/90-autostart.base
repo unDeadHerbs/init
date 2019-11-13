@@ -9,11 +9,6 @@ then
 		export EDITOR='emacsclient -a "" -tc'
 fi
 
-# Automatically start X on appropriate machines
-[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
-[[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux && exit
-[[ $(hostname) = "clearbox"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux new "ssh -R 2200:localhost:22 bk.gg"
-
 if [ -x /usr/bin/gpg-agent ]; then
     if ! pidof gpg-agent; then
 	eval "$(/usr/bin/gpg-agent --daemon)"
