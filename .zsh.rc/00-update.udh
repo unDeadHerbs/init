@@ -1,0 +1,3 @@
+#! /bin/zsh
+# this script updates the version of udh/init that is being run
+(cd `dirname $0` && pwd && git fetch --all ; git pull --ff-only ) > /dev/null &
