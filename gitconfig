@@ -77,6 +77,10 @@
 	reset-up-one             = "reset HEAD^"
 	reset-hard               = "!git r && git clean -d -f"
 
+	rebase-branch-from-branch-to-branch = "!f(){ git rebase --onto $3 $2 $1 ; }; f"
+	rebase-branch-onto-here             = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
+	rebase-here-onto-branch             = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
+
 	##############
 	# Submodules #
 	##############
