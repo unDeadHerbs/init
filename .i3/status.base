@@ -1,4 +1,4 @@
-# i3status configuration file.
+/# i3status configuration file.
 # see "man i3status" for documentation.
 
 # It is important that this file is edited as UTF-8.
@@ -42,6 +42,11 @@ ethernet eth0 {
 }
 
 ethernet enp4s1 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+ethernet enp24s0 {
         format_up = "%ip @ %speed"
         format_down = "E"
 }

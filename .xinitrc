@@ -8,7 +8,7 @@ sleep 2  && bash ~/.fehbg &
 sleep 10 && bash ~/.fehbg &
 
 #link the config from their bases
-if [ -e "~/.i3/config.$(hostname)" ]
+if [ -e "$HOME/.i3/config.$(hostname)" ]
 then
     rm ~/.i3/config
     ln -sf ~/.i3/config.$(hostname) ~/.i3/config
@@ -31,26 +31,27 @@ then
     { sleep 3 && synergyc $laptopip ; } &
 fi
 
-if [ $(hostname) = "uDH-tower" ]
+if [ $(hostname) = "windmills" ]
 then
     ##
     # Position screens
     ##
     
-    sleep   1 && xrandr --output DVI-0 --rotate right
+    sleep   1 && xrandr --output DisplayPort-1 --rotate left &
+    sleep   1 && xrandr --output DVI-0 --rotate left &
 
     ##
-    # Daemons
+    # Move Desktops to the correct screens
     ##
-    
-    sleep   1 && widget &
-    #sleep  10 && i3-msg "workspace  1; exec xfce4-terminal -e 'zsh -ic autogaussport'" &
+
+    sleep   2 && i3-msg 'workspace  11' &
+    sleep   3 && i3-msg 'workspace   1' &
 
     ##
     # Programs
     ##
     
-    sleep  25 && i3-msg 'workspace  2; exec thunderbird' &
+    #sleep  25 && i3-msg 'workspace  2; exec thunderbird' &
     
     #sleep  40 && i3-msg 'workspace 11; exec python2.7 skypestart.py ' &
     #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
@@ -65,7 +66,7 @@ then
     #sleep  60 && i3-msg 'workspace 12; exec firefox' &
     #sleep  68 && i3-msg 'layout tabbed' &
 
-    sleep  80 && i3-msg 'workspace  3; exec google-chrome-stable' &
+    #sleep  80 && i3-msg 'workspace  3; exec google-chrome-stable' &
     #wait for the tabs to load
     sleep 100 && i3-msg 'layout tabbed' &
 
@@ -73,7 +74,7 @@ then
     # Move to main workspace
     ##
 
-    sleep 120 && i3-msg 'workspace  2' &
+    #sleep 120 && i3-msg 'workspace  2' &
 fi
 
 if [ $(hostname) = 'uDH-x201' ]

@@ -16,7 +16,7 @@ MiscTabCloseMiddleClick=TRUE
 MiscTabPosition=GTK_POS_TOP
 MiscHighlightUrls=TRUE
 BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
-FontName=Droid Sans Mono 7
+FontName=Fira Code weight=453 9
 ScrollingBar=TERMINAL_SCROLLBAR_NONE
 ShortcutsNoMnemonics=TRUE
 ShortcutsNoMenukey=TRUE
