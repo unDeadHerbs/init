@@ -14,7 +14,7 @@ then
     then
 	toilet -f script "Hello $USER.  Welcome to $HOST." -t
     else
-	curl "artii.herokuapp.com/make?text="$USER"%20@%20OB"$HOST""
+	curl "artii.herokuapp.com/make?text="$USER"%20@%20"$HOST""
 	echo
     fi
 fi
