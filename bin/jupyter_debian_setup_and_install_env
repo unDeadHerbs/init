@@ -3,7 +3,7 @@ if [ "$#" -ne "1" ];then
 	echo "Usage : `basename $0` [env_name]"
 	exit 0
 fi
-sudo apt install python3-pip
+sudo apt install python3-pip pandoc texlive-xetex
 pip3 install --user virtualenv
 python3 -m virtualenv $1
 . $1/bin/activate
