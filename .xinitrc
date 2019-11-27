@@ -50,13 +50,12 @@ then
     ##
     # Programs
     ##
-    
-    #sleep  25 && i3-msg 'workspace  2; exec thunderbird' &
-    
-    #sleep  40 && i3-msg 'workspace 11; exec python2.7 skypestart.py ' &
-    #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
-    #sleep  30 && i3-msg 'workspace  3; exec skype' &
 
+    sleep  10 && xscreensaver &
+    sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
+    
+    #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
+    
     #sleep   5 && i3-msg 'workspace 11; exec xfce4-terminal --command=alsamixer' &
     #sleep   7 && i3-msg 'exec xfce-terminal --command=pianobar' &
 
@@ -74,7 +73,8 @@ then
     # Move to main workspace
     ##
 
-    #sleep 120 && i3-msg 'workspace  2' &
+    sleep 120 && i3-msg 'workspace 11' &
+    sleep 121 && i3-msg 'workspace  1' &
 fi
 
 if [ $(hostname) = 'uDH-x201' ]

@@ -193,3 +193,5 @@ workspace 16 output DVI-0
 workspace 17 output DVI-0
 workspace 18 output DVI-0
 workspace 19 output DVI-0
+
+exec --no-startup-id xautolock -time 1 -locker 'xscreensaver-command -lock'
