@@ -3,8 +3,8 @@ if [ "$#" -ne "1" ];then
 	echo "Usage : `basename $0` [env_name]"
 	exit 0
 fi
-sudo apt install python3-pip pandoc texlive-xetex
+sudo apt install python3-pip pandoc texlive-xetex libfreetype6-dev
 pip3 install --user virtualenv
 python3 -m virtualenv $1
 . $1/bin/activate
-pip3 install jupyter
+pip3 install jupyter matplotlib

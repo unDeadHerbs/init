@@ -75,3 +75,18 @@ ln -sf ~/build_dir/emacs/lib-src/etags ~/bin
 ln -sf ~/build_dir/emacs/lib-src/emacsclient ~/bin
 sudo apt remove emacs -y
 fi
+
+##
+#  Install Tmux
+##
+if ! [ -e "$HOME/bin/tmux" ]; then
+    cd ~/build_dir
+    rm -rf tmux
+    ~/bin/git clone https://github.com/tmux/tmux.git
+    cd tmux
+    sudo apt install libevent-dev
+    ./autogen.sh
+    ./configure
+    make
+    ln -sf ~/build_dir/tmux/tmux ~/bin
+fi
