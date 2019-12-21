@@ -1,5 +1,5 @@
 #! /bin/zsh
-source ~/init/.zsh.rc/01-local
+source ~/.zshrc.d/01-local
 #IP addresses
 export gaussadd='bk.gg'
 

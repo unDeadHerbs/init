@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+if [ -e "$HOME/.config/guix" ]; then
+    echo "Loading Guix path"
+
+    # https://trofi.github.io/posts/197-guix-on-gentoo-howto.html
+    PATH="${HOME}/.guix-profile/bin:${HOME}/.guix-profile/sbin${PATH:+:}$PATH"
+    # gnutls certs
+    SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+    SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+    GIT_SSL_CAINFO="$SSL_CERT_FILE"
+    # libc locales
+    GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
+
+    # From guix update message
+    PATH="$HOME/.config/guix/current/bin${PATH:+:}$PATH"
+    hash guix
+else
+    echo "No Guix found"
+fi

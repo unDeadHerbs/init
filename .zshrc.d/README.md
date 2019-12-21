@@ -1,4 +1,4 @@
-.zsh.rc
+.zshrc.d
 ========
 This folder is a modular zshrc file.
 
