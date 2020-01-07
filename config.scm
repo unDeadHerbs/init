@@ -2,7 +2,7 @@
 ;; by the graphical installer.
 
 (use-modules (gnu))
-(use-service-modules desktop networking ssh xorg)
+(use-service-modules desktop networking ssh xorg pm)
 
 (operating-system
   (locale "en_US.utf8")
@@ -42,5 +42,6 @@
       (list (service openssh-service-type)
             (set-xorg-configuration
               (xorg-configuration
-                (keyboard-layout keyboard-layout))))
+                (keyboard-layout keyboard-layout)))
+	    (service tlp-service-type))
       %desktop-services)))
