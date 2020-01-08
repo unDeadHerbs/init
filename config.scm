@@ -2,6 +2,7 @@
 ;; by the graphical installer.
 
 (use-modules (gnu))
+(use-package-modules shells)
 (use-service-modules desktop networking ssh xorg pm)
 
 (operating-system
@@ -30,7 +31,8 @@
                   (group "users")
                   (home-directory "/home/udh")
                   (supplementary-groups
-                    '("wheel" "netdev" "audio" "video")))
+                    '("wheel" "netdev" "audio" "video"))
+                  (shell #~(string-append #$zsh "/bin/zsh")))
                 %base-user-accounts))
   (packages
     (append
