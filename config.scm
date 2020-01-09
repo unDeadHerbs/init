@@ -1,7 +1,8 @@
 ;; This is an operating system configuration generated
 ;; by the graphical installer.
 
-(use-modules (gnu))
+(use-modules (gnu)
+	     (srfi srfi-1))  ;for 'remove'
 (use-package-modules shells)
 (use-service-modules desktop networking ssh xorg pm)
 
@@ -46,4 +47,6 @@
               (xorg-configuration
                 (keyboard-layout keyboard-layout)))
 	    (service tlp-service-type))
-      %desktop-services)))
+      (delq (list (service gdm-service-type))
+	      %desktop-services))))
+       
