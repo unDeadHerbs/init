@@ -20,9 +20,7 @@
   (file-systems
     (cons* (file-system
              (mount-point "/")
-             (device
-               (uuid "12985d57-6384-4943-9fdb-a1c2218813d6"
-                     'ext4))
+             (device (file-system-label "guix"))
              (type "ext4"))
            %base-file-systems))
   (host-name "kitchensink")
