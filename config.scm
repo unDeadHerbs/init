@@ -1,11 +1,18 @@
-;; This is an operating system configuration generated
-;; by the graphical installer.
+;; This is an operating system configuration.
 
 (use-modules (gnu)
-	     (srfi srfi-1) ;for 'remove'
-	     (gnu services sound))
-(use-package-modules shells)
-(use-service-modules desktop networking ssh xorg pm avahi dbus)
+	     (srfi srfi-1)             ; for 'remove'
+	     ;; User Shell Location
+	     (gnu packages shells)
+	     ;; Services
+	     (gnu services sound)
+	     (gnu services desktop)
+	     (gnu services networking)
+	     (gnu services ssh)
+	     (gnu services xorg)
+	     (gnu services pm)         ; power management
+	     (gnu services avahi)
+	     (gnu services dbus))
 
 (operating-system
   (locale "en_US.utf8")
