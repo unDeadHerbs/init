@@ -1,8 +1,6 @@
 ;;; init.el --- user init file      -*- no-byte-compile: t -*-
 
-;;https://github.com/vapniks/org-dotemacs
-
-;prevent warning that .dotemacs.org is symlink
+;;prevent warning that .dotemacs.org is symlink
 (setq vc-follow-symlinks nil)
 
 (require 'package)
@@ -10,16 +8,14 @@
 (package-initialize)
 (unless (package-installed-p 'org-dotemacs)
   (progn
-    (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			     ("marmalade" . "https://marmalade-repo.org/packages/")
+    (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			     ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
-			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+			     ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
     (package-install 'org-dotemacs)
     (kill-buffer "*Compile-Log*")))
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
-;(org-dotemacs-load-file "/home/udh/.emacs.d/init.org")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

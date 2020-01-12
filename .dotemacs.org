@@ -4,7 +4,7 @@ unDeadHerbs's emacs init file
   You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
   #+TODO: BROKEN UNUSED CHECK TODO
 
-* emacs Settings
+* Emacs Core Settings
   :PROPERTIES:
   :NAME:     back_end_settings
   :END:
@@ -12,92 +12,113 @@ unDeadHerbs's emacs init file
    :PROPERTIES:
    :NAME:     packages
    :END:
-*** Repositories
+*** Package Installation Settings
     :PROPERTIES:
     :NAME:     repo_init
     :END:
     #+BEGIN_SRC emacs-lisp
       (require 'package)
       (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                               ("marmalade" . "https://marmalade-repo.org/packages/")
                                ("melpa" . "https://melpa.org/packages/") ; milkyPostman's rep
                                ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
       (package-initialize)
       (when (not package-archive-contents)
         (package-refresh-contents))
-      ;;(require 'async)
-      ;;(defun udh-install-and-load (package)
-      ;;        (ignore-errors (async-start
-      ;;                                                                `(lambda() (set 'package ,package)
-      ;;                  (require 'package)
-      ;;                                                                                                                                         (unless (package-installed-p package)
-      ;;                                                                                                                                                 (package-install package)))
-      ;;                                                                (lambda()(require package)))))
       (defun udh-install-and-load (package)
         (ignore-errors
           (unless (package-installed-p package)
             (package-install package))
           (require package)))
-    #+END_SRC
-*** Compile on load
-    :PROPERTIES:
-    :NAME:     auto_compile
-    :END:
-    #+BEGIN_SRC emacs-lisp
       (setq load-prefer-newer t)
       (udh-install-and-load 'auto-compile)
       (auto-compile-on-load-mode)
-    #+END_SRC
-*** Package Utilities
-    :PROPERTIES:
-    :NAME:     pack_utils
-    :END:
-    #+BEGIN_SRC emacs-lisp
       (udh-install-and-load 'package-utils)
       (package-utils-upgrade-all)
     #+END_SRC
-*** install and load required packages
+*** Install and Load Required Packages
     :PROPERTIES:
     :NAME:     get_packages
     :END:
     #+BEGIN_SRC emacs-lisp
-      (setq udh-package-list '(org org-dotemacs org-plus-contrib
-                               ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
-                               highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses linum-relative
-                               magit magit-filenotify magit-popup magit-tramp
-                               tramp-term
-                               markdown-mode
-                               org org-bullets org-trello org-preview-html
-                               multiple-cursors calendar yasnippet helm-config centered-cursor-mode persistent-scratch
-                               hideshow hideshowvis whitespace smart-tabs-mode
-                               ob-spice ob-async ob-diagrams
-                               evil evil-visualstar
-                               vagrant vagrant-tramp
-                               ))
+      (setq udh-package-list '(;;General Interface
+			       calendar
+			       centered-cursor-mode
+			       dynamic-spaces
+			       evil
+			       ;evil-visualstar
+			       hideshow
+			       hideshowvis
+			       highlight
+			       highlight-blocks
+			       highlight-current-line
+			       highlight-indentation
+			       highlight-parentheses
+			       linum-relative
+			       multiple-cursors
+			       persistent-scratch
+			       ;; TODO: tmux-pane
+			       tramp
+			       ;; TODO: visible-mark
+			       whitespace
+			       ;; C++
+			       ctags
+			       ctags-update
+			       flycheck
+			       flymake
+			       cppcheck
+			       flymake-cppcheck
+			       flymake-cursor
+			       flymake-easy
+			       smart-tabs-mode
+			       ;yasnippet
+			       ;; Git
+			       magit
+			       magit-filenotify
+			       magit-popup
+			       magit-tramp
+			       ;; Other Modes
+			       arduino-mode
+			       cider ;; clojure
+			       tramp-term
+			       markdown-mode
+			       ;helm-config
+			       ;vagrant
+			       ;vagrant-tramp
+			       ;; Org Mode - After other languages are installed
+			       ;; TODO: Read though the existing org plugins.
+			       org
+			       org-dotemacs
+			       org-plus-contrib
+			       org-bullets
+			       org-trello
+			       org-preview-html
+			       ;; Org Bable
+			       ob-spice
+			       ob-async
+			       ob-diagrams
+			       ;; ob-tmux ;; TODO: What does this even do?
+			       ))
       (mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
-** Disable Default things
+** Adjust Interface Defaults
    :PROPERTIES:
-   :NAME:     disable_defaults
+   :NAME:     Interface_defaults
    :END:
    #+BEGIN_SRC emacs-lisp
      (setq inhibit-startup-message t ; prevent tutorial
-           initial-major-mode 'org-mode
-           initial-scratch-message "-*- mode: org -*-
+	   initial-major-mode 'org-mode
+	   initial-scratch-message "-*- mode: org -*-
      scratch
 
      "
-           sentence-end-double-space nil)
+	   sentence-end-double-space t)
      (menu-bar-mode -1)
      (tool-bar-mode -1)
      (scroll-bar-mode -1)
-                                             ;(global-unset-key (kbd "C-z")) ; was suspend-frame
-   #+END_SRC
-*** TODO unset (kbd "C-[") from ESC
-    :PROPERTIES:
-    :NAME:     disable_ctrl_bracket
-    :END:
-    didn't work
+     ;; TODO: Disable suspention on gui clients and in
+     ;; tmux. (global-unset-key (kbd "C-z"))
+
+     ;; TODO unset (kbd "C-[") from ESC
     ;(define-key key-translation-map
     ;  [?\C-\[] nil);[(control left_bracket)])
     ;(define-key key-translation-map
@@ -116,53 +137,6 @@ unDeadHerbs's emacs init file
     ;    (define-key local-function-key-map [?\C-\[] nil)
     ;    (define-key local-function-key-map (kbd "C-[") nil))
     ;  (add-hook 'term-setup-hook 'remove-escape-from-local-function-key-map))
-
-** File Extensions
-   :PROPERTIES:
-   :NAME:     file_extentions
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
-     (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
-     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
-     (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
-   #+END_SRC
-*** Trello
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (let ((filename (buffer-file-name (current-buffer))))
-                    (when (and filename (string= "trello" (file-name-extension filename)))
-                      (org-trello-mode)))))
-    #+END_SRC
-** Tell TRAMP To Use SSH
-   :PROPERTIES:
-   :NAME:     tramp
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq tramp-default-method "ssh")
-   #+END_SRC
-** Text Preference
-   :PROPERTIES:
-   :NAME:     text_preferenes
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq sentence-end-double-space t)
-   #+END_SRC
-** Use Tabs and Spaces
-   :PROPERTIES:
-   :NAME:     tabs_and_spaces
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (global-smart-tab-mode 1)
-     (smart-tabs-insinuate 'c 'javascript)
-     (setq-default tab-width 2)
-     (setq tab-width 2)
-     (make-variable-buffer-local 'tab-width)
-     (setq-default indent-tabs-mode t)
-     (setq indent-tabs-mode t)
-     (make-variable-buffer-local 'indent-tabs-mode)
    #+END_SRC
 ** Ask-Before-Closing
    :PROPERTIES:
@@ -194,35 +168,19 @@ unDeadHerbs's emacs init file
    #+BEGIN_SRC emacs-lisp
      (persistent-scratch-setup-default)
    #+END_SRC
-** YASnippet
-   #+BEGIN_SRC emacs-lisp
-                                             ;(yas-reload-all)
-                                             ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
-                                             ;(setq yas/root-directory '"~/.emacs.d/snippets")
-                                             ;(yas/reload-all)
-   #+END_SRC
-** Helm
-   (helm-mode 1)
-** etags
-   #+BEGIN_SRC emacs-lisp
-     (setq path-to-ctags "/usr/bin/ctags-emacs-24")
-   #+END_SRC
-* Pretty Modes
+* Global Text Presentation Settings
   :PROPERTIES:
-  :NAME:     pretty_modes
+  :NAME:     Text_Presentation_Settings
   :END:
-** Global
-   :PROPERTIES:
-   :NAME:     global_prettyness
-   :END:
-*** Highlight Parentheses
+** Highlight Parentheses
     :PROPERTIES:
     :NAME:     highlight_parentheses
     :END:
     #+BEGIN_SRC emacs-lisp
       (show-paren-mode 1) ; highlight matching parentheses
     #+END_SRC
-*** whitespace-mode
+
+** Whitespace-Mode
     :PROPERTIES:
     :NAME:     whitespace_mode
     :END:
@@ -244,7 +202,8 @@ unDeadHerbs's emacs init file
 
       ]+\\)");set it not to care about the first empty line (org files tend to have one)
     #+END_SRC
-*** Cyan Mini-Buffer
+
+** Cyan Mini-Buffer
     :PROPERTIES:
     :NAME:     mini_buffer_cyan
     :END:
@@ -252,309 +211,311 @@ unDeadHerbs's emacs init file
       (add-hook 'tty-setup-hook
                 (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
     #+END_SRC
-** Classes
-   :PROPERTIES:
-   :NAME:     mode_classes
-   :END:
-*** Text Mode
+** Text Mode
     :PROPERTIES:
-    :NAME:     text_mode
+    :NAME:     Text_Mode_Fly_Spell
     :END:
-**** Fly Spell
-     :PROPERTIES:
-     :NAME:     fly_spell
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       (add-hook 'text-mode-hook 'turn-on-flyspell)
-     #+END_SRC
-*** C Common Mode
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'text-mode-hook 'turn-on-flyspell)
+    #+END_SRC
+** Tabs and Spaces
+   :PROPERTIES:
+   :NAME:     tabs_and_spaces
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (global-smart-tab-mode 1)
+     (setq-default tab-width 2)
+     (setq tab-width 2)
+     (make-variable-buffer-local 'tab-width)
+     (setq-default indent-tabs-mode t)
+     (setq indent-tabs-mode t)
+     (make-variable-buffer-local 'indent-tabs-mode)
+   #+END_SRC
+* Global Keyboard Interface
+** Frame Movement
+   :PROPERTIES:
+   :NAME:     frame_controll_keys
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x O") 'previous-multiframe-window)
+   #+END_SRC
+** Cursor Movement
+   :PROPERTIES:
+   :NAME:     cursor_movment_keys
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-a") 'back-to-indentation)
+     (global-unset-key (kbd "M-m"))
+   #+END_SRC
+** multiple-cursors
+   :PROPERTIES:
+   :NAME:     multiple_cursors_keys
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-S-l") 'mc/edit-lines)
+     (global-set-key (kbd "C-d")   'mc/mark-next-like-this)
+     (global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
+     (global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
+   #+END_SRC
+** org-mode
+   :PROPERTIES:
+   :NAME:     org_mode_global_keys
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c l") 'org-store-link)
+     (global-set-key (kbd "C-c a") 'org-agenda)
+     (global-set-key (kbd "C-c c") 'org-capture)
+     (global-set-key (kbd "C-c b") 'org-iswitchb)
+   #+END_SRC
+* Major Mode Settings
+** Org Mode
+** C Like Language Common Mode
     :PROPERTIES:
     :NAME:     cpp_pretty
     :END:
     #+BEGIN_SRC emacs-lisp
-      (defun udh-c-mode-layout ()
-                                              ;(glasses-mode 1)
-        (require 'flymake-cursor)
-        (setq-default c-basic-offset 2
-                                              ;tab-width 2
-                      );indent-tabs-mode t)
-        (hs-minor-mode 1)
-        (hideshowvis-minor-mode 1)
-        (hideshowvis-symbols)
-        (relative-line-numbers-mode 1)
-                                              ;make current line number the line number
-        (require 'centered-cursor-mode)
-        (centered-cursor-mode 1)
-        (highlight-parentheses-mode 1)
-                                              ;(hl-line-mode 1)
-                                              ;(highlight-blocks-mode 1)
-                                              ;(highlight-current-line-minor-mode 1)
-                                              ;(highline-mode 1)
-        )
-      (defun udh-c-mode-prettify ()
-        (pretty-mode 1)
-        (pretty-regexp "--" "↧");"↓"
-        (pretty-regexp "[+][+]" "↥");"↑"
-        (pretty-regexp " *> > >" "⋙")
-        (pretty-regexp "< < < *" "⋘")
-        (pretty-regexp " *> >" "≫")
-        (pretty-regexp "< < *" "≪")
-        (pretty-regexp "<<" "《");"⩽"
-                                              ;(pretty-regexp "< < <" "⫹")
-        (pretty-regexp ">>" "》");"⩾"
-                                              ;(pretty-regexp "> > >" "⫺")
-        (pretty-regexp ">=" "≥")
-        (pretty-regexp "<=" "≤")
-        (pretty-regexp "!=" "≠")
-        (pretty-regexp "==" "≡")
-        (pretty-regexp "!" "¬")
-        (pretty-regexp "||" "∥")
-        (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
-        (pretty-regexp "true" "⊨")
-        (pretty-regexp "bool" "⊢");"╠";"├";"¤"
-        (pretty-regexp "float" "ℝ")
-        (pretty-regexp "int" "ℤ")
-        (pretty-regexp "char" "¶")
-        (pretty-regexp "void" "Ø")
-        (pretty-regexp "//" "⑊")
-                                              ;(pretty-regexp "const" "𝌸")
-                                              ;(pretty-regexp "[/][/][*]" "∫∮" )
-                                              ;(pretty-regexp "[*][/][/]" "∮∫" )
-                                              ;(pretty-regexp "[*][/]" "∮" )
-                                              ;(pretty-regexp "[/][*]" "∮" )
-                                              ;(pretty-regexp "[/][/]" "∬" )
-                                              ;(pretty-regexp "[.]unlock()" "")
-                                              ;(pretty-regexp "[.]lock()" "")
-        (pretty-regexp "std::deque" "ℚ");ɋʠ
-        (pretty-regexp "std::function" "ℱ");∳ƒⁿ
-        (pretty-regexp "std::ostream" "水");⇴⌫⼮
-        (pretty-regexp "std::atomic" "⚛");⌬
-        (pretty-regexp "std::thread" "⎇");↛ ⇶
-        (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
-        (pretty-regexp "std::map" "↦");"≔"
-        (pretty-regexp "std::pair" "⑵");"②";"ʭ"
-        (pretty-regexp "std::make_pair" "mk⑵")
-        (pretty-regexp "std::vector" "→")
-        (pretty-regexp "std::cin" "⌨")
-                                              ;(pretty-regexp "std::buffer" "𝌖")
-        (pretty-regexp "[.]second" "₂")
-        (pretty-regexp "[.]first" "₁")
-        (pretty-regexp "template" "◳")
-        (pretty-regexp "()" "≬")
-        (pretty-regexp "std" "§");"準"
-        (pretty-regexp "::" "∷");"⁞"
-        (pretty-regexp "symbol" "※")
-        (pretty-regexp "Symbol" "⁜")
-        (pretty-regexp "Stream" "川")
-        (pretty-regexp "Thread" "⇶")
-        (pretty-regexp "Array" "⇻")
-        (pretty-regexp "Tree" "ᛘ");𝌎
-                                              ;(pretty-regexp "Key" "🔑")
-        (pretty-regexp "[*]" "∗")
-        (pretty-mode -1)
-        (pretty-mode -1)
-        )
+       (smart-tabs-insinuate 'c 'cpp)
+
+       (defun udh-c-mode-layout ()
+	 ;;(glasses-mode 1)
+	 (require 'flymake-cursor)
+	 (setq-default c-basic-offset 2
+		       ;;tab-width 2
+		       ;;indent-tabs-mode t
+		       )
+	 (hs-minor-mode 1)
+	 (hideshowvis-minor-mode 1)
+	 (hideshowvis-symbols)
+	 (relative-line-numbers-mode 1)
+	 ;; Make current line number the line number.
+	 (require 'centered-cursor-mode)
+	 (centered-cursor-mode 1)
+	 (highlight-parentheses-mode 1)
+	 ;;(hl-line-mode 1)
+	 ;;(highlight-blocks-mode 1)
+	 ;;(highlight-current-line-minor-mode 1)
+	 ;;(highline-mode 1)
+	 )
+       (defun udh-c-mode-prettify ()
+	 (pretty-mode 1)
+	 (pretty-regexp "--" "↧");"↓"
+	 (pretty-regexp "[+][+]" "↥");"↑"
+	 (pretty-regexp " *> > >" "⋙")
+	 (pretty-regexp "< < < *" "⋘")
+	 (pretty-regexp " *> >" "≫")
+	 (pretty-regexp "< < *" "≪")
+	 (pretty-regexp "<<" "《");"⩽"
+	 ;;(pretty-regexp "< < <" "⫹")
+	 (pretty-regexp ">>" "》");"⩾"
+	 ;;(pretty-regexp "> > >" "⫺")
+	 (pretty-regexp ">=" "≥")
+	 (pretty-regexp "<=" "≤")
+	 (pretty-regexp "!=" "≠")
+	 (pretty-regexp "==" "≡")
+	 (pretty-regexp "!" "¬")
+	 (pretty-regexp "||" "∥")
+	 (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
+	 (pretty-regexp "true" "⊨")
+	 (pretty-regexp "bool" "⊢");"╠";"├";"¤"
+	 (pretty-regexp "float" "ℝ")
+	 (pretty-regexp "int" "ℤ")
+	 (pretty-regexp "char" "¶")
+	 (pretty-regexp "void" "Ø")
+	 (pretty-regexp "//" "⑊")
+	 ;;(pretty-regexp "const" "𝌸")
+	 ;;(pretty-regexp "[/][/][*]" "∫∮" )
+	 ;;(pretty-regexp "[*][/][/]" "∮∫" )
+	 ;;(pretty-regexp "[*][/]" "∮" )
+	 ;;(pretty-regexp "[/][*]" "∮" )
+	 ;;(pretty-regexp "[/][/]" "∬" )
+	 ;;(pretty-regexp "[.]unlock()" "")
+	 ;;(pretty-regexp "[.]lock()" "")
+	 (pretty-regexp "std::deque" "ℚ");ɋʠ
+	 (pretty-regexp "std::function" "ℱ");∳ƒⁿ
+	 (pretty-regexp "std::ostream" "水");⇴⌫⼮
+	 (pretty-regexp "std::atomic" "⚛");⌬
+	 (pretty-regexp "std::thread" "⎇");↛ ⇶
+	 (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
+	 (pretty-regexp "std::map" "↦");"≔"
+	 (pretty-regexp "std::pair" "⑵");"②";"ʭ"
+	 (pretty-regexp "std::make_pair" "mk⑵")
+	 (pretty-regexp "std::vector" "→")
+	 (pretty-regexp "std::cin" "⌨")
+	 ;;(pretty-regexp "std::buffer" "𝌖")
+	 (pretty-regexp "[.]second" "₂")
+	 (pretty-regexp "[.]first" "₁")
+	 (pretty-regexp "template" "◳")
+	 (pretty-regexp "()" "≬")
+	 (pretty-regexp "std" "§");"準"
+	 (pretty-regexp "::" "∷");"⁞"
+	 (pretty-regexp "symbol" "※")
+	 (pretty-regexp "Symbol" "⁜")
+	 (pretty-regexp "Stream" "川")
+	 (pretty-regexp "Thread" "⇶")
+	 (pretty-regexp "Array" "⇻")
+	 (pretty-regexp "Tree" "ᛘ");𝌎
+	 ;;(pretty-regexp "Key" "🔑")
+	 (pretty-regexp "[*]" "∗")
+	 (pretty-mode -1)
+	 (pretty-mode -1)
+	 )
+       (add-hook 'c-mode-common-hook
+		 'udh-c-mode-layout)
+       (add-hook 'c-mode-common-hook
+       		 'flyspell-prog-mode)
+       (add-hook 'c-mode-common-hook
+		 '(lambda () (local-set-key (kbd "C-M-S-p")
+					    '(lambda () (interactive) (udh-c-mode-prettify)))))
+      (defun udh-c-mode-keys ()
+	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
+	(local-set-key (kbd "C-M-t") 'hs-hide-level)
+	(local-set-key (kbd "M-{") 'hs-hide-block)
+	(local-set-key (kbd "M-}") 'hs-show-block)
+	(local-set-key (kbd "C-S-b") (lambda () (interactive)
+				       ;;(flycheck-select-checker 'c/c++-cppcheck)
+				       (flymake-mode -1) (flymake-mode 1)
+				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+				       ))
+	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+					 (flycheck-mode -1) (flymake-mode -1)
+					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+	(setq tags-revert-without-query 1)
+	)
       (add-hook 'c-mode-common-hook
-                'udh-c-mode-layout)
-      (add-hook 'c-mode-common-hook
-                '(lambda () (local-set-key (kbd "C-M-S-p")
-                                           '(lambda () (interactive) (udh-c-mode-prettify)))))
+		'udh-c-mode-keys)
     #+END_SRC
-** Major
+*** CPP Settings
+    :PROPERTIES:
+    :NAME:     cpp_custome_file_extentions
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+      (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+      (add-hook 'c++-mode-hook
+		(lambda ()
+		  (setq flycheck-clang-language-standard "c++1z")
+		  (flycheck-mode 1)
+		  ))
+    #+END_SRC
+** TRAMP
    :PROPERTIES:
-   :NAME:     major_prettyness
+   :NAME:     tramp
    :END:
-*** lisp
-**** TODO rainbow-blocks
-     :PROPERTIES:
-     :NAME:     lisp_rainbows
-     :END:
-     #+BEGIN_SRC emacs-lisp
-                                               ;(require 'rainbow-blocks)
-                                               ;(add-hook 'tty-setup-hook
-                                               ;    (add-hook 'lisp-mode-hook
-                                               ;              'rainbow-blocks-mode)
-     #+END_SRC
-*** org
- **** disable tabs
-     :PROPERTIES:
-     :NAME:     org_tabs
-     :END:
-     This is just until i can make it such that one tab is a level of indentation and they are different sizes
-     #+BEGIN_SRC emacs-lisp
-       (add-hook 'org-mode-hook
-                 (lambda ()
-                   (setq indent-tabs-mode nil)))
-     #+END_SRC
-**** Flyspell
-     :PROPERTIES:
-     :NAME:     org_flyspell
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       (add-hook 'org-mode-hook
-                 (lambda ()
-                   (flyspell-mode)))
-     #+END_SRC
-** Minor
+   #+BEGIN_SRC emacs-lisp
+     (setq tramp-default-method "ssh")
+   #+END_SRC
+** Org
    :PROPERTIES:
-   :NAME:     minor_prettyness
+   :NAME:     org_settings
    :END:
-*** set relative-line-numbers-mode Visible Lines to
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
+
+     (defun udh-disable-tabs ()
+       (setq indent-tabs-mode nil))
+     (add-hook 'org-mode-hook 'udh-disable-tabs)
+     (add-hook 'org-mode-hook 'flyspell-mode)
+     ;; TODO: Find a better way to detect this.
+     (defun udh-org-trello-detect ()
+       (let ((filename (buffer-file-name (current-buffer))))
+	 (when (and filename (string= "trello" (file-name-extension filename)))
+	   (org-trello-mode))))
+     (add-hook 'org-mode-hook 'udh-org-trello-detect)
+
+     (defun org-collapse-element ()
+	"moves to parent element and then collapses it"
+	(interactive)
+	(org-up-element)
+	(org-cycle))
+     (defun udh-org-mode-keys ()
+       (local-set-key (kbd "RET") 'org-return-indent)
+       ;;(local-set-key (kbd "M-C-RET") 'org-return)
+       (local-set-key (kbd "M-[") 'org-backward-element)
+       (local-set-key (kbd "M-]") 'org-forward-element)
+       (local-set-key (kbd "M-{") 'org-collapse-element)
+       (local-set-key (kbd "M-}") 'org-down-element)
+       )
+     (add-hook 'org-mode-hook
+	       'udh-org-mode-keys)
+
+     (setq indent-tabs-mode nil)
+   #+END_SRC
+** Markdown
+   :PROPERTIES:
+   :NAME:     Markdown
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
+   #+END_SRC
+** TODO Lisp
+   :PROPERTIES:
+   :NAME:     lisp_mode_settings
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     ;;(require 'rainbow-blocks)
+     ;;(add-hook 'tty-setup-hook
+     ;;    (add-hook 'lisp-mode-hook
+     ;;              'rainbow-blocks-mode)
+     (setq indent-tabs-mode nil)
+   #+END_SRC
+** IRC (ERC)
+   :PROPERTIES:
+   :NAME:     erc_mode
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'erc-mode-hook
+               (lambda ()
+                 (flyspell-mode 1)
+                 ))
+     (add-hook 'erc-disconnected-hook
+               (lambda (nick host-name reason)
+                 ;; Re-establish the connection even if the server closed it.
+                 (setq erc-server-error-occurred nil)))
+     (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT","MODE"))
+     (setq erc-lurker-threshold-time 3600)
+                                             ;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
+                                             ;(setq erc-hide-list '())
+     (setq erc-log-channels-directory "~/.erc/logs/")
+     (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
+                                             ;that might make erc slow
+                                             ;the forums are unsure
+                                             ;https://www.emacswiki.org/emacs/ErcLogging#toc6
+    #+END_SRC
+* Minor Mode Settings
+** Relative Line Numbers
     :PROPERTIES:
     :NAME:     relitive_line_numbers
     :END:
     #+BEGIN_SRC emacs-lisp
-                                              ;(add-hook 'nlinum-mode-hook
-                                              ;         (lambda ()
-      (setq relative-line-numbers-motion-function 'forward-visible-line);))
+      (setq relative-line-numbers-motion-function 'forward-visible-line)
     #+END_SRC
-* Key Bindings
-  :PROPERTIES:
-  :NAME:     key_bindings
-  :END:
-** Global
+** TODO Flymake
+   Move flymake errors to mini-buffer.
+* Large TODOs
+** File Extensions
    :PROPERTIES:
-   :NAME:     global_keys
+   :NAME:     file_extentions
    :END:
-*** Frame Movement
-    :PROPERTIES:
-    :NAME:     frame_controll_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-x O") 'previous-multiframe-window) ; make shift-o move back a frame
-    #+END_SRC
-*** Cursor Movement
-    :PROPERTIES:
-    :NAME:     cursor_movment_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-a") 'back-to-indentation)
-      (global-unset-key (kbd "M-m"))
-    #+END_SRC
-*** multiple-cursors
-    :PROPERTIES:
-    :NAME:     multiple_cursors_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-S-l") 'mc/edit-lines)
-      (global-set-key (kbd "C-d")   'mc/mark-next-like-this)
-      (global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
-      (global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
-    #+END_SRC
-*** org-mode
-    :PROPERTIES:
-    :NAME:     org_mode_global_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-c l") 'org-store-link)
-      (global-set-key (kbd "C-c a") 'org-agenda)
-      (global-set-key (kbd "C-c c") 'org-capture)
-      (global-set-key (kbd "C-c b") 'org-iswitchb)
-    #+END_SRC
-* Mode Settings
-** Major
-   :PROPERTIES:
-   :NAME:     major_keys
-   :END:
-*** lizzy-mode
-    :PROPERTIES:
-    :NAME:     lizzy_mode_setings
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun lizzy-interface-default-modes ()
-        (progn
-          (flyspell-prog-mode)
-          (evil-mode 1)
-          (linum-mode 1)
-          (whitespace-mode 1)
-          (setq indent-tabs-mode nil)
-          ))
-      (when (string= system-name "umbra")
-        (mapcar
-         (lambda (mode-hook) (ad-hook mode-hook 'lizzy-interface-default-modes)))
-        '(c-mode-common-hook asm-mode-hook))
-    #+END_SRC
-*** c-mode
-    :PROPERTIES:
-    :NAME:     c_mode_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun udh-c-mode-keys ()
-        (local-set-key (kbd "C-t") 'hs-toggle-hiding)
-        (local-set-key (kbd "C-M-t") 'hs-hide-level)
-        (local-set-key (kbd "M-{") 'hs-hide-block)
-        (local-set-key (kbd "M-}") 'hs-show-block)
-        (local-set-key (kbd "C-S-b") (lambda () (interactive)
-                                       ;(flycheck-select-checker 'c/c++-cppcheck)
-                                       (flymake-mode -1) (flymake-mode 1)
-                                       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-                                       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-                                       ))
-        (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-                                         (flycheck-mode -1) (flymake-mode -1)
-                                         (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-        (setq tags-revert-without-query 1)
-        )
-      (add-hook 'c-mode-common-hook
-                'udh-c-mode-keys)
-      (add-hook 'c++-mode-hook
-                (lambda ()
-                  (flyspell-prog-mode)
-                  (setq flycheck-clang-language-standard "c++1z")
-                  (flycheck-mode 1)
-                  ))
-    #+END_SRC
-**** TODO Move flymake errors to mini-buffer and have them not terminate the mode
-*** org-mode
-    :PROPERTIES:
-    :NAME:     org_keys
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun org-collapse-element ()
-        "moves to parent element and then collapses it"
-        (interactive)
-        (org-up-element)
-        (org-cycle))
-      (defun udh-org-mode-keys ()
-        (local-set-key (kbd "RET") 'org-return-indent)
-                                              ;(local-set-key (kbd "M-C-RET") 'org-return)
-        (local-set-key (kbd "M-[") 'org-backward-element)
-        (local-set-key (kbd "M-]") 'org-forward-element)
-        (local-set-key (kbd "M-{") 'org-collapse-element)
-        (local-set-key (kbd "M-}") 'org-down-element)
-        )
-      (add-hook 'org-mode-hook
-                'udh-org-mode-keys)
-    #+END_SRC
-*** erc-mode
-    :PROPERTIES:
-    :NAME:     erc_mode
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'erc-mode-hook
-                (lambda ()
-                  (flyspell-mode 1)
-                  ))
-      (add-hook 'erc-disconnected-hook
-                (lambda (nick host-name reason)
-                  ;; Re-establish the connection even if the server closed it.
-                  (setq erc-server-error-occurred nil)))
-      (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT","MODE"))
-      (setq erc-lurker-threshold-time 3600)
-                                              ;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
-                                              ;(setq erc-hide-list '())
-      (setq erc-log-channels-directory "~/.erc/logs/")
-      (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
-                                              ;that might make erc slow
-                                              ;the forums are unsure
-                                              ;https://www.emacswiki.org/emacs/ErcLogging#toc6
-
-    #+END_SRC
-*** lisp-mode
-    #+BEGIN_SRC emacs-lisp
-      (setq indent-tabs-mode nil)
-    #+END_SRC
-* TODO python mode
+   #+BEGIN_SRC emacs-lisp
+     ;; TODO: Move this into each major mode's config.
+     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
+   #+END_SRC
+** TODO YASnippet
+   #+BEGIN_SRC emacs-lisp
+                                             ;(yas-reload-all)
+                                             ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
+                                             ;(setq yas/root-directory '"~/.emacs.d/snippets")
+                                             ;(yas/reload-all)
+   #+END_SRC
+** TODO Helm
+   (helm-mode 1)
+** TODO etags
+   #+BEGIN_SRC emacs-lisp
+     ;; TODO: That's variable
+     (setq path-to-ctags "/usr/bin/ctags-emacs-24")
+   #+END_SRC
+** TODO python mode
   :PROPERTIES:
   :NAME:     python_setup
   :END:
@@ -565,7 +526,6 @@ unDeadHerbs's emacs init file
   ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
   ;; set iedit mode
   ;(define-key global-map (kbd "C-c o") 'iedit-mode)
-* Possible But Disabled
 ** correct M-arrow to move paragraphs rather than single lines
    (defun org-transpose-paragraphs (arg)
    (interactive)
