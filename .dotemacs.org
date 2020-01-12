@@ -61,18 +61,55 @@ unDeadHerbs's emacs init file
     :NAME:     get_packages
     :END:
     #+BEGIN_SRC emacs-lisp
-      (setq udh-package-list '(org org-dotemacs org-plus-contrib
-                               ctags ctags-update flycheck flymake cppcheck flymake-cppcheck flymake-cursor flymake-easy
-                               highlight highlight-blocks highlight-current-line highlight-indentation highlight-parentheses linum-relative
-                               magit magit-filenotify magit-popup magit-tramp
+      (setq udh-package-list '(;;General Interface
+                               highlight
+                               highlight-blocks
+                               highlight-current-line
+                               highlight-indentation
+                               highlight-parentheses
+                               linum-relative
+                               multiple-cursors
+                               calendar
+                               centered-cursor-mode
+                               persistent-scratch
+                               hideshow
+                               hideshowvis
+                               evil
+                               ;evil-visualstar
+                               whitespace
+                               ;; Org Mode
+                               org
+                               org-dotemacs
+                               org-plus-contrib
+                               org-bullets
+                               org-trello
+                               org-preview-html
+                               ;; Org Bable
+                               ob-spice
+                               ob-async
+                               ob-diagrams
+                               ;; C++
+                               ctags
+                               ctags-update
+                               flycheck
+                               flymake
+                               cppcheck
+                               flymake-cppcheck
+                               flymake-cursor
+                               flymake-easy
+                               smart-tabs-mode
+                               ;yasnippet
+                               ;; Git
+                               magit
+                               magit-filenotify
+                               magit-popup
+                               magit-tramp
+                               ;; Other Modes
                                tramp-term
                                markdown-mode
-                               org org-bullets org-trello org-preview-html
-                               multiple-cursors calendar yasnippet helm-config centered-cursor-mode persistent-scratch
-                               hideshow hideshowvis whitespace smart-tabs-mode
-                               ob-spice ob-async ob-diagrams
-                               evil evil-visualstar
-                               vagrant vagrant-tramp
+                               ;helm-config
+                               ;vagrant
+                               ;vagrant-tramp
                                ))
       (mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
