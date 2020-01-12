@@ -1,8 +1,6 @@
 ;;; init.el --- user init file      -*- no-byte-compile: t -*-
 
-;;https://github.com/vapniks/org-dotemacs
-
-;prevent warning that .dotemacs.org is symlink
+;;prevent warning that .dotemacs.org is symlink
 (setq vc-follow-symlinks nil)
 
 (require 'package)
@@ -18,7 +16,6 @@
     (kill-buffer "*Compile-Log*")))
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
-;(org-dotemacs-load-file "/home/udh/.emacs.d/init.org")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
