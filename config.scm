@@ -54,6 +54,9 @@
 	     (specification->package "xfce4-terminal")
 	     (specification->package "xinit")
 	     (specification->package "xorg-server")
+	     (specification->package "font-gnu-unifont")
+	     (specification->package "font-google-roboto")
+	     (specification->package "font-fira-code")
 	     ;; TUI
 	     (specification->package "mc")
 	     (specification->package "tmux")
@@ -69,8 +72,6 @@
 	     (specification->package "vim")
 	     (specification->package "youtube-dl")
 	     ;; System
-	     (specification->package "font-gnu-unifont")
-	     (specification->package "font-google-roboto")
 	     (specification->package "libxfont")
 	     (specification->package "nss-certs")
 	     (specification->package "r-extrafont")
