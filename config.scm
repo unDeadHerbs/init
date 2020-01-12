@@ -95,4 +95,12 @@
 	   (service alsa-service-type)
 	   (service tlp-service-type))
      %base-services)))
-       
+
+;; TODO: Improve the `console-fonts` config from this
+;; #<<service> type: #<service-type console-fonts 7f506f7ae690>
+;;            value: (("tty1" . "LatGrkCyr-8x16")
+;;                    ("tty2" . "LatGrkCyr-8x16")
+;;                    ("tty3" . "LatGrkCyr-8x16")
+;;                    ("tty4" . "LatGrkCyr-8x16")
+;;                    ("tty5" . "LatGrkCyr-8x16")
+;;                    ("tty6" . "LatGrkCyr-8x16"))>
