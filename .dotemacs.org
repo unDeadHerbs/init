@@ -19,7 +19,6 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
       (require 'package)
       (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                               ("marmalade" . "https://marmalade-repo.org/packages/")
                                ("melpa" . "https://melpa.org/packages/") ; milkyPostman's rep
                                ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
       (package-initialize)
@@ -62,55 +61,63 @@ unDeadHerbs's emacs init file
     :END:
     #+BEGIN_SRC emacs-lisp
       (setq udh-package-list '(;;General Interface
-                               highlight
-                               highlight-blocks
-                               highlight-current-line
-                               highlight-indentation
-                               highlight-parentheses
-                               linum-relative
-                               multiple-cursors
-                               calendar
-                               centered-cursor-mode
-                               persistent-scratch
-                               hideshow
-                               hideshowvis
-                               evil
-                               ;evil-visualstar
-                               whitespace
-                               ;; Org Mode
-                               org
-                               org-dotemacs
-                               org-plus-contrib
-                               org-bullets
-                               org-trello
-                               org-preview-html
-                               ;; Org Bable
-                               ob-spice
-                               ob-async
-                               ob-diagrams
-                               ;; C++
-                               ctags
-                               ctags-update
-                               flycheck
-                               flymake
-                               cppcheck
-                               flymake-cppcheck
-                               flymake-cursor
-                               flymake-easy
-                               smart-tabs-mode
-                               ;yasnippet
-                               ;; Git
-                               magit
-                               magit-filenotify
-                               magit-popup
-                               magit-tramp
-                               ;; Other Modes
-                               tramp-term
-                               markdown-mode
-                               ;helm-config
-                               ;vagrant
-                               ;vagrant-tramp
-                               ))
+			       calendar
+			       centered-cursor-mode
+			       dynamic-spaces
+			       evil
+			       ;evil-visualstar
+			       hideshow
+			       hideshowvis
+			       highlight
+			       highlight-blocks
+			       highlight-current-line
+			       highlight-indentation
+			       highlight-parentheses
+			       linum-relative
+			       multiple-cursors
+			       persistent-scratch
+			       ;; TODO: tmux-pane
+			       tramp
+			       ;; TODO: visible-mark
+			       whitespace
+			       ;; C++
+			       ctags
+			       ctags-update
+			       flycheck
+			       flymake
+			       cppcheck
+			       flymake-cppcheck
+			       flymake-cursor
+			       flymake-easy
+			       smart-tabs-mode
+			       ;yasnippet
+			       ;; Git
+			       magit
+			       magit-filenotify
+			       magit-popup
+			       magit-tramp
+			       ;; Other Modes
+			       arduino-mode
+			       cider ;; clojure
+			       tramp-term
+			       markdown-mode
+			       ;helm-config
+			       ;vagrant
+			       ;vagrant-tramp
+			       ;; Org Mode - After other languages are installed
+			       ;; TODO: Read though the existing org plugins.
+			       org
+			       org-dotemacs
+			       org-plus-contrib
+			       org-bullets
+			       org-trello
+			       org-preview-html
+			       ;; Org Bable
+			       ob-spice
+			       ob-async
+			       ob-diagrams
+			       ;; ob-tmux ;; TODO: What does this even do?
+			       ))
       (mapcar 'udh-install-and-load udh-package-list)
     #+END_SRC
 ** Disable Default things

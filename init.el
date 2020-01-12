@@ -10,10 +10,9 @@
 (package-initialize)
 (unless (package-installed-p 'org-dotemacs)
   (progn
-    (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			     ("marmalade" . "https://marmalade-repo.org/packages/")
+    (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			     ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
-			     ("org" . "http://orgmode.org/elpa/"))) ; Org-mode's repository
+			     ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
     (package-install 'org-dotemacs)
     (kill-buffer "*Compile-Log*")))
