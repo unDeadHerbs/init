@@ -43,6 +43,14 @@
                 %base-user-accounts))
   (packages (cons*
 	     ;;; These are in long form to reduce `use-modules` lines.
+	     ;;; These sections are listed in reverse order of importance.
+	     ;; GUI-Fonts
+	     (specification->package "font-gnu-unifont")
+	     (specification->package "font-google-roboto")
+	     (specification->package "font-fira-code")
+	     (specification->package "font-fira-mono")
+	     (specification->package "font-fira-sans")
+	     (specification->package "libxfont")
 	     ;; GUI
 	     (specification->package "dmenu")
 	     (specification->package "feh")
@@ -54,15 +62,13 @@
 	     (specification->package "xfce4-terminal")
 	     (specification->package "xinit")
 	     (specification->package "xorg-server")
-	     (specification->package "font-gnu-unifont")
-	     (specification->package "font-google-roboto")
-	     (specification->package "font-fira-code")
 	     ;; TUI
 	     (specification->package "mc")
 	     (specification->package "tmux")
 	     (specification->package "zsh")
 	     ;; Tools
 	     (specification->package "aspell")
+	     (specification->package "aspell-dict-en")
 	     (specification->package "clang")
 	     (specification->package "ed")
 	     (specification->package "emacs")
@@ -72,9 +78,7 @@
 	     (specification->package "vim")
 	     (specification->package "youtube-dl")
 	     ;; System
-	     (specification->package "libxfont")
 	     (specification->package "nss-certs")
-	     (specification->package "r-extrafont")
 	     (specification->package "wpa-supplicant")
 	     %base-packages))
   (services
