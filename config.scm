@@ -1,16 +1,15 @@
 ;; This is an operating system configuration for Guix SD.
 
 (use-modules (gnu)
-	     (srfi srfi-1)             ; for 'remove'
+	     (srfi srfi-1)              ; for 'remove'
 	     ;; User Shell Location
 	     (gnu packages shells)
 	     ;; Services
 	     (gnu services sound)
-	     (gnu services desktop)
+	     (gnu services desktop)     ; for 'elogind' TODO: can the
+					; scope be reduced on that?
 	     (gnu services networking)
-	     (gnu services ssh)
-	     (gnu services xorg)
-	     (gnu services pm)         ; power management
+	     (gnu services pm)          ; power management
 	     (gnu services avahi)
 	     (gnu services dbus))
 
@@ -53,21 +52,17 @@
 	     %base-packages))
   (services
     (append
-     (list (service openssh-service-type)
-	   (service network-manager-service-type)
+     (list (service network-manager-service-type)
 	   (service tor-service-type)
 	   (service wpa-supplicant-service-type)
 	   (service usb-modeswitch-service-type)
-	   (service avahi-service-type)
-	   ;; (service accountsservice-service) ; TODO: What's this do?
-	   ;; (service geoclue-service)
+	   (service avahi-service-type) ;; TODO: Not working?
 	   (service dbus-root-service-type)
 	   (service polkit-service-type)
 	   (service elogind-service-type)
-	   ;; (service ntp-service-type)
-	   ;; x11-socket-directory
+	   (service ntp-service-type)
 	   (service alsa-service-type)
-	   (service tlp-service-type))
+	   (service tlp-service-type)) ; Thermal
      %base-services)))
 
 ;; TODO: Improve the `console-fonts` config from this
