@@ -19,7 +19,12 @@ if [[ -e ~/.motd/$(hostname) ]]
 then
     source ~/.motd/$(hostname)
 else
-    [[ -e ~/.motd/base ]] && source ~/.motd/base
+    if [[ -e ~/.motd/$(whoami) ]]
+    then
+	source ~/.motd/$(whoami)
+    else
+	[[ -e ~/.motd/base ]] && source ~/.motd/base
+    fi
 fi
 
 PATH="/home/udh/perl5/bin${PATH:+:${PATH}}"; export PATH;
