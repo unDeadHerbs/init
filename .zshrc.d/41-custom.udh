@@ -1,5 +1,6 @@
 #! /bin/zsh
-source ./01-local
+source ~/.zshrc.d/01-local
+
 alias rot13="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m'5-90-4"
 alias sedesc="sed 's/[] ()'\''\\\\[&;]/\\\\&/g'"
 alias escpath="sed 's/\\//\\\\&/g'"
@@ -12,7 +13,24 @@ alias firstline="perl -pe '<>'"
 [[ $(hostname) = 'uDH-x201' ]] && alias delta="~/ai/cpp/stream/delta"
 exists espeak && alias toipa='espeak --stdin -q --ipa'
 alias buffer="sed''|perl -ne '\$a[\$n++]=\$_;if(eof){for(@a){print}}'|sed''"
-#alias reverse="perl -ne 'something fancy'"
+#TODO: alias reverse="perl -ne 'something fancy'"
 #exists httrack && alias htmirror="httrack -w +* -Y -q -r9999 -s0"
-alias weather='curl -s wttr.in|head -n 7'
-alias forcast='curl -s wttr.in|tail -n +8|head -n -2'
+exists curl && alias weather='curl -s wttr.in|head -n 7'
+exists curl && alias forcast='curl -s wttr.in|tail -n +8|head -n -2'
+if exists sox
+then
+    alias cleenmic='sox -d -n trim 0 .1 noiseprof|sox -d -d noisered'
+    alias trimsilence='sox - - silence -l 1 0.3 1% -1 2.0 1%'
+fi
+alias e.='e .'
+quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
+exists ssh && :(){ TO=$1; shift ; ssh $TO -qt `quote "$@"` ; };
+
+function sleep_until {
+    # sleep_until "7:00 tomorrow"
+    seconds=$(( $(date -d "$*" +%s) - $(date +%s) )) # Use $* to eliminate need for quotes
+    #echo "Sleeping for $seconds seconds"
+    sleep $seconds
+}
+
+exists cowsay && exists fortune && alias cowfortune='clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))'
