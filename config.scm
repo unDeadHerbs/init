@@ -43,28 +43,9 @@
                 %base-user-accounts))
   (packages (cons*
 	     ;;; These are in long form to reduce `use-modules` lines.
-	     ;;; These sections are listed in reverse order of importance.
-	     ;; GUI-Fonts
-	     (specification->package "font-gnu-unifont")
-	     (specification->package "font-google-roboto")
-	     (specification->package "font-fira-code")
-	     (specification->package "font-fira-mono")
-	     (specification->package "font-fira-sans")
-	     (specification->package "libxfont")
-	     ;; GUI
-	     (specification->package "dmenu")
-	     (specification->package "feh")
-	     (specification->package "i3-wm")
-	     (specification->package "i3status")
-	     (specification->package "xf86-input-libinput")
-	     (specification->package "xf86-video-fbdev")
-	     (specification->package "xf86-video-nouveau")
-	     (specification->package "xfce4-terminal")
-	     (specification->package "xinit")
-	     (specification->package "xorg-server")
 	     ;; System
 	     (specification->package "bash")
-	     (specification->package "clang")
+	     (specification->package "nss")
 	     (specification->package "nss-certs")
 	     (specification->package "tor")
 	     (specification->package "wpa-supplicant")
