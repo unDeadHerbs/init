@@ -1,4 +1,4 @@
-;; This is an operating system configuration.
+;; This is an operating system configuration for Guix SD.
 
 (use-modules (gnu)
 	     (srfi srfi-1)             ; for 'remove'
@@ -78,24 +78,23 @@
 	     (specification->package "vim")
 	     (specification->package "youtube-dl")
 	     ;; System
+	     (specification->package "bash")
 	     (specification->package "nss-certs")
+	     (specification->package "tor")
 	     (specification->package "wpa-supplicant")
 	     %base-packages))
   (services
     (append
      (list (service openssh-service-type)
-	   ;; console-fonts
 	   (service network-manager-service-type)
+	   (service tor-service-type)
 	   (service wpa-supplicant-service-type)
 	   (service usb-modeswitch-service-type)
 	   (service avahi-service-type)
-	   ;; upower ; from gnome, havn't renabled
 	   ;; (service accountsservice-service) ; TODO: What's this do?
-	   ;; colord ; from gnome, havn't renabled
 	   ;; (service geoclue-service)
 	   (service dbus-root-service-type)
 	   (service polkit-service-type)
-	   ;; (service polkit-wheel-service-type) ; can't find in repo
 	   (service elogind-service-type)
 	   ;; (service ntp-service-type)
 	   ;; x11-socket-directory
