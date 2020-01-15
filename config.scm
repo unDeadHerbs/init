@@ -62,26 +62,13 @@
 	     (specification->package "xfce4-terminal")
 	     (specification->package "xinit")
 	     (specification->package "xorg-server")
-	     ;; TUI
-	     (specification->package "mc")
-	     (specification->package "tmux")
-	     (specification->package "zsh")
-	     ;; Tools
-	     (specification->package "aspell")
-	     (specification->package "aspell-dict-en")
-	     (specification->package "clang")
-	     (specification->package "ed")
-	     (specification->package "emacs")
-	     (specification->package "git")
-	     (specification->package "htop")
-	     (specification->package "make")
-	     (specification->package "vim")
-	     (specification->package "youtube-dl")
 	     ;; System
 	     (specification->package "bash")
+	     (specification->package "clang")
 	     (specification->package "nss-certs")
 	     (specification->package "tor")
 	     (specification->package "wpa-supplicant")
+	     (specification->package "zsh")
 	     %base-packages))
   (services
     (append

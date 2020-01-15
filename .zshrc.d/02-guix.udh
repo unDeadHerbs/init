@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+source ~/.zshrc.d/01-local
+
+source ~/.zshrc.d/02-guix.base
+if exists guix; then
+    guix_installed(){
+	if [ $# -eq 0 ]; then
+	    guix package -I|cut -f 1
+	else
+	    guix package -I|cut -f 1|grep $1 > /dev/null
+	fi
+    }
+    _guix_install_noreplace(){
+	if [ $# -eq 1 ]; then
+	    guix_installed $1 || guix install $1
+	else
+	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
+	    for pack in "$@"; do
+		echo $pack
+	    done|egrep -v "$installed"|xargs -r guix install
+	fi
+    }
+    _guix_install_noreplace tmux git emacs feh make htop \
+			    ed sl cowsay youtube-dl vim aspell \
+			    aspell-dict-en openssl nss-certs \
+			    neofetch curl mc openssh nss
+    #guix package -u
+
+fi
+source ~/.zshrc.d/02-guix.base

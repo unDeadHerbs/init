@@ -15,6 +15,10 @@ if [ -e "$HOME/.config/guix" ]; then
     # From guix update message
     PATH="$HOME/.config/guix/current/bin${PATH:+:}$PATH"
     hash guix
+
+    # let's see if this fixes the SSL errors
+    GUIX_PROFILE=$HOME/.guix-profile
+    source $GUIX_PROFILE/etc/profile
 else
     echo "No Guix found"
 fi
