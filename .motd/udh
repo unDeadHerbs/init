@@ -1,1 +1,5 @@
-type neofetch > /dev/null && neofetch
+if type neofetch ; then
+   neofetch --color_blocks off
+else
+   source ~/.motd/base
+fi

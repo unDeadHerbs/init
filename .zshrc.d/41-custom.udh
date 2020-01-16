@@ -27,9 +27,31 @@ quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
 exists ssh && ,(){
 	TO=$1; shift
 	TF=`mktemp`
-	ssh -o "LogLevel INFO" -E $TF $TO -t `quote "$@"` 2>/dev/null
+	if [ $# -ne 0 ]; then
+	    ssh -o "LogLevel INFO" -E $TF $TO -t `quote "$@"` 2>/dev/null
+	    RET=$?
+	else
+	    ssh -o "LogLevel INFO" -E $TF $TO 2>/dev/null
+	    RET=$?
+	fi
 	cat $TF
 	rm $TF
+	return $RET
+    }
+
+exists avahi-browse && hosts_list(){
+	if [ "$1" = "-L" ]; then
+	    NEO_OPTS='--color_blocks off'
+	else
+	    NEO_OPTS='--off --color_blocks off'
+	fi
+	exists neofetch && neofetch `echo $NEO_OPTS` || hostname | figlet
+	hosts=(`avahi-browse -alt|cut -d' ' -f 4|sort -u|grep -v $HOST|xargs`)
+	# The ()s make it into an array for ~for~.
+	for host in $hosts; do
+	    timeout 1 ssh -q $host.local -tt "neofetch $NEO_OPTS 2>/dev/null || hostname | figlet"|egrep "[a-zA-Z]"
+	    # The ~egrep~ suppresses blank lines.
+	done
     }
 
 function sleep_until {
