@@ -24,7 +24,13 @@ then
 fi
 alias e.='e .'
 quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
-exists ssh && :(){ TO=$1; shift ; ssh $TO -qt `quote "$@"` ; };
+exists ssh && ,(){
+	TO=$1; shift
+	TF=`mktemp`
+	ssh -o "LogLevel INFO" -E $TF $TO -t `quote "$@"` 2>/dev/null
+	cat $TF
+	rm $TF
+    }
 
 function sleep_until {
     # sleep_until "7:00 tomorrow"

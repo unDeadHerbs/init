@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$1" = "-h" || "$#" = "0" ]]; then
     echo "Usage: `basename $0` [Time|Duration]"
@@ -12,11 +12,12 @@ if [[ "$1" = "-h" || "$#" = "0" ]]; then
 fi
 
 set -e
-quiet=false
-[ "$1" = "-q" ] && shift && quiet=true
+quiet=true
+[ "$1" = "-v" ] && shift && quiet=false
 til=`date -I'seconds' -d "$*"`
 $quiet || echo "Sleeping until `date -d $til`"
 til=`date -uI'seconds' -d $til`
+# Using a loop here because laptop suspension breaks normal sleep.
 while [[ "$til" > "`date -uI'seconds'`" ]]; do
     sleep 10
 done

@@ -1,4 +1,4 @@
 #!/bin/bash
-[[ -e ~/bg ]] && feh --no-fehbg --bg-scale $(find ~/bg|grep "[.]jpg$"|shuf -n1)
-[[ -e ~/init/bg/$(hostname).jpg ]] && feh --no-fehbg --bg-scale "init/bg/$(hostname).jpg"
+[[ -e $HOME/bg ]] && feh --no-fehbg --bg-scale $(find $HOME/bg|grep "[.]jpg$"|shuf -n1)
+[[ -e $HOME/init/bg/$(hostname).jpg ]] && feh --no-fehbg --bg-scale "$HOME/init/bg/$(hostname).jpg"
 
