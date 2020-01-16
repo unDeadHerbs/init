@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#set background
+sleep 2  && bash ~/.fehbg &
+sleep 10 && bash ~/.fehbg &
+
+#link the config from their bases
+if [ -e "$HOME/.i3/config.$(hostname)" ]
+then
+    rm ~/.i3/config
+    ln -sf ~/.i3/config.$(hostname) ~/.i3/config
+else
+    rm ~/.i3/config
+    ln -sf ~/.i3/config.base ~/.i3/config
+fi
+cat ~/.i3/status.base > ~/.i3status.conf
+cat ~/.i3/status.$(hostname) >> ~/.i3status.conf

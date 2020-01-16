@@ -1,0 +1,46 @@
+#!/bin/bash
+
+##
+# Position screens
+##
+
+sleep   1 && xrandr --output DisplayPort-1 --rotate left &
+sleep   1 && xrandr --output DVI-0 --rotate left &
+
+##
+# Move Desktops to the correct screens
+##
+
+sleep   2 && i3-msg 'workspace  11' &
+sleep   3 && i3-msg 'workspace   1' &
+
+##
+# Programs
+##
+
+sleep  10 && xscreensaver &
+sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
+
+#sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
+
+#sleep   5 && i3-msg 'workspace 11; exec xfce4-terminal --command=alsamixer' &
+#sleep   7 && i3-msg 'exec xfce-terminal --command=pianobar' &
+
+#sleep  62 && i3-msg 'workspace 12; exec kvirc4 --nosplash' &
+#sleep  64 && i3-msg 'layout tabbed' &
+
+#sleep  60 && i3-msg 'workspace 12; exec firefox' &
+#sleep  68 && i3-msg 'layout tabbed' &
+
+#sleep  80 && i3-msg 'workspace  3; exec google-chrome-stable' &
+#wait for the tabs to load
+sleep 100 && i3-msg 'layout tabbed' &
+
+##
+# Move to main workspace
+##
+
+sleep 120 && i3-msg 'workspace 11' &
+sleep 121 && i3-msg 'workspace  1' &
+
+echo 121
