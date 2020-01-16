@@ -50,13 +50,14 @@
 	     (specification->package "wpa-supplicant")
 	     (specification->package "zsh")
 	     %base-packages))
+  (name-service-switch %mdns-host-lookup-nss)
   (services
     (append
      (list (service network-manager-service-type)
 	   (service tor-service-type)
 	   (service wpa-supplicant-service-type)
 	   (service usb-modeswitch-service-type)
-	   (service avahi-service-type) ;; TODO: Not working?
+	   (service avahi-service-type)
 	   (service dbus-root-service-type)
 	   (service polkit-service-type)
 	   (service elogind-service-type)
