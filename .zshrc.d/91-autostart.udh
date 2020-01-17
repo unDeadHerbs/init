@@ -1,4 +1,4 @@
-#! /bin/zsh
+#! /usr/bin/env zsh
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux new-session -d
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys 'while true; do ssh -R 2200:localhost:22 bk.gg; sleep 10; done' C-m
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && { running X || exec startx }

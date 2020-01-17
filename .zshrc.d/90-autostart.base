@@ -1,4 +1,4 @@
-#! /bin/zsh
+#! /usr/bin/env zsh
 if echo $EDITOR|grep emacs
 then
 		if ! ps -ef|grep emacs|grep "server-start"

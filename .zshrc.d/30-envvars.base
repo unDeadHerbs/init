@@ -1,4 +1,4 @@
-#! /bin/zsh
+#! /usr/bin/env zsh
 # set up the enviorment variables that other programs use for settings
 source ~/.zshrc.d/01-local
 
