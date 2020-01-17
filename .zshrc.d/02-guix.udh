@@ -18,23 +18,29 @@ if exists guix; then
 	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
 	    for pack in "$@"; do
 		echo $pack
-	    done|egrep -v "$installed"|xargs -r guix install
+	    done|egrep -v "^$installed\$"|xargs -r guix install
 	fi
     }
     _guix_install_noreplace \
 	tmux git emacs feh make htop \
-	ed sl cowsay youtube-dl vim aspell \
-	aspell-dict-en openssl nss-certs \
-	neofetch curl mc openssh nss clang \
-	figlet
-    [[ $(hostname) = "kitchensink" ]] && \
+	ed sl cowsay youtube-dl vim \
+	aspell aspell-dict-en \
+	neofetch curl mc clang \
+	figlet zsh-autosuggestions
+    neofetch distro|grep "guix">/dev/null &&
+	_guix_install_noreplace \
+	    nss nss-certs openssl openssh \
+	    coreutils diffutils
+    [ "$(hostname)" = "kitchensink" ] && \
 	_guix_install_noreplace \
 	    font-fira-code font-fira-mono font-fira-sans \
 	    font-gnu-unifont libxfont \
 	    dmenu feh i3-wm i3status xinit \
 	    xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
 	    xfce4-terminal xorg-server \
-	    scrot
-    #guix package -u
+	    scrot moreutils cpufrequtils binutils progress usbutils \
+	    clang-toolchain sh-z sicp
+    # To look at: lean minikanren
+    #TODO: make a reminder for guix package -u
 fi
 source ~/.zshrc.d/02-guix.base
