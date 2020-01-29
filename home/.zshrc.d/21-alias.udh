@@ -6,6 +6,7 @@ if exists ls
 then
 		alias lt='clear && ls'
 		alias la='ls -a'
+		alias l='ls -trlha'
 		alias tl="clear && l"
 fi
 exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
