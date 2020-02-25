@@ -1,0 +1,30 @@
+#! /usr/bin/env zsh
+# set up the enviorment variables that other programs use for settings
+source ~/.zshrc.d/01-local
+
+if [ -d "$HOME/bin" ]; then
+    #export PATH="$HOME/bin:$PATH"
+    for file in $(find -L ~/bin -maxdepth 4 -type d)
+    do
+	    PATH="$file:$PATH"
+    done
+
+fi
+
+[[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
+export TERMINAL="xfce4-terminal"
+exists nano  && export EDITOR='nano'
+exists vim   && export EDITOR='vim'
+exists vi    && export EDITOR='vi'
+exists emacs && export EDITOR='emacs -nw'
+alias e='$(echo $EDITOR)'
+if exists google-chrome-stable
+then
+    export BROWSER="google-chrome-stable"
+else
+    exists firefox && export BROWSER="firefox"
+fi
+
+# so that GPG works for git
+GPG_TTY=$(tty)
+export GPG_TTY

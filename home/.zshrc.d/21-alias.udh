@@ -1,0 +1,14 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+alias nano='echo use e for editing file '
+exists ls          && alias ls="ls --color=auto"
+if exists ls
+then
+		alias lt='clear && ls'
+		alias la='ls -a'
+		alias l='ls -trlha'
+		alias tl="clear && l"
+fi
+exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
+exists git && exists emacs && alias magit="emacs --eval \"(magit-status)\""
+exists cmatrix && alias cmatrix='cmatrix -abu 2'

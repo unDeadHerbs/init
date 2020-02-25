@@ -1,0 +1,46 @@
+#! /usr/bin/env zsh
+
+source ~/.zshrc.d/01-local
+
+source ~/.zshrc.d/02-guix.base
+if exists guix; then
+    guix_installed(){
+	if [ $# -eq 0 ]; then
+	    guix package -I|cut -f 1
+	else
+	    guix package -I|cut -f 1|grep $1 > /dev/null
+	fi
+    }
+    _guix_install_noreplace(){
+	if [ $# -eq 1 ]; then
+	    guix_installed $1 || guix install $1
+	else
+	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
+	    for pack in "$@"; do
+		echo $pack
+	    done|egrep -v "^$installed\$"|xargs -r guix install
+	fi
+    }
+    _guix_install_noreplace \
+	tmux git emacs feh make htop \
+	ed sl cowsay youtube-dl vim \
+	aspell aspell-dict-en \
+	neofetch curl mc clang \
+	figlet zsh-autosuggestions
+    neofetch distro|grep "guix">/dev/null &&
+	_guix_install_noreplace \
+	    nss nss-certs openssl openssh \
+	    coreutils diffutils
+    [ "$(hostname)" = "kitchensink" ] && \
+	_guix_install_noreplace \
+	    font-fira-code font-fira-mono font-fira-sans \
+	    font-gnu-unifont libxfont \
+	    dmenu feh i3-wm i3status xinit \
+	    xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
+	    xfce4-terminal xorg-server \
+	    scrot moreutils cpufrequtils binutils progress usbutils \
+	    clang-toolchain sh-z sicp
+    # To look at: lean minikanren
+    #TODO: make a reminder for guix package -u
+fi
+source ~/.zshrc.d/02-guix.base

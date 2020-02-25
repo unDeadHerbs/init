@@ -1,0 +1,9 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+
+alias quit='exit'
+alias whereami='hostname'
+exists poweroff && alias shutdown='poweroff'
+exists poweroff && alias turnoff='poweroff'
+exists pianobar && alias pandora='pianobar'
+exists git && alias g='git'

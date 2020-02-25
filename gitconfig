@@ -18,6 +18,7 @@
 	log-top-fourty     = "!git log-standard -40 | less -FXR"
 	log-recent         = "!git log-standard -40 --since=1.weeks | less -FXR"
 	log-stashes        = "!git log-standard $(git reflog show --format="%h" stash)"
+	log-lost           = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
 	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP)/ || !/[0-9a-f]{7}/; END{print}' | less -FXR"
 	ref-from-branch    = "rev-parse --short"
 
@@ -54,7 +55,7 @@
 	# Local Manipulation #
 	######################
 
-	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout -b \"$@\" || git checkout \"$@\" ; } && git fetch-and-ff-pull ; }; f"
+	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout \"$@\" || git checkout -b \"$@\" ; } && git fetch-and-ff-pull ; }; f"
 
 	add-verbose                    = "add -v"
 	add-verbose-opt-all            = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
@@ -63,7 +64,7 @@
 	add-to-last-commit             = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-all \"$@\" && git amend-with-staged ; }; f"
 	unstage-all                    = "reset -q"
 
-	commit-standard              = "commit -S"
+	commit-standard              = "commit"
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
 
 	stash-staged  = "stash --keep-index"
@@ -75,6 +76,10 @@
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
 	reset-up-one             = "reset HEAD^"
 	reset-hard               = "!git r && git clean -d -f"
+
+	rebase-branch-from-branch-to-branch = "!f(){ git rebase --onto $3 $2 $1 ; }; f"
+	rebase-branch-onto-here             = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
+	rebase-here-onto-branch             = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
 
 	##############
 	# Submodules #
@@ -154,3 +159,5 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+[advice]
+	detachedHead = false

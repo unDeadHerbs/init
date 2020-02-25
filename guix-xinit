@@ -1,0 +1,4 @@
+#!/bin/sh
+DIR=$HOME/.guix-profile
+vtname=vt`tty|sed 's,[^0-9],,g'`
+$DIR/bin/xinit -- $DIR/bin/Xorg :0 $vtname -keeptty -configdir $DIR/share/X11/xorg.conf.d -modulepath $DIR/lib/xorg/modules

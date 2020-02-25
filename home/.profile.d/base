@@ -1,0 +1,3 @@
+# -*- mode: shell-script -*-
+export LESS="FXR"
+export MANPAGER='less -X'

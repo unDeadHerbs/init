@@ -1,0 +1,23 @@
+
+wireless wlp0s26u1u2 {
+        format_up = "%quality @ %essid (%ip)"
+        format_down = "W"
+}
+
+battery 0 {
+        format = "%status %percentage %remaining"
+	integer_battery_capacity = true
+}
+
+
+order += "battery 0"
+#order += "ipv6"
+#order += "disk /dev/sdb1"
+#order += "disk /mnt/flash"
+#order += "disk /"
+#order += "run_watch DHCP"
+#order += "run_watch VPN"
+order += "wireless wlp0s26u1u2"
+order += "ethernet enp0s25"
+order += "load"
+order += "tztime local"

@@ -1,60 +1,28 @@
-The global todo list for uDH_init
-
-* global
-  1. probably a license or something?
-* bg
-* .dotemacs.org
-  1. reorganize everything!
-  2. on open, if folder && folder is git; then open magit-status as-well
-  3. M-! does not use the .zshrc file
-  4. have tab size and indent mode be buffer local
-  5. make lisp mode not use tabs
-  6. have magit status refresh on M-!
-  7. have tab mode be buffer local and ban tabs from org mode
-  8. have flycheck-clang-language-standard set by inspecting make
-* .fehbg
-* .gitignore
-* .i3
-  1. make more general for other users
-  2. have the configs be links not generated
-     done for i3 but not i3 status
-* init.el
-* init.sh
-  1. returns wrong error on chsh if zsh not installed
-  2. have backup existing configs if they exist
-     done for i3
-  3. make the install script work off of a list
-  4. add required programs to the install script
-     i3status
-     dmenu
-     xfce4-terminal
+* TODO probably a license or something?
+* TODO .dotemacs.org general
+  1. M-! does not use the .zshrc file
+  2. have tab size and indent mode be buffer local
+  3. make lisp mode not use tabs
+  4. have magit status refresh on M-!
+  5. have tab mode be buffer local and ban tabs from org mode
+  6. have flycheck-clang-language-standard set by inspecting make
+* TODO .i3 config positioning
+  have the configs be links not generated
+  - done for i3 but not i3 status
+* TODO init.sh experience
   5. some form of version numbers
-     when git pull sucseeds on .zshrc it can re run init.sh
-* README.md
-  1. look though others for standard seciotns to indluce
-* .screenrc
-  1. replace with tmux
-* todo
-* xfce4
-* .xinitrc
-  1. make more general for other users
-* .zshrc
-  1. separate into main and per user
-     have main capture and log behavior
-  2. the startup is to slow, try and make this more optimal
-     that will be partly fixed by the source division (for most people)
-  3. move wget's options to the correct env var
-  4. make sudo alias more consistant with sudo
+     when git pull succeeds on .zshrc it can rerun install.sh
+* TODO add common README.md sections for github
+* TODO make screen more consistent with tmux, just in case
+* TODO .zshrc
+  1. move rc options to the correct env var or file rather than alias
+  2. make sudo alias more consistant with sudo
      the real sudo can't accept commands in '' marks
-  5. when posible, prevent re-assiging to a export
+  3. when posible, prevent re-assiging to a export
      the editor variable is reexported 6 times
-  6. disable the motd on ssh if it's just the cow
+  4. disable the motd on ssh if it's just the cow
      that fills up the buffer and the clear is annoying
-  7. remove the wget settings and create a .wgetrc
-* .gitconfig
-  1. have the commands lt and ll look at how big my terminal is
-  2. Fetch-Merge-FastForward
-     fmff="find divergence with upstream, move back to it, re-base all new commits on origin"
-     that might just be the re-base command if i do it right     
-* tmux
-  make the name in the left status the terminal title
+* TODO git have the commands lt and ll look at how big my terminal is
+* TODO git Fetch-Merge-FastForward
+  fmff="find divergence with upstream, move back to it, re-base all new commits on origin"
+  that might just be the re-base command if i do it right

@@ -1,0 +1,12 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+
+function vim(){
+		if [ $RANDOM -gt 20000 ]; then
+				echo 'Bad kitty. Use e for editing the file '
+		else
+				/usr/bin/vim $@
+		fi
+}
+
+alias vi='vim'

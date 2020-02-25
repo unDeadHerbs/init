@@ -1,0 +1,73 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+        colors = true
+        interval = 5
+}
+
+wireless wlp2s0 {
+        format_up = "%quality @ %essid (%ip)"
+        format_down = "W"
+}
+
+wireless wlan0 {
+        format_up = "%quality %essid (%ip)"
+        format_down = "W"
+}
+
+ethernet enp0s25 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+ethernet enp2s0{
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+ethernet eth0 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+ethernet enp4s1 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+run_watch DHCP {
+        pidfile = "/var/run/dhclient*.pid"
+}
+
+run_watch VPN {
+        pidfile = "/var/run/vpnc/pid"
+}
+
+tztime local {
+        format = "0%Y-%m-%dT%H:%M:%S"
+}
+
+load {
+        format = "%1min"
+}
+
+disk "/" {
+        format = "%free"
+}
+
+disk "/mnt/flash" {
+        format = "%free"
+}
+
+disk "/dev/sdb1" {
+        format = "%free"
+#        format_up = "%free"
+#	format_down = "sdb"
+}
+

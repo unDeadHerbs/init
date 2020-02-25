@@ -1,0 +1,14 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+#IP addresses
+export gaussadd='bk.gg'
+
+if exists ssh
+then
+		alias sshgauss='ssh ${gaussadd}'
+fi
+
+alias gaussport='ssh -R 2048:localhost:22 udh@${gaussadd}'
+alias autogaussport='while true; do; gaussport; done'
+
+alias hopper='sshfs z1835773@hopper.cs.niu.edu:/home/turing/z1835773 ~/hopper'

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ "$1" = "-h" || "$#" = "0" ]]; then
+    echo "Usage: `basename $0` [Time|Duration]"
+    echo "   This script is only accurate to 10 seconds"
+    echo ""
+    echo "Examples:"
+    echo "   `basename $0` 14        - Sleep until 14:00 today"
+    echo "   `basename $0` 2 hours   - Sleep for 2 hours"
+    echo "   `basename $0` wed 9:15  - Sleep until 9:15 next wednesday"
+    exit
+fi
+
+set -e
+quiet=true
+[ "$1" = "-v" ] && shift && quiet=false
+til=`date -I'seconds' -d "$*"`
+$quiet || echo "Sleeping until `date -d $til`"
+til=`date -uI'seconds' -d $til`
+# Using a loop here because laptop suspension breaks normal sleep.
+while [[ "$til" > "`date -uI'seconds'`" ]]; do
+    sleep 10
+done

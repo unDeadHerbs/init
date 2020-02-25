@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+POSITIONAL=()
+DAY=0
+FILL=1
+while [[ "$#" -gt "0" ]]
+do
+    key="$1"
+
+    case $key in
+	-h|--help)
+	    echo "Usage : `basename $0` [Opts]"
+	    echo "  -d --day      Just list the day number"
+	    exit 0
+	    ;;
+	-d|--day)
+	    DAY=1
+	    shift
+	    ;;
+	-f| --fill)
+	    FILL=$2
+	    shift
+	    shift
+	    ;;
+	*)    # unknown option
+	    POSITIONAL+=("$1") # save it in an array for later
+	    shift # past argument
+	    ;;
+    esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+if [ $DAY -eq 1 ]; then
+    printf "%0$FILL""d\n" "$(( ($(date +%s) - $(date --date="1993-09-01" +%s) )/(60*60*24) +1 ))"
+else
+    printf "Sep %0$FILL""d, 1993\n" "$(( ($(date +%s) - $(date --date="1993-09-01" +%s) )/(60*60*24) +1 ))"
+fi

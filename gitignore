@@ -10,8 +10,10 @@
 */.\#*
 **/*/.\#*
 
-.i3/config
-
-logs/*
-
+# Cpp projects
 TAGS
+*.o
+*.bin
+.d/
+html/
+latex/
