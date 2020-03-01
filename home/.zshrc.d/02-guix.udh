@@ -25,22 +25,29 @@ if exists guix; then
 	tmux git emacs feh make htop \
 	ed sl cowsay youtube-dl vim \
 	aspell aspell-dict-en \
-	neofetch curl mc clang \
-	figlet zsh-autosuggestions
+	neofetch curl wget mc clang unzip \
+	figlet zsh-autosuggestions ghc-pandoc
     neofetch distro|grep "guix">/dev/null &&
 	_guix_install_noreplace \
 	    nss nss-certs openssl openssh \
-	    coreutils diffutils
+	    coreutils diffutils man-pages
     [ "$(hostname)" = "kitchensink" ] && \
 	_guix_install_noreplace \
 	    font-fira-code font-fira-mono font-fira-sans \
 	    font-gnu-unifont libxfont \
-	    dmenu feh i3-wm i3status xinit \
+	    links dmenu feh i3-wm i3status xinit \
 	    xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
 	    xfce4-terminal xorg-server \
 	    scrot moreutils cpufrequtils binutils progress usbutils \
-	    clang-toolchain sh-z sicp
+	    sh-z sicp ghc-pandoc inetutils
     # To look at: lean minikanren
     #TODO: make a reminder for guix package -u
 fi
 source ~/.zshrc.d/02-guix.base
+
+exists xinit && xinit(){
+	# TODO: check for if an X11 server is running
+	DIR=$HOME/.guix-profile
+	vtname=vt`tty|sed 's,[^0-9],,g'`
+	$DIR/bin/xinit -- $DIR/bin/Xorg :0 $vtname -keeptty -configdir $DIR/share/X11/xorg.conf.d -modulepath $DIR/lib/xorg/modules
+    }

@@ -2,6 +2,7 @@
 POSITIONAL=()
 DAY=0
 FILL=1
+DATE=`date --iso`
 while [[ "$#" -gt "0" ]]
 do
     key="$1"
@@ -9,7 +10,10 @@ do
     case $key in
 	-h|--help)
 	    echo "Usage : `basename $0` [Opts]"
-	    echo "  -d --day      Just list the day number"
+	    echo "  -f --fill [num]   Minimum number of digits for the day."
+	    echo "  -d --day          Just list the day number"
+	    echo "  -D --date [date]  Use a date other than today"
+	    echo "  -i --inverse      convert an day to iso format"
 	    exit 0
 	    ;;
 	-d|--day)
@@ -21,6 +25,17 @@ do
 	    shift
 	    shift
 	    ;;
+	-D|--date)
+	    DATE=$2
+	    shift
+	    shift
+	    ;;
+	-i|--inverse)
+	    date -d "@$(( $2*60*60*24 + $(date --date='1993-09-01' +%s)))" --iso
+	    # TODO: the lack of `($2-1)` makes me suspicious, check if
+	    # this is using timezones in some way
+	    exit
+	    ;;
 	*)    # unknown option
 	    POSITIONAL+=("$1") # save it in an array for later
 	    shift # past argument
@@ -28,9 +43,12 @@ do
     esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
+# i've nothing to do with those right now
+
+DAYS=$(( ($(date --date="$DATE" +%s) - $(date --date="1993-09-01" +%s) )/(60*60*24) +1 ))
 
 if [ $DAY -eq 1 ]; then
-    printf "%0$FILL""d\n" "$(( ($(date +%s) - $(date --date="1993-09-01" +%s) )/(60*60*24) +1 ))"
+    printf "%0$FILL""d\n" "$DAYS"
 else
-    printf "Sep %0$FILL""d, 1993\n" "$(( ($(date +%s) - $(date --date="1993-09-01" +%s) )/(60*60*24) +1 ))"
+    printf "Sep %0$FILL""d, 1993\n" "$DAYS"
 fi
