@@ -1,0 +1,106 @@
+#! /usr/bin/env zsh
+
+source ~/.zshrc.d/01-local
+
+source ~/.zshrc.d/04-brew.base
+if uname|grep Darwin; then
+    if exists brew; then
+	
+	echo '
+	     ##
+	     # Core
+	     ##
+
+	     tap "homebrew/bundle"
+	     tap "homebrew/core"
+	     tap "homebrew/cask"
+
+	     ##
+	     # CLI Utilities
+	     ##
+
+	     brew "aspell"
+	     brew "make"
+     	     brew "cmake"
+     	     brew "coreutils"
+     	     brew "cowsay"
+     	     brew "curl"
+     	     brew "diffutils"
+     	     brew "ffmpeg"
+     	     brew "figlet"
+     	     brew "htop"
+     	     brew "midnight-commander"
+     	     brew "neofetch"
+     	     brew "pandoc"
+     	     brew "sl"
+     	     brew "tmux"
+     	     brew "wget"
+
+	     ##
+	     # Terminal Features
+	     ##
+
+	     brew "bash-completion"
+	     cask "iterm2"
+     	     brew "zsh"
+     	     brew "zsh-autosuggestions"
+     	     brew "zsh-completions"
+     	     brew "zsh-git-prompt"
+     	     brew "zsh-syntax-highlighting"
+
+	     ##
+	     # Programming
+	     ##
+
+     	     brew "clang-format"
+     	     brew "cling"
+     	     brew "doxygen"
+     	     brew "gcc"
+     	     brew "git"
+     	     brew "git-lfs"
+     	     brew "glib"
+     	     brew "mono"
+     	     brew "openssh"
+     	     brew "openssl@1.1"
+     	     brew "youtube-dl"
+
+	     ##	     
+	     # Editors
+	     ##
+
+     	     brew "ed"
+	     cask "emacs"
+	     cask "emacsclient"
+	     cask "pycharm"
+     	     brew "vim"
+	     cask "visual-studio-code"
+	     
+	     ##
+	     # Graphic Utilities
+	     ##
+
+	     cask "bettertouchtool"
+	     cask "keyboard-maestro""
+	     cask "vlc"
+	     
+	     ##
+	     # Fonts
+	     ##
+
+	     tap "homebrew/cask-fonts"
+	     cask "font-fira-code"
+	     cask "font-fira-sans"
+	     cask "font-fira-mono"
+	     ' | brew bundle --file -
+
+	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+    else
+	install_brew(){
+	    cd
+	    # From https://brew.sh/ homepage.
+	    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	}
+    fi
+fi
+source ~/.zshrc.d/04-brew.base

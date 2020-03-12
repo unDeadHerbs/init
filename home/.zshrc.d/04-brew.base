@@ -1,0 +1,7 @@
+#! /usr/bin/env zsh
+
+if exists brew; then
+    PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"
+else
+    echo "No Brew Found"
+fi
