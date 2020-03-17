@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+source ~/.zshrc.d/01-local
+
 if exists brew; then
     PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"
 else
