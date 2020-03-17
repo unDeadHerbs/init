@@ -9,7 +9,6 @@ source ~/.zshrc.d/01-local
 # Add default options to programs
 # some of these probably don't need checking, but for the sake of autocompleations being correct i will anyway
 
-exists ls          && alias ls="ls --color=always"
 exists ssh         && alias ssh='ssh -o ConnectionAttempts=4'
 exists ssh         && alias xssh='ssh -YC'
 #-o ConnectTimeout=1'
@@ -28,9 +27,6 @@ exists find        && alias finds='find 2>/dev/null'
 exists less        && alias less='less -FXR'
 exists tmux        && alias tmux='tmux -2'
 
-# Create aliases for programs that  need to be run as root
-##TODO: have that check if in sudoers file
-exists sudo || alias sudo='su -c'
 alias rhtop="sudo htop"
 #TODO:make a function for umount as root
 #alias s2ram="sudo s2ram"
