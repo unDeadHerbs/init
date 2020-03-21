@@ -4,14 +4,19 @@ for file in $(ls ~/.zshrc.d|
                   sed 's/./~\/.zshrc.d\/&/'|
                   egrep "(base|$HOST|$USER)$"|
                   sed 's/-.*//'|
-                  uniq|
-                  sed "s/.*/if [ -e &-*.$USER ] ; then echo &-*.$USER ; else if [ -e &-*.$HOST ] ; then echo &-*.$HOST ; else echo &-*.base ; fi fi/"|
-                  sh)
+                  uniq)
 do
-    source $file
-    #|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").log
-    #2>&1|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").error.log
+    if echo "ls $file-*.$USER"|sh > /dev/null 2>&1; then
+	source ${~file}-*.$USER
+    else if echo "ls $file-*.$HOST"|sh >/dev/null 2>&1 ; then
+	source ${~file}-*.$HOST
+    else if echo "ls $file-*.base"|sh > /dev/null 2>&1; then
+        source ${~file}-*.base
+    fi; fi; fi
 done
+#    source $file
+#    #|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").log
+#    #2>&1|sed "s/./[$(date +"%H:%M:%S")]: &/" >> ~/init/logs/$(date +"0%Y-%m-%d").error.log
 
 clear
 
