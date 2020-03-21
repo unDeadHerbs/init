@@ -1,0 +1,10 @@
+#! /usr/bin/env zsh
+
+if [ "$(uname -o)" = "Msys" ]; then
+    echo "Found Msys"
+
+    pacman -Sy
+    pacman -S -q --needed --noconfirm openssh git zsh base-devel 2> /dev/null
+else
+    echo "Not Msys"
+fi
