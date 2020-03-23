@@ -4,3 +4,6 @@
 [submodule "home/.vim/pack/tpope/start/surround"]
 	path = home/.vim/pack/tpope/start/surround
 	url = https://tpope.io/vim/surround.git
+[submodule "home/.bashrc.d/bash-git-prompt"]
+	path = home/.bashrc.d/bash-git-prompt
+	url = https://github.com/magicmonty/bash-git-prompt.git
