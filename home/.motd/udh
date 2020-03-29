@@ -1,0 +1,21 @@
+if type neofetch >/dev/null ; then
+    neofetch --color_blocks off
+else
+    if type figlet > /dev/null
+    then
+        figlet -f script "Hello $USER.  Welcome to $HOST." -t
+    elif type toilet > /dev/null
+    then
+        toilet -f script "Hello $USER.  Welcome to $HOST." -t
+    else
+        curl "artii.herokuapp.com/make?text="$USER"%20@%20"$HOST""
+        echo
+    fi
+fi
+
+if type weather >/dev/null; then
+    #pr -tTms\| <(cal --color=always) <(weather)
+    diff -y <(cal) <(weather) | sed -e "s,`date +%_d`,\x1B[3m`date +%_d`\x1B[23m,"
+else
+    cal -3
+fi
