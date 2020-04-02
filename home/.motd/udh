@@ -13,9 +13,8 @@ else
     fi
 fi
 
-if type weather >/dev/null; then
-    #pr -tTms\| <(cal --color=always) <(weather)
-    diff -y <(cal) <(weather) | sed -e "s,`date +%_d`,\x1B[3m`date +%_d`\x1B[23m,"
+if type weather >/dev/null && type paste >/dev/null; then
+    paste <(cal --color=always) <(weather)
 else
     cal -3
 fi
