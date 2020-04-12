@@ -1,8 +1,21 @@
-[push]
-	default = current
-	recurseSubmodules = on-demand
+[advice]
+	detachedHead = false
+[apply]
+	whitespace = fix
 [color]
 	ui = auto
+[merge]
+	conflictstyle = diff3
+	ff = false
+[push]
+	default = current
+	followTags = true
+	recurseSubmodules = on-demand
+[rerere]
+	autoupdate = true
+	enabled = true
+[status]
+	submodulesummary = true
 [alias]
 
 	debug = "!GIT_TRACE=1 git"
@@ -149,14 +162,3 @@
 	bc     = "rev-parse --abbrev-ref HEAD"
 	#hist  = "!git log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color|less -FXRS"
 
-[apply]
-	whitespace = fix
-[merge]
-	ff = false
-[status]
-	submodulesummary = true
-[rerere]
-	enabled = true
-	autoupdate = true
-[advice]
-	detachedHead = false
