@@ -1,7 +1,7 @@
 #! /usr/bin/env zsh
 source ~/.zshrc.d/01-local
 alias nano='echo use e for editing file '
-exists ls          && alias ls="ls --color=auto"
+exists ls          && alias ls="ls --color=auto --ignore='*~'"
 if exists ls
 then
 		alias lt='clear && ls'
