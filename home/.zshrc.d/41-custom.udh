@@ -47,7 +47,7 @@ exists ssh && ,(){
 	    ssh -o "LogLevel INFO" -E $TF $TO 2>/dev/null
 	    RET=$?
 	fi
-	cat $TF 1&>2
+	cat $TF >&2
 	rm $TF
 	return $RET
     }
