@@ -144,7 +144,8 @@
 
 	#TODO: make a recurse macro for arbitary commands
 	diff-submodule = "submodule foreach --recursive \"git d\""
-	fetch-submodule = "!f(){ cd \"${GIT_PREFIX:-.}\" && git f && git submodule sync && git submodule update --init --recursive ; }; f"
+	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git f && git submodule sync && git submodule update --init --recursive ; }; f"
+	submodules-fix = "submodules-update"
 
 	#######
 	# SVN #

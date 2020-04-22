@@ -25,7 +25,7 @@ exists autossh     && alias autossh='autossh -M 0'
 exists pianobar    && alias pianobar='pianobar 2> /dev/null'
 exists find        && alias finds='find 2>/dev/null'
 exists less        && alias less='less -FXR'
-exists tmux        && alias tmux='tmux -2'
+exists tmux        && alias tmux='tmux -2 -u'
 
 alias rhtop="sudo htop"
 #TODO:make a function for umount as root

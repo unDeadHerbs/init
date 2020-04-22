@@ -37,6 +37,13 @@ then
 fi
 alias e.='e .'
 quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
+
+# Create aliases for programs that  need to be run as root
+##TODO: have that check if in sudoers file
+exists sudo || sudo(){
+	su -c "`quote "$@"`" -
+    }
+
 exists ssh && ,(){
 	TO=$1; shift
 	TF=`mktemp`
@@ -98,3 +105,53 @@ function sleep_until {
 }
 
 exists cowsay && exists fortune && alias cowfortune='clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))'
+exists ranger && rcd () {
+    tmp="$(mktemp)"
+    ranger --choosedir="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+uname -r | grep "gentoo" &&
+    package_from(){
+	location=`realpath $(whence -p "$@")` 2> /dev/null
+	if [ "$?" = "0" ]; then
+	    if exists eix; then
+		equery -q b $location | eix -'|*'
+	    else
+		equery b $location
+	    fi
+	else
+	    if exists e-file; then
+		if e-file "$@"|grep "No matches found." >/dev/null; then
+		    which "$@"
+		else
+		    e-file "$@"
+		fi
+	    else
+		which "$@"
+	    fi
+	fi
+    }
+
+uname -a|grep "Ubuntu" &&
+    package_from(){
+	location=`realpath $(whence -p "$@")` 2> /dev/null
+	if [ "$?" = "0" ]; then
+	    dpkg -s `dpkg -S $location|cut -d: -f1`|
+		egrep "^((Package|Version|Installed-Size|Homepage|Description): .*)$"
+	else
+	    if exists apt-file; then
+		packages=`apt-file search -x "bin.*\b$@$"|cut -d: -f1|xargs`
+		apt show $(echo $packages) 2>/dev/null |
+		    egrep "^((Package|Version|Installed-Size|Homepage|Description): .*)$" |
+		    perl -pe 'chomp if eof'
+	    else
+		which "$@"
+	    fi
+	    # APT(8) and PERL(1) are rather noisy with errors, so we
+	    # silence them with NULL(4).
+	fi 2>/dev/null
+    }
