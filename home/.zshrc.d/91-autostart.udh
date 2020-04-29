@@ -19,5 +19,3 @@ fi
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux && exit
-
-exists ranger && rcd
