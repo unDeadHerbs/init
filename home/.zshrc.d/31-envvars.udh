@@ -1,30 +1,8 @@
 #! /usr/bin/env zsh
 source ~/.zshrc.d/01-local
 #IP addresses
-export toweradd='10.0.128.107'
-#export toweradd='uDH-tower.local'
 export gaussadd='bk.gg'
-export mcadd='${gaussadd}'
-#export widgetadd='cygwin_ssh@home.widget.dj'
-#export widgetport='9001'
 
-if exists ssh
-then
-		alias sshtower='mosh ${toweradd}'
-		alias sshmc='ssh minecraft@${mcadd}'
-		alias sshdeb='ssh uDH-deb.local'
-		alias sshdb='ssh ${gaussadd}'
-		alias sshgauss='ssh ${gaussadd}'
-		alias sshwidget='ssh ${widgetadd} -p ${widgetport}'
-		alias sshratcht='ssh undeadherbs@ratchtnet.cf'
-fi
-
-if exists sshfs
-then
-    #alias widget='sshfs ${widgetadd}:/cygdrive/ ~/widget/ -p ${widgetport}'
-    [[ $(hostname) = 'uDH-x201' ]] && alias tower='sshfs udh@${toweradd}:/ ~/tower/'
-    alias drinkboot='sshfs udh@${gaussadd}:/ ~/drinkboot/'
-fi
 alias gaussproxy='autossh -M 0 ${gaussadd} -D 1414'
 alias gaussport='ssh -R 2200:localhost:22 ${gaussadd} -t "ssh 127.0.0.1 -p 2200 -t \"while true; do sleep 3600; done\""'
 alias autogaussport='while true; do; gaussport; echo reconnecting; done'

@@ -18,7 +18,7 @@ sleep   3 && i3-msg 'workspace   1' &
 # Programs
 ##
 
-sleep  10 && xscreensaver &
+#sleep  10 && xscreensaver &
 sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 
 #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
@@ -32,7 +32,7 @@ sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 #sleep  60 && i3-msg 'workspace 12; exec firefox' &
 #sleep  68 && i3-msg 'layout tabbed' &
 
-#sleep  80 && i3-msg 'workspace  3; exec google-chrome-stable' &
+sleep  80 && i3-msg 'workspace  1; exec google-chrome-stable' &
 #wait for the tabs to load
 sleep 100 && i3-msg 'layout tabbed' &
 
