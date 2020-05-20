@@ -1,0 +1,3 @@
+# Disable requirements for docs on docs programs to lower chance of build errors
+
+dev-python/sphinx -doc

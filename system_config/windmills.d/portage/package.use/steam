@@ -1,0 +1,152 @@
+app-arch/bzip2 abi_x86_32
+dev-db/sqlite abi_x86_32
+dev-libs/atk abi_x86_32
+dev-libs/expat abi_x86_32
+dev-libs/fribidi abi_x86_32
+dev-libs/glib abi_x86_32
+dev-libs/gmp abi_x86_32
+dev-libs/icu abi_x86_32
+dev-libs/libcroco abi_x86_32
+dev-libs/libffi abi_x86_32
+dev-libs/libpcre abi_x86_32
+dev-libs/libpthread-stubs abi_x86_32
+dev-libs/libtasn1 abi_x86_32
+dev-libs/libunistring abi_x86_32
+dev-libs/libxml2 abi_x86_32
+dev-libs/lzo abi_x86_32
+dev-libs/nettle abi_x86_32
+dev-libs/nspr abi_x86_32
+dev-libs/nss abi_x86_32
+dev-libs/openssl abi_x86_32
+dev-libs/wayland abi_x86_32
+dev-util/pkgconfig abi_x86_32
+gnome-base/librsvg abi_x86_32
+media-gfx/graphite2 abi_x86_32
+media-libs/fontconfig abi_x86_32
+media-libs/freetype abi_x86_32
+media-libs/harfbuzz abi_x86_32
+media-libs/libpng abi_x86_32
+media-libs/mesa abi_x86_32
+media-libs/openal abi_x86_32
+media-libs/tiff abi_x86_32
+net-dns/libidn2 abi_x86_32
+net-libs/gnutls abi_x86_32
+net-misc/curl abi_x86_32
+net-nds/openldap abi_x86_32
+net-print/cups abi_x86_32
+sys-apps/attr abi_x86_32
+sys-apps/dbus abi_x86_32
+sys-apps/util-linux abi_x86_32
+sys-devel/gettext abi_x86_32
+sys-devel/llvm abi_x86_32
+sys-fs/udev abi_x86_32
+sys-libs/binutils-libs abi_x86_32
+sys-libs/gpm abi_x86_32
+sys-libs/ncurses abi_x86_32
+sys-libs/readline abi_x86_32
+sys-libs/zlib abi_x86_32
+virtual/libffi abi_x86_32
+virtual/libiconv abi_x86_32
+virtual/libudev abi_x86_32
+virtual/pkgconfig abi_x86_32
+x11-libs/cairo abi_x86_32
+x11-libs/gdk-pixbuf abi_x86_32
+x11-libs/gtk+:2 abi_x86_32
+x11-libs/libX11 abi_x86_32
+x11-libs/libXScrnSaver abi_x86_32
+x11-libs/libXau abi_x86_32
+x11-libs/libXcomposite abi_x86_32
+x11-libs/libXcursor abi_x86_32
+x11-libs/libXdamage abi_x86_32
+x11-libs/libXdmcp abi_x86_32
+x11-libs/libXext abi_x86_32
+x11-libs/libXfixes abi_x86_32
+x11-libs/libXft abi_x86_32
+x11-libs/libXi abi_x86_32
+x11-libs/libXinerama abi_x86_32
+x11-libs/libXrandr abi_x86_32
+x11-libs/libXrender abi_x86_32
+x11-libs/libXxf86vm abi_x86_32
+x11-libs/libdrm abi_x86_32
+x11-libs/libpciaccess abi_x86_32
+x11-libs/libxcb abi_x86_32
+x11-libs/libxshmfence abi_x86_32
+x11-libs/pango abi_x86_32
+x11-libs/pixman abi_x86_32
+x11-proto/damageproto abi_x86_32
+x11-proto/dri2proto abi_x86_32
+x11-proto/dri3proto abi_x86_32
+x11-proto/fixesproto abi_x86_32
+x11-proto/glproto abi_x86_32
+x11-proto/inputproto abi_x86_32
+x11-proto/kbproto abi_x86_32
+x11-proto/presentproto abi_x86_32
+x11-base/xcb-proto abi_x86_32
+x11-proto/xextproto abi_x86_32
+x11-proto/xf86bigfontproto abi_x86_32
+x11-proto/xf86driproto abi_x86_32
+x11-proto/xf86vidmodeproto abi_x86_32
+x11-proto/xproto abi_x86_32
+
+# If not using systemd add this, otherwise chances are the libudev/udev will
+# be pulled as dependencies and eudev removed from your system.
+sys-fs/eudev abi_x86_32
+
+
+# required by media-libs/openal-1.19.1::gentoo[alsa]
+# required by @steam (argument)
+>=media-libs/alsa-lib-1.1.8 abi_x86_32
+# required by media-libs/openal-1.19.1::gentoo[sdl]
+# required by @steam (argument)
+>=media-libs/libsdl2-2.0.10 abi_x86_32
+# required by dev-libs/glib-2.60.6::gentoo
+# required by x11-libs/cairo-1.16.0-r3::gentoo[glib]
+# required by media-libs/harfbuzz-2.6.4::gentoo[cairo]
+# required by x11-libs/pango-1.42.4-r2::gentoo
+# required by gnome-base/librsvg-2.40.20::gentoo
+# required by x11-libs/gtk+-2.24.32-r1::gentoo
+# required by @steam (argument)
+>=virtual/libintl-0-r2 abi_x86_32
+# required by media-libs/mesa-19.1.8::gentoo[-video_cards_r600,gallium,llvm,-video_cards_radeonsi,video_cards_radeon,-opencl]
+# required by virtual/opengl-7.0-r2::gentoo
+# required by media-libs/libsdl2-2.0.10::gentoo[opengl]
+# required by media-libs/openal-1.19.1::gentoo[sdl]
+# required by @steam (argument)
+>=virtual/libelf-3 abi_x86_32
+# required by virtual/libelf-3::gentoo
+# required by dev-libs/glib-2.60.6::gentoo
+# required by x11-libs/cairo-1.16.0-r3::gentoo[glib]
+# required by media-libs/harfbuzz-2.6.4::gentoo[cairo]
+# required by x11-libs/pango-1.42.4-r2::gentoo
+# required by gnome-base/librsvg-2.40.20::gentoo
+# required by x11-libs/gtk+-2.24.32-r1::gentoo
+# required by @steam (argument)
+>=dev-libs/elfutils-0.176-r1 abi_x86_32
+# required by media-libs/libsdl2-2.0.10::gentoo[opengl]
+# required by media-libs/openal-1.19.1::gentoo[sdl]
+# required by @steam (argument)
+>=virtual/glu-9.0-r2 abi_x86_32
+# required by virtual/glu-9.0-r2::gentoo
+# required by media-libs/libsdl2-2.0.10::gentoo[opengl]
+# required by media-libs/openal-1.19.1::gentoo[sdl]
+# required by @steam (argument)
+>=media-libs/glu-9.0.1 abi_x86_32
+# required by media-libs/libsdl2-2.0.10::gentoo[opengl]
+# required by media-libs/openal-1.19.1::gentoo[sdl]
+# required by @steam (argument)
+>=virtual/opengl-7.0-r2 abi_x86_32
+# required by x11-libs/gdk-pixbuf-2.38.1-r1::gentoo[jpeg]
+# required by gnome-base/librsvg-2.40.20::gentoo
+# required by x11-libs/gtk+-2.24.32-r1::gentoo
+# required by @steam (argument)
+>=virtual/jpeg-0-r3 abi_x86_32
+# required by virtual/jpeg-0-r3::gentoo
+# required by x11-libs/gdk-pixbuf-2.38.1-r1::gentoo[jpeg]
+# required by gnome-base/librsvg-2.40.20::gentoo
+# required by x11-libs/gtk+-2.24.32-r1::gentoo
+# required by @steam (argument)
+>=media-libs/libjpeg-turbo-2.0.3 abi_x86_32
+
+
+# Nothing asked for this, but it looks right from the error codes
+app-crypt/p11-kit abi_x86_32

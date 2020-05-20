@@ -1,0 +1,22 @@
+# let's enable the new kernel, what's the worst that could happen
+# 2020-04-04 Disabled, let's see if this stops the kernel panics
+# 2020-04-26 Enabled, I'm indicsive and upgrading graphics card
+sys-kernel/gentoo-sources ~amd64
+
+# need new aspell for camel case suport
+=app-text/aspell-0.60.8 ~amd64
+
+media-gfx/opencsg ~amd64
+media-gfx/openscad ~amd64
+app-doc/cppman ~amd64
+app-doc/devmanual ~amd64
+app-emulation/vagrant ~amd64
+
+# Let's see how well this works under gentoo
+sys-apps/guix ~amd64
+
+# 2020-04-04 For OPENFOAM
+=sci-visualization/paraview-5.8.0-r2 ~amd64
+
+# 2020-04-20 Trying to get clang-format's settings to match the wiki
+=sys-devel/clang-10.0.0 ~amd64

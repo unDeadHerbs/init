@@ -1,0 +1,33 @@
+# required by sys-kernel/genkernel-3.5.3.3::gentoo[firmware]
+# required by sys-kernel/genkernel (argument)
+sys-kernel/linux-firmware linux-fw-redistributable no-source-code
+# required by games-misc/fortune-mod-calvin (argument)
+>=games-misc/fortune-mod-calvin-0.1.1 fairuse
+# required by games-misc/fortune-mod-discworld (argument)
+>=games-misc/fortune-mod-discworld-0.1 fairuse
+# required by games-misc/fortune-mod-dune (argument)
+>=games-misc/fortune-mod-dune-2.0.1 free-noncomm
+# required by games-misc/fortune-mod-firefly (argument)
+>=games-misc/fortune-mod-firefly-2.1.1 fairuse
+# required by games-misc/fortune-mod-humorixfortunes (argument)
+>=games-misc/fortune-mod-humorixfortunes-1.4-r1 fairuse freedist
+# required by games-misc/fortune-mod-strangelove (argument)
+>=games-misc/fortune-mod-strangelove-20041203 fairuse
+# required by google-chrome (argument)
+>=www-client/google-chrome-78.0.3904.87 google-chrome
+# required by x11-base/xorg-x11-7.4-r3::gentoo[fonts]
+# required by xorg-x11 (argument)
+>=media-fonts/font-bh-ttf-1.0.3-r1 bh-luxi
+# required by x11-base/xorg-x11-7.4-r3::gentoo[fonts]
+# required by xorg-x11 (argument)
+>=media-fonts/font-bh-type1-1.0.3-r1 bh-luxi
+# required by media-fonts/corefonts (argument)
+>=media-fonts/corefonts-1-r7 MSttfEULA
+# required by paraview (argument)
+>=sci-visualization/paraview-5.8.0 paraview
+# required by media-libs/nv-codec-headers-9.0.18.1::gentoo
+# required by media-video/ffmpeg-4.2.2::gentoo[video_cards_nvidia]
+# required by mail-client/thunderbird-68.7.0-r1::gentoo
+# required by @selected
+# required by @world (argument)
+=x11-drivers/nvidia-drivers-440.82 NVIDIA-r2

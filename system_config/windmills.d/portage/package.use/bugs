@@ -1,0 +1,12 @@
+app-doc/doxygen -doc
+dev-java/hamcrest-core -doc
+media-libs/libcaca -doc
+
+# Something's wrong with dev-python/sphinx
+=dev-python/paramiko-2.7.1 -doc
+=dev-python/six-1.14.0 -doc
+
+sci-libs/cgnslib -doc
+sci-visualization/paraview -doc
+sci-visualization/paraview -qt5
+sci-visualization/paraview -webengine

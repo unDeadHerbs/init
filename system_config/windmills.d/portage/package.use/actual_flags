@@ -1,0 +1,18 @@
+# Hehe, terminals
+>=media-video/vlc-3.0.8 libcaca opus
+
+>=app-editors/emacs-26.3-r1 libxml2
+
+media-video/ffmpeg openssl
+
+# To make the install much smaller
+app-emulation/vagrant -virtualbox
+
+# Not sure why that was missing
+dev-vcs/git subversion
+
+# 2020-04-23 Python 3.7 virtualenv needed
+dev-python/pip PYTHON_TARGETS: python3_7
+
+# 2020-04-29 jpeg to ascii
+media-libs/libcaca imlib

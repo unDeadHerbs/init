@@ -1,0 +1,4 @@
+* make.conf
+* portage
+* kernel.config
+* world
