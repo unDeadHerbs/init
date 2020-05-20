@@ -4,8 +4,16 @@
 # Position screens
 ##
 
-sleep   1 && xrandr --output DisplayPort-1 --rotate left &
-sleep   1 && xrandr --output DVI-0 --rotate left &
+sleep   1 && xrandr --output DP-1 --rotate left --left-of DVI-I-1 &
+sleep   1 && xrandr --output DVI-I-1 --rotate left &
+sleep   2 && xrandr --output DP-1 --rotate left --left-of DVI-I-1 &
+sleep   2 && xrandr --output DVI-I-1 --rotate left --right-of DP-1 &
+
+##
+# Start Transparency
+##
+
+sleep   2 && xcompmgr -c &
 
 ##
 # Move Desktops to the correct screens
@@ -43,4 +51,4 @@ sleep 100 && i3-msg 'layout tabbed' &
 sleep 120 && i3-msg 'workspace 11' &
 sleep 121 && i3-msg 'workspace  1' &
 
-echo 121
+echo "Was this important?"
