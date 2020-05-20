@@ -26,6 +26,8 @@ sleep   3 && i3-msg 'workspace   1' &
 # Programs
 ##
 
+sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e="tmux attach"' &
+
 #sleep  10 && xscreensaver &
 sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 
