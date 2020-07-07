@@ -23,25 +23,30 @@ upload_rate = 0
 
 # Default directory to save the downloaded torrents.
 #directory = ./
-directory = ~/tors
+directory = /mnt/6/tor/tors
 
 # Default session directory. Make sure you don't run multiple instance
 # of rtorrent using the same session directory. Perhaps using a
 # relative path?
 #session = ./session
-session = ~/downloads_active/
+session = /mnt/6/tor/downloads_active/
+session.path.set = /mnt/6/tor/downloads_active/
 
 # Watch a directory for new torrents, and stop those that have been
 # deleted.
 # schedule = id,start,interval,command
 #schedule = watch_directory,5,5,load_start=./watch/*.torrent
 #schedule = untied_directory,5,5,stop_untied=
-schedule = watch_directory,10,10,load=~/torl/*.torrent
-schedule = untied_directory,10,10,close_untied=
+#schedule = watch_directory,10,10,load=~/torl/*.torrent
+#schedule = untied_directory,10,10,close_untied=
+schedule2 = watch_directory,10,10,load.start=~/torl/*.torrent
+schedule2 = untied_directory,5,5,stop_untied=
+schedule2 = tied_directory,5,5,start_tied=
 
 # Close torrents when diskspace is low.
 #schedule = low_diskspace,5,60,close_low_diskspace=100M
-schedule = low_diskspace,5,60,close_low_diskspace=200M
+#schedule = low_diskspace,5,60,close_low_diskspace=200M
+schedule2 = low_diskspace,5,60,((close_low_diskspace,200M))
 
 # Stop torrents when reaching upload ratio in percent,
 # when also reaching total upload in bytes, or when
