@@ -269,6 +269,14 @@ unDeadHerbs's emacs init file
    #+END_SRC
 * Major Mode Settings
 ** Org Mode
+   :PROPERTIES:
+   :NAME:     cpp_pretty
+   :END:
+   #+BEGIN_SRC emacs-lisp
+   (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((dot . t)))
+   #+end_src
 ** C Like Language Common Mode
     :PROPERTIES:
     :NAME:     cpp_pretty
