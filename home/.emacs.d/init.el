@@ -24,11 +24,12 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes nil)
  '(erc-modules
    (quote
     (autojoin button completion dcc fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track)))
  '(org-agenda-files (quote ("~/todo")))
+ '(org-export-with-todo-keywords nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
    (quote

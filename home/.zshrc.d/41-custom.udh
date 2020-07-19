@@ -104,7 +104,15 @@ function sleep_until {
     sleep $seconds
 }
 
-exists cowsay && exists fortune && alias cowfortune='clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))'
+exists cowsay && exists fortune &&
+    if exists lolcat; then
+	cowfortune(){clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))|lolcat}
+    else
+	cowfortune(){clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))}
+    fi
+
+# Use lf to switch directories and bind it to ctrl-o
+
 exists ranger && rcd () {
     tmp="$(mktemp)"
     ranger --choosedir="$tmp" "$@"
