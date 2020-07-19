@@ -19,7 +19,7 @@ sleep   2 && xcompmgr -c &
 # Move Desktops to the correct screens
 ##
 
-sleep   2 && i3-msg 'workspace  11' &
+sleep   2 && i3-msg 'workspace   2' &
 sleep   3 && i3-msg 'workspace   1' &
 
 ##
@@ -29,7 +29,7 @@ sleep   3 && i3-msg 'workspace   1' &
 sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e="tmux attach"' &
 
 #sleep  10 && xscreensaver &
-sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
+#sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 
 #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
 
@@ -42,7 +42,7 @@ sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 #sleep  60 && i3-msg 'workspace 12; exec firefox' &
 #sleep  68 && i3-msg 'layout tabbed' &
 
-sleep  80 && i3-msg 'workspace  1; exec google-chrome-stable' &
+#sleep  80 && i3-msg 'workspace  1; exec google-chrome-stable' &
 #wait for the tabs to load
 sleep 100 && i3-msg 'layout tabbed' &
 
@@ -52,5 +52,6 @@ sleep 100 && i3-msg 'layout tabbed' &
 
 sleep 120 && i3-msg 'workspace 11' &
 sleep 121 && i3-msg 'workspace  1' &
+sleep 122 && i3-msg 'workspace  2' &
 
 echo "Was this important?"
