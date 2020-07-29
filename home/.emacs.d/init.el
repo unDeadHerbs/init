@@ -28,6 +28,7 @@
  '(erc-modules
    (quote
     (autojoin button completion dcc fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track)))
+ '(linum-relative-current-symbol "")
  '(org-agenda-files (quote ("~/todo")))
  '(org-export-with-todo-keywords nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))

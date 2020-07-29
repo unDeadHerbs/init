@@ -56,6 +56,7 @@ unDeadHerbs's emacs init file
 			       linum-relative
 			       multiple-cursors
 			       persistent-scratch
+			       pretty-mode
 			       ;; TODO: tmux-pane
 			       tramp
 			       ;; TODO: visible-mark
@@ -292,10 +293,9 @@ unDeadHerbs's emacs init file
 		       ;;indent-tabs-mode t
 		       )
 	 (hs-minor-mode 1)
-	 (hideshowvis-minor-mode 1)
-	 (hideshowvis-symbols)
-	 (relative-line-numbers-mode 1)
-	 ;; Make current line number the line number.
+	 ;(hideshowvis-minor-mode 1)
+	 ;(hideshowvis-symbols)
+	 (linum-relative-mode 1)
 	 (require 'centered-cursor-mode)
 	 (centered-cursor-mode 1)
 	 (highlight-parentheses-mode 1)
@@ -369,6 +369,8 @@ unDeadHerbs's emacs init file
 	 )
        (add-hook 'c-mode-common-hook
 		 'udh-c-mode-layout)
+       ;(add-hook 'c-mode-common-hook
+       ;         'udh-c-mode-prettify)
        (add-hook 'c-mode-common-hook
        		 'flyspell-prog-mode)
        (add-hook 'c-mode-common-hook
