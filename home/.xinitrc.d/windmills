@@ -13,7 +13,7 @@ sleep   2 && xrandr --output DVI-I-1 --rotate left --right-of DP-1 &
 # Start Transparency
 ##
 
-sleep   2 && xcompmgr -c &
+sleep   2 && picom &
 
 ##
 # Move Desktops to the correct screens
