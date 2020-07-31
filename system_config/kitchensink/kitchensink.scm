@@ -37,7 +37,7 @@
                   (group "users")
                   (home-directory "/home/udh")
                   (supplementary-groups
-                    '("wheel" "netdev" "audio" "video"))
+                    '("wheel" "netdev" "audio" "video" "dialout"))
                   (shell #~(string-append #$zsh "/bin/zsh")))
                 %base-user-accounts))
   (packages (cons*
@@ -46,6 +46,7 @@
 	     (specification->package "bash")
 	     (specification->package "nss")
 	     (specification->package "nss-certs")
+	     (specification->package "tlp")
 	     (specification->package "tor")
 	     (specification->package "wpa-supplicant")
 	     (specification->package "zsh")
@@ -63,7 +64,12 @@
 	   (service elogind-service-type)
 	   (service ntp-service-type)
 	   (service alsa-service-type)
-	   (service tlp-service-type)) ; Thermal
+	   (service tlp-service-type
+		    (tlp-configuration
+		     (tlp-default-mode "BAT")))
+	   (service thermald-service-type
+		    (thermald-configuration
+		     (ignore-cpuid-check? #t))))
      %base-services)))
 
 ;; TODO: Improve the `console-fonts` config from this
