@@ -7,6 +7,12 @@
 sleep   1 && xrandr --output DP-1 --above VGA-1 &
 
 ##
+# Enable Compositor
+##
+
+sleep   1 && picom &
+
+##
 # Move Desktops to the correct monitors
 ##
 

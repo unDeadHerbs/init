@@ -30,6 +30,7 @@ if exists guix; then
     neofetch distro|grep "guix">/dev/null &&
 	_guix_install_noreplace \
 	    nss nss-certs openssl openssh \
+	    netcat \
 	    coreutils diffutils man-pages
     [ "$(hostname)" = "kitchensink" ] && \
 	_guix_install_noreplace \
@@ -37,9 +38,9 @@ if exists guix; then
 	    font-gnu-unifont libxfont \
 	    links dmenu feh i3-wm i3status xinit \
 	    xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
-	    xfce4-terminal xorg-server \
+	    xfce4-terminal xorg-server synergy picom\
 	    scrot moreutils cpufrequtils binutils progress usbutils \
-	    sh-z sicp ghc-pandoc inetutils
+	    sh-z sicp ghc-pandoc inetutils xpdf icecat
     # To look at: lean minikanren
     #TODO: make a reminder for guix package -u
 fi
