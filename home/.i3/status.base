@@ -26,6 +26,11 @@ ethernet enp0s25 {
         format_down = "E"
 }
 
+ethernet enp24s0 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
 ethernet enp2s0{
         format_up = "%ip @ %speed"
         format_down = "E"
