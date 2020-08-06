@@ -43,6 +43,7 @@ quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
 exists sudo || sudo(){
 	su -c "cd `pwd`; `quote "$@"`" -
     }
+exists emerge && alias emerge="sudo emerge"
 
 exists ssh && ,(){
 	TO=$1; shift
