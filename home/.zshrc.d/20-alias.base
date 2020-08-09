@@ -27,12 +27,24 @@ exists find        && alias finds='find 2>/dev/null'
 exists less        && alias less='less -FXR'
 exists tmux        && alias tmux='tmux -2 -u'
 
+if exists shutdown; then
+    alias shutdown='sudo shutdown'
+    if exists poweroff; then
+	alias poweroff='sudo poweroff'
+    else
+	alias poweroff='sudo shutdown'
+    fi
+else if exists poweroff; then
+	 alias shutdown='sudo poweroff'
+	 alias poweroff='sudo poweroff'
+     fi
+fi
+
 alias rhtop="sudo htop"
 #TODO:make a function for umount as root
 #alias s2ram="sudo s2ram"
 #alias s2ram="sudo 'swapon /dev/sda3 && s2ram && swapoff /dev/sda3'"
-alias reboot="sudo reboot"
-alias poweroff="sudo poweroff" # TODO: not on guix
+exists reboot      && alias reboot="sudo reboot"
 [ `os` = "gentoo" ] && alias dhcpcd-reset="sudo 'dhcpcd && dhcpcd -x && dhcpcd && dhcpcd -x && dhcpcd'"
 [ `os` = "gentoo" ] && exists wicd-curses && alias wicd-restart="sudo 'rc-config restart wicd'"
 
