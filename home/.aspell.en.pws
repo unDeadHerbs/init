@@ -1,5 +1,6 @@
-personal_ws-1.1 en 112 
+personal_ws-1.1 en 134 
 ABI
+ADHD
 APL
 Acyclic
 AmpèÃere's
@@ -8,12 +9,17 @@ Booleans
 CISC
 CLI
 CPP
+DeKalb
+Decrementing
 ErgoDox
 ErgoDox's
 Fibromyalgia
 GPIO
 Generatable
 Guix
+Hyrum
+Hyrum's
+Incrementing
 LSB
 Lliam
 Lojban
@@ -29,19 +35,26 @@ THz
 TODO
 Voxel
 Widget's
+aave
 abelian
+agreeded
 allocatable
 amongst
 annulus's
 architecting
 atomata
+blerg
+blerging
 bruteforcable
 bruteforce
+buildable
+checkable
 colours
 compilable
 composable
 compositional
 config
+const
 coplaner
 customizable
 datalogics
@@ -57,6 +70,7 @@ expander
 extrema
 factorable
 generalizable
+globals
 goto
 heh
 inavoidable
@@ -68,7 +82,12 @@ intimatly
 ish
 leveragable
 linkable
+mana
 maths
+memoize
+memoized
+memoizer
+motd
 nano
 ncurses
 notational
@@ -81,6 +100,7 @@ providable
 punny
 radix
 reconnections
+recursed
 recursiveness
 reducable
 reimagining
@@ -100,6 +120,7 @@ tokenization
 tokenizer
 translational
 uncallable
+uncheckable
 uncompared
 unenumerated
 unexplicit
@@ -111,3 +132,4 @@ unviewed
 userland
 virtuals
 wasd
+whos

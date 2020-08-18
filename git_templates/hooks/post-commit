@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import sys
+#, os, re
+#from subprocess import check_output
+commit_msg_filepath = sys.argv[1]
+## Figure out which branch we're on
+#branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
+#print "commit-msg: On branch '%s'" % branch
+## Check the commit message if we're on an issue branch
+#if branch.startswith('issue-'):
+#print "commit-msg: Oh hey, it's an issue branch."
+#result = re.match('issue-(.*)', branch)
+#issue_number = result.group(1)
+#required_message = "ISSUE-%s" % issue_number
+with open(commit_msg_filepath, 'r') as f:
+  content = f.read()
+  if len(content.split('\n')[0]) > 50:
+      print("commit-msg: ERROR: The commit message decription is too long (max 50 chars).")
+      sys.exit(1)
+  if max([len(line) for line in content.split('\n')]) > 72:
+      print("commit-msg: ERROR: One of the description lines is too long (max 72 chars).")
