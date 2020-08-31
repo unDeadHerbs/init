@@ -44,8 +44,6 @@ unDeadHerbs's emacs init file
 			       calendar
 			       centered-cursor-mode
 			       dynamic-spaces
-			       evil
-			       ;evil-visualstar
 			       hideshow
 			       hideshowvis
 			       highlight

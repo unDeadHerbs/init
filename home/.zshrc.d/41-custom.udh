@@ -25,7 +25,8 @@ exists curl && weather(){
 	if [ "$1" = "--full" ] ; then
 	    c -s wttr.in
 	else
-	    c -s wttr.in|head -n 7
+	    # Search for "igor_chubin" to remove warning on failure.
+	    c -s wttr.in|head -n 7|grep -v "igor_chubin"
 	fi
     }
 
@@ -123,6 +124,17 @@ exists ranger && rcd () {
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
 }
+
+exists exa && l_test(){
+	screen_rows=$(stty -a | grep -Po '(?<=rows )\d+')
+	if (( $(ls|wc -l) < $screen_rows*3/4 )); then
+	    #clear
+	    exa --tree --long --git --level=1
+	else
+	    echo "more"
+	fi	
+    }
+
 uname -r | grep "gentoo" &&
     package_from(){
 	location=`realpath $(whence -p "$@")` 2> /dev/null
@@ -143,6 +155,7 @@ uname -r | grep "gentoo" &&
 		which "$@"
 	    fi
 	fi
+	# comm -12 <(equery d packagename|sort|sed 's/[-][0-9.]*\([-]r[0-9]\+\|\)$//') /var/lib/portage/world
     }
 
 uname -a|grep "Ubuntu" &&
@@ -164,3 +177,7 @@ uname -a|grep "Ubuntu" &&
 	    # silence them with NULL(4).
 	fi 2>/dev/null
     }
+
+
+exists sox && alias noise_wash="play -n synth brownnoise synth pinknoise mix synth sine amod 0.3 10"
+exists play && alias whitenoise="play -n synth whitenoise"
