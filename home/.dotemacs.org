@@ -115,7 +115,8 @@ unDeadHerbs's emacs init file
      (tool-bar-mode -1)
      (scroll-bar-mode -1)
      ;; TODO: Disable suspention on gui clients and in
-     ;; tmux. (global-unset-key (kbd "C-z"))
+     ;; tmux.
+     (global-unset-key (kbd "C-z"))
 
      ;; TODO unset (kbd "C-[") from ESC
     ;(define-key key-translation-map
@@ -272,16 +273,17 @@ unDeadHerbs's emacs init file
    :NAME:     cpp_pretty
    :END:
    #+BEGIN_SRC emacs-lisp
-   (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((dot . t)))
+     (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((dot . t)
+	 (octave . t)))
    #+end_src
 ** C Like Language Common Mode
     :PROPERTIES:
     :NAME:     cpp_pretty
     :END:
     #+BEGIN_SRC emacs-lisp
-       (smart-tabs-insinuate 'c 'cpp)
+       (smart-tabs-insinuate 'c 'c++)
 
        (defun udh-c-mode-layout ()
 	 ;;(glasses-mode 1)
@@ -301,6 +303,8 @@ unDeadHerbs's emacs init file
 	 ;;(highlight-blocks-mode 1)
 	 ;;(highlight-current-line-minor-mode 1)
 	 ;;(highline-mode 1)
+	 (flycheck-mode 1)
+	 (flyspell-prog-mode)
 	 )
        (defun udh-c-mode-prettify ()
 	 (pretty-mode 1)
@@ -363,7 +367,6 @@ unDeadHerbs's emacs init file
 	 ;;(pretty-regexp "Key" "🔑")
 	 (pretty-regexp "[*]" "∗")
 	 (pretty-mode -1)
-	 (pretty-mode -1)
 	 )
        (add-hook 'c-mode-common-hook
 		 'udh-c-mode-layout)
@@ -375,6 +378,7 @@ unDeadHerbs's emacs init file
 		 '(lambda () (local-set-key (kbd "C-M-S-p")
 					    '(lambda () (interactive) (udh-c-mode-prettify)))))
       (defun udh-c-mode-keys ()
+        (local-set-key (kbd "C-,") 'flycheck-next-error)
 	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
 	(local-set-key (kbd "C-M-t") 'hs-hide-level)
 	(local-set-key (kbd "M-{") 'hs-hide-block)
