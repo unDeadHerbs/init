@@ -268,15 +268,22 @@ unDeadHerbs's emacs init file
      (global-set-key (kbd "C-c b") 'org-iswitchb)
    #+END_SRC
 * Major Mode Settings
-** Org Mode
+** EXWM
    :PROPERTIES:
-   :NAME:     cpp_pretty
+   :NAME:     EXWM_settings
    :END:
    #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((dot . t)
-	 (octave . t)))
+     (if (string= "kitchensink" (system-name))
+	 (progn
+	  (require 'exwm)
+	  (require 'exwm-config)
+	  (exwm-config-default)
+	  ;; TODO: rebind all of the window navigation keys
+	  ;; TODO: bind S-x to match d-menu
+	  ;; TODO: setup monitor xrandr
+	  (require 'exwm-systemtray)
+	  (exwm-systemtray-enable)
+	  ))
    #+end_src
 ** C Like Language Common Mode
     :PROPERTIES:
@@ -422,6 +429,11 @@ unDeadHerbs's emacs init file
    :NAME:     org_settings
    :END:
    #+BEGIN_SRC emacs-lisp
+     (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((dot . t))
+	 (octave . t)))
+
      (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
 
      (defun udh-disable-tabs ()
