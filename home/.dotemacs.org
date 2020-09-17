@@ -2,7 +2,9 @@ unDeadHerbs's emacs init file
 
 * Buffer-wide TODO states
   You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
-  #+TODO: BROKEN UNUSED CHECK TODO
+  #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
+  TODO: Does the WORKING tag still disable the code? If so move
+  DISABLED to there and remove WORKING
 
 * Emacs Core Settings
   :PROPERTIES:
