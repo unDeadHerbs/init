@@ -267,6 +267,36 @@ unDeadHerbs's emacs init file
    :PROPERTIES:
    :NAME:     org_mode
    :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
+
+     (defun udh-disable-tabs ()
+       (setq indent-tabs-mode nil))
+     (add-hook 'org-mode-hook 'udh-disable-tabs)
+     (add-hook 'org-mode-hook 'flyspell-mode)
+     ;; TODO: Find a better way to detect this.
+     (defun udh-org-trello-detect ()
+       (let ((filename (buffer-file-name (current-buffer))))
+	 (when (and filename (string= "trello" (file-name-extension filename)))
+	   (org-trello-mode))))
+     (add-hook 'org-mode-hook 'udh-org-trello-detect)
+
+     (defun org-collapse-element ()
+	"Moves to parent element and then collapses it."
+	(interactive)
+	(org-up-element)
+	(org-cycle))
+     (defun udh-org-mode-keys ()
+       (local-set-key (kbd "RET") 'org-return-indent)
+       ;;(local-set-key (kbd "M-C-RET") 'org-return)
+       (local-set-key (kbd "M-[") 'org-backward-element)
+       (local-set-key (kbd "M-]") 'org-forward-element)
+       (local-set-key (kbd "M-{") 'org-collapse-element)
+       (local-set-key (kbd "M-}") 'org-down-element)
+       )
+     (add-hook 'org-mode-hook
+	       'udh-org-mode-keys)
+   #+END_SRC
 *** Org Babel
     :PROPERTIES:
     :NAME:     Org_Babel
@@ -437,42 +467,6 @@ unDeadHerbs's emacs init file
    :END:
    #+BEGIN_SRC emacs-lisp
      (setq tramp-default-method "ssh")
-   #+END_SRC
-** Org
-   :PROPERTIES:
-   :NAME:     org_settings
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
-
-     (defun udh-disable-tabs ()
-       (setq indent-tabs-mode nil))
-     (add-hook 'org-mode-hook 'udh-disable-tabs)
-     (add-hook 'org-mode-hook 'flyspell-mode)
-     ;; TODO: Find a better way to detect this.
-     (defun udh-org-trello-detect ()
-       (let ((filename (buffer-file-name (current-buffer))))
-	 (when (and filename (string= "trello" (file-name-extension filename)))
-	   (org-trello-mode))))
-     (add-hook 'org-mode-hook 'udh-org-trello-detect)
-
-     (defun org-collapse-element ()
-	"moves to parent element and then collapses it"
-	(interactive)
-	(org-up-element)
-	(org-cycle))
-     (defun udh-org-mode-keys ()
-       (local-set-key (kbd "RET") 'org-return-indent)
-       ;;(local-set-key (kbd "M-C-RET") 'org-return)
-       (local-set-key (kbd "M-[") 'org-backward-element)
-       (local-set-key (kbd "M-]") 'org-forward-element)
-       (local-set-key (kbd "M-{") 'org-collapse-element)
-       (local-set-key (kbd "M-}") 'org-down-element)
-       )
-     (add-hook 'org-mode-hook
-	       'udh-org-mode-keys)
-
-     (setq indent-tabs-mode nil)
    #+END_SRC
 ** Markdown
    :PROPERTIES:
