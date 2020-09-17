@@ -200,6 +200,17 @@ unDeadHerbs's emacs init file
       (add-hook 'text-mode-hook 'turn-on-flyspell)
       (add-hook 'prog-mode-hook 'turn-on-flyspell-prog)
     #+END_SRC
+** Undo Tree Everywhere
+    :PROPERTIES:
+    :NAME:     Undo_Tree_Everwhere
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun turn-on-undo-tree ()
+	"Unconditionally turn on undo-tree-mode."
+	(undo-tree-mode 1))
+      (add-hook 'text-mode-hook 'turn-on-undo-tree)
+      (add-hook 'prog-mode-hook 'turn-on-undo-tree)
+    #+END_SRC
 ** Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
