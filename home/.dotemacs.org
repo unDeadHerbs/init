@@ -288,9 +288,9 @@ unDeadHerbs's emacs init file
        (require `ob-octave)
        (setq org-confirm-babel-evaluate nil)
      #+END_SRC
-** C Like Language Common Mode
+** C Like Languages
     :PROPERTIES:
-    :NAME:     cpp_pretty
+    :NAME:     c_languages
     :END:
     #+BEGIN_SRC emacs-lisp
        (smart-tabs-insinuate 'c 'c++)
@@ -316,7 +316,36 @@ unDeadHerbs's emacs init file
 	 (flycheck-mode 1)
 	 (flyspell-prog-mode)
 	 )
-       (defun udh-c-mode-prettify ()
+       (add-hook 'c-mode-common-hook
+		 'udh-c-mode-layout)
+       (add-hook 'c-mode-common-hook
+		 'flyspell-prog-mode)
+      (defun udh-c-mode-keys ()
+        (local-set-key (kbd "C-,") 'flycheck-next-error)
+	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
+	(local-set-key (kbd "C-M-t") 'hs-hide-level)
+	(local-set-key (kbd "M-{") 'hs-hide-block)
+	(local-set-key (kbd "M-}") 'hs-show-block)
+	(local-set-key (kbd "C-S-b") (lambda () (interactive)
+				       ;;(flycheck-select-checker 'c/c++-cppcheck)
+				       (flymake-mode -1) (flymake-mode 1)
+				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+				       ))
+	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+					 (flycheck-mode -1) (flymake-mode -1)
+					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+	(setq tags-revert-without-query 1)
+	)
+      (add-hook 'c-mode-common-hook 'udh-c-mode-keys)
+    #+END_SRC
+*** TODO Toggle Hiding opens a new tab in some terminal emulators
+*** DISABLED C Visual Symbols
+    :PROPERTIES:
+    :NAME:     C_Visual_Symbols
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun udh-c-mode-prettify ()
 	 (pretty-mode 1)
 	 (pretty-regexp "--" "↧");"↓"
 	 (pretty-regexp "[+][+]" "↥");"↑"
@@ -338,7 +367,7 @@ unDeadHerbs's emacs init file
 	 (pretty-regexp "true" "⊨")
 	 (pretty-regexp "bool" "⊢");"╠";"├";"¤"
 	 (pretty-regexp "float" "ℝ")
-	 (pretty-regexp "int" "ℤ")
+	 (pretty-regexp "\bint\b" "ℤ")
 	 (pretty-regexp "char" "¶")
 	 (pretty-regexp "void" "Ø")
 	 (pretty-regexp "//" "⑊")
@@ -377,48 +406,30 @@ unDeadHerbs's emacs init file
 	 ;;(pretty-regexp "Key" "🔑")
 	 (pretty-regexp "[*]" "∗")
 	 (pretty-mode -1)
-	 )
-       (add-hook 'c-mode-common-hook
-		 'udh-c-mode-layout)
-       ;(add-hook 'c-mode-common-hook
-       ;         'udh-c-mode-prettify)
-       (add-hook 'c-mode-common-hook
-       		 'flyspell-prog-mode)
-       (add-hook 'c-mode-common-hook
-		 '(lambda () (local-set-key (kbd "C-M-S-p")
-					    '(lambda () (interactive) (udh-c-mode-prettify)))))
-      (defun udh-c-mode-keys ()
-        (local-set-key (kbd "C-,") 'flycheck-next-error)
-	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
-	(local-set-key (kbd "C-M-t") 'hs-hide-level)
-	(local-set-key (kbd "M-{") 'hs-hide-block)
-	(local-set-key (kbd "M-}") 'hs-show-block)
-	(local-set-key (kbd "C-S-b") (lambda () (interactive)
-				       ;;(flycheck-select-checker 'c/c++-cppcheck)
-				       (flymake-mode -1) (flymake-mode 1)
-				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-				       ))
-	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-					 (flycheck-mode -1) (flymake-mode -1)
-					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-	(setq tags-revert-without-query 1)
-	)
+      )
+      (add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
       (add-hook 'c-mode-common-hook
-		'udh-c-mode-keys)
+          '(lambda () (local-set-key (kbd "C-M-S-p")
+              '(lambda () (interactive) (udh-c-mode-prettify)))))
     #+END_SRC
 *** CPP Settings
     :PROPERTIES:
-    :NAME:     cpp_custome_file_extentions
+    :NAME:     Cpp_Settings
     :END:
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
       (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-      (add-hook 'c++-mode-hook
-		(lambda ()
-		  (setq flycheck-clang-language-standard "c++1z")
-		  (flycheck-mode 1)
-		  ))
+      (defun udh-set-flycheck-cpp-language-standard
+		  (setq flycheck-clang-language-standard "c++1z"))
+      (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
+    #+END_SRC
+*** TODO etags
+    :PROPERTIES:
+    :NAME:     Locate_Etags
+    :END:
+    Fix this to be use =which= or something.
+    #+BEGIN_SRC emacs-lisp
+      (setq path-to-ctags "/usr/bin/ctags-emacs-24")
     #+END_SRC
 ** TRAMP
    :PROPERTIES:
@@ -554,11 +565,6 @@ unDeadHerbs's emacs init file
    #+END_SRC
 ** TODO Helm
    (helm-mode 1)
-** TODO etags
-   #+BEGIN_SRC emacs-lisp
-     ;; TODO: That's variable
-     (setq path-to-ctags "/usr/bin/ctags-emacs-24")
-   #+END_SRC
 ** TODO python mode
   :PROPERTIES:
   :NAME:     python_setup
