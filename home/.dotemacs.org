@@ -189,12 +189,16 @@ unDeadHerbs's emacs init file
       (add-hook 'tty-setup-hook
                 (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
     #+END_SRC
-** Text Mode
+** Spell Check Everywhere
     :PROPERTIES:
-    :NAME:     Text_Mode_Fly_Spell
+    :NAME:     Fly_Spell_Everywhere
     :END:
     #+BEGIN_SRC emacs-lisp
+      (defun turn-on-flyspell-prog ()
+	"Unconditionally turn on Flyspell-prog mode."
+	(flyspell-prog-mode 1))
       (add-hook 'text-mode-hook 'turn-on-flyspell)
+      (add-hook 'prog-mode-hook 'turn-on-flyspell-prog)
     #+END_SRC
 ** Tabs and Spaces
    :PROPERTIES:
