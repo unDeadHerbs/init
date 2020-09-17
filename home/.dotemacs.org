@@ -461,13 +461,6 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
       (setq path-to-ctags "/usr/bin/ctags-emacs-24")
     #+END_SRC
-** TRAMP
-   :PROPERTIES:
-   :NAME:     tramp
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq tramp-default-method "ssh")
-   #+END_SRC
 ** Markdown
    :PROPERTIES:
    :NAME:     Markdown
@@ -566,6 +559,13 @@ unDeadHerbs's emacs init file
 
       ]+\\)");set it not to care about the first empty line (org files tend to have one)
     #+END_SRC
+** TRAMP
+   :PROPERTIES:
+   :NAME:     tramp
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (setq tramp-default-method "ssh")
+   #+END_SRC
 ** TODO Flymake
    Move flymake errors to mini-buffer.
 * Large TODOs
