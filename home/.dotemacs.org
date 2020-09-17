@@ -234,6 +234,8 @@ unDeadHerbs's emacs init file
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-x O") 'previous-multiframe-window)
    #+END_SRC
+*** TODO C-x O moves between windows
+    That's obnoxious, only move between frames in active client.
 ** Cursor Movement
    :PROPERTIES:
    :NAME:     cursor_movment_keys
@@ -262,6 +264,22 @@ unDeadHerbs's emacs init file
      (global-set-key (kbd "C-c c") 'org-capture)
      (global-set-key (kbd "C-c b") 'org-iswitchb)
    #+END_SRC
+** TODO ED
+   :PROPERTIES:
+   :NAME:     ED_Keys
+   :END:
+   Replicate some of ED's features
+
+   This should be made into a minor mode once it's larger.
+
+   (require 'multiple-cursors-mode)
+
+   When searching, highlight all lines that are matching, make sure
+   they are visible.  Reduce context around lines until all are
+   visable on screen.
+
+   Really, just make a regex search that filters the visible lines.
+   And a second function to revert the view.
 * Major Mode Settings
 ** Org Mode
    :PROPERTIES:
