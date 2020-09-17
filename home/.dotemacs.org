@@ -520,6 +520,15 @@ unDeadHerbs's emacs init file
                                              ;the forums are unsure
                                              ;https://www.emacswiki.org/emacs/ErcLogging#toc6
     #+END_SRC
+** TODO EWW
+   :PROPERTIES:
+   :NAME:     eww_mode
+   :END:
+   Have each tab rename to the active site
+   Have calling M-x eww make a new tab from any buffer
+   Make a bookmark org file
+   Have a "bookmark and close" function
+   Have a "Dump all tabs to bookmarks" function
 * Minor Mode Settings
 ** Relative Line Numbers
     :PROPERTIES:
