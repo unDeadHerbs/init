@@ -486,6 +486,17 @@ unDeadHerbs's emacs init file
      ;;              'rainbow-blocks-mode)
      (setq indent-tabs-mode nil)
    #+END_SRC
+** TODO Python
+   :PROPERTIES:
+   :NAME:     python_setup
+   :END:
+  ;;;for python
+  ;;enable elpy
+  ;(elpy-enable)
+  ;; set compleat to C-c k
+  ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+  ;; set iedit mode
+  ;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** IRC (ERC)
    :PROPERTIES:
    :NAME:     erc_mode
@@ -559,17 +570,6 @@ unDeadHerbs's emacs init file
    #+END_SRC
 ** TODO Helm
    (helm-mode 1)
-** TODO python mode
-  :PROPERTIES:
-  :NAME:     python_setup
-  :END:
-  ;;;for python
-  ;;enable elpy
-  ;(elpy-enable)
-  ;; set compleat to C-c k
-  ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-  ;; set iedit mode
-  ;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** correct M-arrow to move paragraphs rather than single lines
    (defun org-transpose-paragraphs (arg)
    (interactive)
