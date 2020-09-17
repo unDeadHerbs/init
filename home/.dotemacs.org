@@ -265,14 +265,29 @@ unDeadHerbs's emacs init file
 * Major Mode Settings
 ** Org Mode
    :PROPERTIES:
-   :NAME:     cpp_pretty
+   :NAME:     org_mode
    :END:
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((dot . t)
-	 (octave . t)))
-   #+end_src
+*** Org Babel
+    :PROPERTIES:
+    :NAME:     Org_Babel
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+	  (dot . t)
+	  (octave . t)))
+    #+END_SRC
+**** TODO Org Babel Confirmation
+     :PROPERTIES:
+     :NAME:     Org_Babel_Octave_Confirmation
+     :END:
+     Have this ask once per language per file, as it's currently
+     written it's a security hole.
+     #+BEGIN_SRC emacs-lisp
+       (require `ob-octave)
+       (setq org-confirm-babel-evaluate nil)
+     #+END_SRC
 ** C Like Language Common Mode
     :PROPERTIES:
     :NAME:     cpp_pretty
@@ -617,6 +632,3 @@ unDeadHerbs's emacs init file
    ; Introduction
    ; Chapter 1
    ; ...
-** org-babel-octave
-   (require `ob-octave)
-   (setq org-confirm-babel-evaluate nil)
