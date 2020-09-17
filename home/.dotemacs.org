@@ -2,7 +2,9 @@ unDeadHerbs's emacs init file
 
 * Buffer-wide TODO states
   You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
-  #+TODO: BROKEN UNUSED CHECK TODO
+  #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
+  TODO: Does the WORKING tag still disable the code? If so move
+  DISABLED to there and remove WORKING
 
 * Emacs Core Settings
   :PROPERTIES:
@@ -179,30 +181,6 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
       (show-paren-mode 1) ; highlight matching parentheses
     #+END_SRC
-
-** Whitespace-Mode
-    :PROPERTIES:
-    :NAME:     whitespace_mode
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'whitespace-load-hook
-                '(lambda () (if (display-graphic-p)
-                                (progn (whitespace-mode 1)
-                                       (setq whitespace-style
-                                             '(face tabs spaces trailing space-before-tab
-                                                    newline indentation empty space-after-tab
-                                                    space-mark tab-mark newline-mark)))
-                              (progn (whitespace-mode 1)
-                                     (setq whitespace-style
-                                           '(face tabs trailing space-before-tab
-                                                  newline indentation empty
-                                                  space-mark tab-mark newline-mark))))))
-      (setq whitespace-empty-at-eob-regexp "^
-      \\([
-
-      ]+\\)");set it not to care about the first empty line (org files tend to have one)
-    #+END_SRC
-
 ** Cyan Mini-Buffer
     :PROPERTIES:
     :NAME:     mini_buffer_cyan
@@ -211,17 +189,34 @@ unDeadHerbs's emacs init file
       (add-hook 'tty-setup-hook
                 (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
     #+END_SRC
-** Text Mode
+** Spell Check Everywhere
     :PROPERTIES:
-    :NAME:     Text_Mode_Fly_Spell
+    :NAME:     Fly_Spell_Everywhere
     :END:
     #+BEGIN_SRC emacs-lisp
+      (defun turn-on-flyspell-prog ()
+	"Unconditionally turn on Flyspell-prog mode."
+	(flyspell-prog-mode 1))
       (add-hook 'text-mode-hook 'turn-on-flyspell)
+      (add-hook 'prog-mode-hook 'turn-on-flyspell-prog)
     #+END_SRC
-** Tabs and Spaces
+** Undo Tree Everywhere
+    :PROPERTIES:
+    :NAME:     Undo_Tree_Everwhere
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun turn-on-undo-tree ()
+	"Unconditionally turn on undo-tree-mode."
+	(undo-tree-mode 1))
+      (add-hook 'text-mode-hook 'turn-on-undo-tree)
+      (add-hook 'prog-mode-hook 'turn-on-undo-tree)
+    #+END_SRC
+** TODO Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
    :END:
+   Move most of this into appropriate major modes instead of
+   overriding defaults.
    #+BEGIN_SRC emacs-lisp
      (global-smart-tab-mode 1)
      (setq-default tab-width 2)
@@ -239,6 +234,8 @@ unDeadHerbs's emacs init file
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-x O") 'previous-multiframe-window)
    #+END_SRC
+*** TODO C-x O moves between windows
+    That's obnoxious, only move between frames in active client.
 ** Cursor Movement
    :PROPERTIES:
    :NAME:     cursor_movment_keys
@@ -267,6 +264,22 @@ unDeadHerbs's emacs init file
      (global-set-key (kbd "C-c c") 'org-capture)
      (global-set-key (kbd "C-c b") 'org-iswitchb)
    #+END_SRC
+** TODO ED
+   :PROPERTIES:
+   :NAME:     ED_Keys
+   :END:
+   Replicate some of ED's features
+
+   This should be made into a minor mode once it's larger.
+
+   (require 'multiple-cursors-mode)
+
+   When searching, highlight all lines that are matching, make sure
+   they are visible.  Reduce context around lines until all are
+   visable on screen.
+
+   Really, just make a regex search that filters the visible lines.
+   And a second function to revert the view.
 * Major Mode Settings
 ** EXWM
    :PROPERTIES:
@@ -285,9 +298,64 @@ unDeadHerbs's emacs init file
 	  (exwm-systemtray-enable)
 	  ))
    #+end_src
-** C Like Language Common Mode
+** Org Mode
+   :PROPERTIES:
+   :NAME:     org_mode
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
+
+     (defun udh-disable-tabs ()
+       (setq indent-tabs-mode nil))
+     (add-hook 'org-mode-hook 'udh-disable-tabs)
+     (add-hook 'org-mode-hook 'flyspell-mode)
+     ;; TODO: Find a better way to detect this.
+     (defun udh-org-trello-detect ()
+       (let ((filename (buffer-file-name (current-buffer))))
+	 (when (and filename (string= "trello" (file-name-extension filename)))
+	   (org-trello-mode))))
+     (add-hook 'org-mode-hook 'udh-org-trello-detect)
+
+     (defun org-collapse-element ()
+	"Moves to parent element and then collapses it."
+	(interactive)
+	(org-up-element)
+	(org-cycle))
+     (defun udh-org-mode-keys ()
+       (local-set-key (kbd "RET") 'org-return-indent)
+       ;;(local-set-key (kbd "M-C-RET") 'org-return)
+       (local-set-key (kbd "M-[") 'org-backward-element)
+       (local-set-key (kbd "M-]") 'org-forward-element)
+       (local-set-key (kbd "M-{") 'org-collapse-element)
+       (local-set-key (kbd "M-}") 'org-down-element)
+       )
+     (add-hook 'org-mode-hook
+	       'udh-org-mode-keys)
+   #+END_SRC
+*** Org Babel
     :PROPERTIES:
-    :NAME:     cpp_pretty
+    :NAME:     Org_Babel
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+	  (dot . t)
+	  (octave . t)))
+    #+END_SRC
+**** TODO Org Babel Confirmation
+     :PROPERTIES:
+     :NAME:     Org_Babel_Octave_Confirmation
+     :END:
+     Have this ask once per language per file, as it's currently
+     written it's a security hole.
+     #+BEGIN_SRC emacs-lisp
+       (require `ob-octave)
+       (setq org-confirm-babel-evaluate nil)
+     #+END_SRC
+** C Like Languages
+    :PROPERTIES:
+    :NAME:     c_languages
     :END:
     #+BEGIN_SRC emacs-lisp
        (smart-tabs-insinuate 'c 'c++)
@@ -313,7 +381,36 @@ unDeadHerbs's emacs init file
 	 (flycheck-mode 1)
 	 (flyspell-prog-mode)
 	 )
-       (defun udh-c-mode-prettify ()
+       (add-hook 'c-mode-common-hook
+		 'udh-c-mode-layout)
+       (add-hook 'c-mode-common-hook
+		 'flyspell-prog-mode)
+      (defun udh-c-mode-keys ()
+        (local-set-key (kbd "C-,") 'flycheck-next-error)
+	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
+	(local-set-key (kbd "C-M-t") 'hs-hide-level)
+	(local-set-key (kbd "M-{") 'hs-hide-block)
+	(local-set-key (kbd "M-}") 'hs-show-block)
+	(local-set-key (kbd "C-S-b") (lambda () (interactive)
+				       ;;(flycheck-select-checker 'c/c++-cppcheck)
+				       (flymake-mode -1) (flymake-mode 1)
+				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+				       ))
+	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+					 (flycheck-mode -1) (flymake-mode -1)
+					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+	(setq tags-revert-without-query 1)
+	)
+      (add-hook 'c-mode-common-hook 'udh-c-mode-keys)
+    #+END_SRC
+*** TODO Toggle Hiding opens a new tab in some terminal emulators
+*** DISABLED C Visual Symbols
+    :PROPERTIES:
+    :NAME:     C_Visual_Symbols
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun udh-c-mode-prettify ()
 	 (pretty-mode 1)
 	 (pretty-regexp "--" "↧");"↓"
 	 (pretty-regexp "[+][+]" "↥");"↑"
@@ -335,7 +432,7 @@ unDeadHerbs's emacs init file
 	 (pretty-regexp "true" "⊨")
 	 (pretty-regexp "bool" "⊢");"╠";"├";"¤"
 	 (pretty-regexp "float" "ℝ")
-	 (pretty-regexp "int" "ℤ")
+	 (pretty-regexp "\bint\b" "ℤ")
 	 (pretty-regexp "char" "¶")
 	 (pretty-regexp "void" "Ø")
 	 (pretty-regexp "//" "⑊")
@@ -374,97 +471,31 @@ unDeadHerbs's emacs init file
 	 ;;(pretty-regexp "Key" "🔑")
 	 (pretty-regexp "[*]" "∗")
 	 (pretty-mode -1)
-	 )
-       (add-hook 'c-mode-common-hook
-		 'udh-c-mode-layout)
-       ;(add-hook 'c-mode-common-hook
-       ;         'udh-c-mode-prettify)
-       (add-hook 'c-mode-common-hook
-       		 'flyspell-prog-mode)
-       (add-hook 'c-mode-common-hook
-		 '(lambda () (local-set-key (kbd "C-M-S-p")
-					    '(lambda () (interactive) (udh-c-mode-prettify)))))
-      (defun udh-c-mode-keys ()
-        (local-set-key (kbd "C-,") 'flycheck-next-error)
-	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
-	(local-set-key (kbd "C-M-t") 'hs-hide-level)
-	(local-set-key (kbd "M-{") 'hs-hide-block)
-	(local-set-key (kbd "M-}") 'hs-show-block)
-	(local-set-key (kbd "C-S-b") (lambda () (interactive)
-				       ;;(flycheck-select-checker 'c/c++-cppcheck)
-				       (flymake-mode -1) (flymake-mode 1)
-				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-				       ))
-	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-					 (flycheck-mode -1) (flymake-mode -1)
-					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-	(setq tags-revert-without-query 1)
-	)
+      )
+      (add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
       (add-hook 'c-mode-common-hook
-		'udh-c-mode-keys)
+          '(lambda () (local-set-key (kbd "C-M-S-p")
+              '(lambda () (interactive) (udh-c-mode-prettify)))))
     #+END_SRC
 *** CPP Settings
     :PROPERTIES:
-    :NAME:     cpp_custome_file_extentions
+    :NAME:     Cpp_Settings
     :END:
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
       (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-      (add-hook 'c++-mode-hook
-		(lambda ()
-		  (setq flycheck-clang-language-standard "c++1z")
-		  (flycheck-mode 1)
-		  ))
+      (defun udh-set-flycheck-cpp-language-standard
+		  (setq flycheck-clang-language-standard "c++1z"))
+      (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
     #+END_SRC
-** TRAMP
-   :PROPERTIES:
-   :NAME:     tramp
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq tramp-default-method "ssh")
-   #+END_SRC
-** Org
-   :PROPERTIES:
-   :NAME:     org_settings
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((dot . t))
-	 (octave . t)))
-
-     (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
-
-     (defun udh-disable-tabs ()
-       (setq indent-tabs-mode nil))
-     (add-hook 'org-mode-hook 'udh-disable-tabs)
-     (add-hook 'org-mode-hook 'flyspell-mode)
-     ;; TODO: Find a better way to detect this.
-     (defun udh-org-trello-detect ()
-       (let ((filename (buffer-file-name (current-buffer))))
-	 (when (and filename (string= "trello" (file-name-extension filename)))
-	   (org-trello-mode))))
-     (add-hook 'org-mode-hook 'udh-org-trello-detect)
-
-     (defun org-collapse-element ()
-	"moves to parent element and then collapses it"
-	(interactive)
-	(org-up-element)
-	(org-cycle))
-     (defun udh-org-mode-keys ()
-       (local-set-key (kbd "RET") 'org-return-indent)
-       ;;(local-set-key (kbd "M-C-RET") 'org-return)
-       (local-set-key (kbd "M-[") 'org-backward-element)
-       (local-set-key (kbd "M-]") 'org-forward-element)
-       (local-set-key (kbd "M-{") 'org-collapse-element)
-       (local-set-key (kbd "M-}") 'org-down-element)
-       )
-     (add-hook 'org-mode-hook
-	       'udh-org-mode-keys)
-
-     (setq indent-tabs-mode nil)
-   #+END_SRC
+*** TODO etags
+    :PROPERTIES:
+    :NAME:     Locate_Etags
+    :END:
+    Fix this to be use =which= or something.
+    #+BEGIN_SRC emacs-lisp
+      (setq path-to-ctags "/usr/bin/ctags-emacs-24")
+    #+END_SRC
 ** Markdown
    :PROPERTIES:
    :NAME:     Markdown
@@ -483,6 +514,17 @@ unDeadHerbs's emacs init file
      ;;              'rainbow-blocks-mode)
      (setq indent-tabs-mode nil)
    #+END_SRC
+** TODO Python
+   :PROPERTIES:
+   :NAME:     python_setup
+   :END:
+  ;;;for python
+  ;;enable elpy
+  ;(elpy-enable)
+  ;; set compleat to C-c k
+  ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+  ;; set iedit mode
+  ;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** IRC (ERC)
    :PROPERTIES:
    :NAME:     erc_mode
@@ -506,6 +548,22 @@ unDeadHerbs's emacs init file
                                              ;the forums are unsure
                                              ;https://www.emacswiki.org/emacs/ErcLogging#toc6
     #+END_SRC
+** TODO EWW
+   :PROPERTIES:
+   :NAME:     eww_mode
+   :END:
+   Have each tab rename to the active site
+   Have calling M-x eww make a new tab from any buffer
+   Make a bookmark org file
+   Have a "bookmark and close" function
+   Have a "Dump all tabs to bookmarks" function
+** Pascal
+   :PROPERTIES:
+   :NAME:     Pascal_Mode
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
+   #+END_SRC
 * Minor Mode Settings
 ** Relative Line Numbers
     :PROPERTIES:
@@ -514,17 +572,38 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
       (setq relative-line-numbers-motion-function 'forward-visible-line)
     #+END_SRC
+** Whitespace-Mode
+   :PROPERTIES:
+   :NAME:     whitespace_mode
+   :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'whitespace-load-hook
+		'(lambda () (if (display-graphic-p)
+				(progn (whitespace-mode 1)
+                                       (setq whitespace-style
+                                             '(face tabs spaces trailing space-before-tab
+                                                    newline indentation empty space-after-tab
+                                                    space-mark tab-mark newline-mark)))
+                              (progn (whitespace-mode 1)
+                                     (setq whitespace-style
+                                           '(face tabs trailing space-before-tab
+                                                  newline indentation empty
+                                                  space-mark tab-mark newline-mark))))))
+      (setq whitespace-empty-at-eob-regexp "^
+      \\([
+
+      ]+\\)");set it not to care about the first empty line (org files tend to have one)
+    #+END_SRC
+** TRAMP
+   :PROPERTIES:
+   :NAME:     tramp
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (setq tramp-default-method "ssh")
+   #+END_SRC
 ** TODO Flymake
    Move flymake errors to mini-buffer.
 * Large TODOs
-** File Extensions
-   :PROPERTIES:
-   :NAME:     file_extentions
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     ;; TODO: Move this into each major mode's config.
-     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
-   #+END_SRC
 ** TODO YASnippet
    #+BEGIN_SRC emacs-lisp
                                              ;(yas-reload-all)
@@ -534,22 +613,6 @@ unDeadHerbs's emacs init file
    #+END_SRC
 ** TODO Helm
    (helm-mode 1)
-** TODO etags
-   #+BEGIN_SRC emacs-lisp
-     ;; TODO: That's variable
-     (setq path-to-ctags "/usr/bin/ctags-emacs-24")
-   #+END_SRC
-** TODO python mode
-  :PROPERTIES:
-  :NAME:     python_setup
-  :END:
-  ;;;for python
-  ;;enable elpy
-  ;(elpy-enable)
-  ;; set compleat to C-c k
-  ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-  ;; set iedit mode
-  ;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** correct M-arrow to move paragraphs rather than single lines
    (defun org-transpose-paragraphs (arg)
    (interactive)
@@ -612,6 +675,3 @@ unDeadHerbs's emacs init file
    ; Introduction
    ; Chapter 1
    ; ...
-** org-babel-octave
-   (require `ob-octave)
-   (setq org-confirm-babel-evaluate nil)
