@@ -211,10 +211,12 @@ unDeadHerbs's emacs init file
       (add-hook 'text-mode-hook 'turn-on-undo-tree)
       (add-hook 'prog-mode-hook 'turn-on-undo-tree)
     #+END_SRC
-** Tabs and Spaces
+** TODO Tabs and Spaces
    :PROPERTIES:
    :NAME:     tabs_and_spaces
    :END:
+   Move most of this into appropriate major modes instead of
+   overriding defaults.
    #+BEGIN_SRC emacs-lisp
      (global-smart-tab-mode 1)
      (setq-default tab-width 2)
