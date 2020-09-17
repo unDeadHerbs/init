@@ -179,30 +179,6 @@ unDeadHerbs's emacs init file
     #+BEGIN_SRC emacs-lisp
       (show-paren-mode 1) ; highlight matching parentheses
     #+END_SRC
-
-** Whitespace-Mode
-    :PROPERTIES:
-    :NAME:     whitespace_mode
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'whitespace-load-hook
-                '(lambda () (if (display-graphic-p)
-                                (progn (whitespace-mode 1)
-                                       (setq whitespace-style
-                                             '(face tabs spaces trailing space-before-tab
-                                                    newline indentation empty space-after-tab
-                                                    space-mark tab-mark newline-mark)))
-                              (progn (whitespace-mode 1)
-                                     (setq whitespace-style
-                                           '(face tabs trailing space-before-tab
-                                                  newline indentation empty
-                                                  space-mark tab-mark newline-mark))))))
-      (setq whitespace-empty-at-eob-regexp "^
-      \\([
-
-      ]+\\)");set it not to care about the first empty line (org files tend to have one)
-    #+END_SRC
-
 ** Cyan Mini-Buffer
     :PROPERTIES:
     :NAME:     mini_buffer_cyan
@@ -501,6 +477,28 @@ unDeadHerbs's emacs init file
     :END:
     #+BEGIN_SRC emacs-lisp
       (setq relative-line-numbers-motion-function 'forward-visible-line)
+    #+END_SRC
+** Whitespace-Mode
+   :PROPERTIES:
+   :NAME:     whitespace_mode
+   :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'whitespace-load-hook
+		'(lambda () (if (display-graphic-p)
+				(progn (whitespace-mode 1)
+                                       (setq whitespace-style
+                                             '(face tabs spaces trailing space-before-tab
+                                                    newline indentation empty space-after-tab
+                                                    space-mark tab-mark newline-mark)))
+                              (progn (whitespace-mode 1)
+                                     (setq whitespace-style
+                                           '(face tabs trailing space-before-tab
+                                                  newline indentation empty
+                                                  space-mark tab-mark newline-mark))))))
+      (setq whitespace-empty-at-eob-regexp "^
+      \\([
+
+      ]+\\)");set it not to care about the first empty line (org files tend to have one)
     #+END_SRC
 ** TODO Flymake
    Move flymake errors to mini-buffer.
