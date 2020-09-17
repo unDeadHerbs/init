@@ -529,6 +529,13 @@ unDeadHerbs's emacs init file
    Make a bookmark org file
    Have a "bookmark and close" function
    Have a "Dump all tabs to bookmarks" function
+** Pascal
+   :PROPERTIES:
+   :NAME:     Pascal_Mode
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
+   #+END_SRC
 * Minor Mode Settings
 ** Relative Line Numbers
     :PROPERTIES:
@@ -562,14 +569,6 @@ unDeadHerbs's emacs init file
 ** TODO Flymake
    Move flymake errors to mini-buffer.
 * Large TODOs
-** File Extensions
-   :PROPERTIES:
-   :NAME:     file_extentions
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     ;; TODO: Move this into each major mode's config.
-     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
-   #+END_SRC
 ** TODO YASnippet
    #+BEGIN_SRC emacs-lisp
                                              ;(yas-reload-all)
