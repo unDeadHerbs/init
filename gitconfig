@@ -18,15 +18,31 @@
 	submodulesummary = true
 [alias]
 
-	########################
-	# Second Order Command #
-	########################
+	#
+	##
+	##########################
+	### Second Order Command #
+	##########################
+	##
+	#
 
-	# TODO: add GIT_PREFIX to these
 	debug = "!GIT_TRACE=1 git"
+	# TODO: add GIT_PREFIX to this
 	pipe-in = "!xargs -L 1 git"
-	paged = "!f(){ git "$@" | less -FXR; }; f"
-	stash-wrap = "!f(){ git stash; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
+	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git "$@" | less -FXR; }; f"
+	# TODO: make sure that staged and unstagedness is kept
+	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
+	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstanged; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
+
+	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; } f"
+
+	#
+	##
+	#####################
+	### Normal Commands #
+	#####################
+	##
+	#
 
 	######################
 	# General Inspection #
@@ -92,13 +108,13 @@
 	rebase-standard                     = "rebase "
 	rebase-branch-from-branch-to-branch = "!f(){ git rebase-standard --onto $3 $2 $1 ; }; f"
 	rebase-branch-onto-here             = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
-	rebase-here-onto-branch             = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
+	#TODO: works when run manual, but fails when called
+	#rebase-here-onto-branch             = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
 	#test-commits-count-command          = "" TODO git rebase --interactive --exec
 	#test-commits-command-opt-count      = check back to last merge
 	reorder-last-commits-count          = "!f(){ git stash-wrap rebase --interactive HEAD~$1 ; }; f"
 	reorder-last-commits-opt-count      = "!f(){ if [ $# -eq 0 ]; then git reorder-last-commits-count $(git rev-list --count master..HEAD); else git reorder-last-commits-count "$1"; fi; }; f"
-	#eject-hash-from-history-verbose     = stash unstaged; stash staged; checkout hash;make branch name; rebase; checkout head; remove tmp branch name; pop staged; add; pop unstaged; git log-relivant HEAD hash
-	#amend-staged-to-hash-verbose        = stash unstaged; stash staged; checkout hash; pop staged; amend-with-staged-keep-date; rebase all but hash onto new commit; move back to head; pop unstaged; git log-relivant HEAD hash
+	#eject-hash-from-history-verbose     = stash-unstaged; stash staged; checkout hash;make branch name; rebase; checkout head; remove tmp branch name; pop staged; add; pop unstaged; git log-relivant HEAD hash
 
 	###############################
 	# Head and Label Manipulation #
@@ -119,13 +135,22 @@
 	add-verbose-opt-list           = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
 	add-interactive-opt-list       = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-interactive --all ; else git add-interactive \"$@\"; fi }; f"
 	amend-with-staged              = "commit-standard --amend --reuse-message=HEAD"
-	amend-with-staged-keep-date    = "amend-with-staged --date='`git show -s --format=%ci`'"
+	#TODO: Fix this, probably with commit-tree
+	#amend-with-staged-keep-date    = "!f(){ git amend-with-staged --date=\"`git show -s --format=%ci`\"; }; f"
 	amend-with-staged-opt-message  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard --amend --reuse-message=HEAD; else git commit-standard --amend -m \"$@\"; fi }; f"
 	add-to-last-commit             = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"$@\" && git amend-with-staged ; }; f"
 	unstage-all                    = "reset -q"
 
 	commit-standard              = "commit"
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
+
+	#########################
+	# Not Head Manipulation #
+	#########################
+
+	#amend-staged-to-hash-verbose-unsafe = "git do-at-hash "$1" ammend-with-staged-keep-date; rebase all but hash onto new commit; move back to head; pop unstaged; git log-relivant HEAD hash"
+	#amend-staged-to-hash-verbose        = "stash-unstaged-wrap amend-staged-to-hash-verbose-unsafe"
+
 
 	################
 	# Stash Things #
@@ -134,9 +159,18 @@
 	stash-unstanged = "stash save --keep-index"
 	stash-tracked = "stash"
 	stash-all     = "stash --include-untracked"
-	stash-ignored = "stash --all"
+	#TODO: this won't work because stash-wrap will see the new stash
+	#stash-ignored = "stash-wrap stash --all"
 	stash-tracked-verbose = "!git unstage-all && git add-verbose-opt-list && git stash-tracked"
-	stash-pop-stage = "!f(){ git stash pop; git add --all; }; f"
+	stash-pop-and-stage = "!f(){ git stash pop; git add --all; }; f"
+
+	#
+	##
+	########################
+	### Non-Standard Modes #
+	########################
+	##
+	#
 
 	##############
 	# Submodules #
@@ -164,9 +198,13 @@
 	add-and-commit        = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
 	log-status           = "!git log-top-twenty && echo && git status"
 
-	##############
-	# Shorthands #
-	##############
+	#
+	##
+	################
+	### Shorthands #
+	################
+	##
+	#
 
 	chk  = "checkout-or-create"
 	ac   = "add-and-commit"
