@@ -325,24 +325,146 @@ unDeadHerbs's emacs init file
 
    Really, just make a regex search that filters the visible lines.
    And a second function to revert the view.
+* Computer Specific
+** Kitchen Sink (Laptop)
+   :PROPERTIES:
+   :NAME:     Kitchen_Sink
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (setq is-kitchensink (string= "kitchensink" (system-name)))
+   #+END_SRC
+*** GUIX
+    :PROPERTIES:
+    :NAME:     Kitchensink_Guix
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (if is-kitchensink
+ 	  (progn
+		(mapcar 'udh-install-and-load '(guix pretty-sha-path))
+	  ))
+    #+END_SRC
+**** TODO Something doesn't work here
+**** TODO Move installed packages from zsh to here
+*** Start EXWM
+    :PROPERTIES:
+    :NAME:     Kitchensink_EXWM_Init
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (if is-kitchensink
+	  (progn
+	    (setq mouse-autoselect-window t
+		  focus-follows-mouse t)
+
+	    (mapcar 'udh-install-and-load '(exwm exwm-mff))
+	    (require 'exwm)
+	    (require 'exwm-config)
+	    (exwm-config-default)
+	    ;; TODO: bind S-x to match d-menu
+	    (require 'exwm-systemtray)
+	    (exwm-systemtray-enable)
+	    (setq exwm-manage-force-tiling t)
+	    ))
+    #+END_SRC
+**** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
 * Major Mode Settings
 ** EXWM
    :PROPERTIES:
    :NAME:     EXWM_settings
    :END:
-   #+BEGIN_SRC emacs-lisp
-     (if (string= "kitchensink" (system-name))
-	 (progn
-	  (require 'exwm)
-	  (require 'exwm-config)
-	  (exwm-config-default)
-	  ;; TODO: rebind all of the window navigation keys
-	  ;; TODO: bind S-x to match d-menu
-	  ;; TODO: setup monitor xrandr
-	  (require 'exwm-systemtray)
-	  (exwm-systemtray-enable)
-	  ))
-   #+end_src
+   EXWM isn't loaded here since it's only wanted on some systems.
+*** TODO Only run this section if exwm is loaded
+*** Key-binds
+    :PROPERTIES:
+    :NAME:     EXWM_Keybinds
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (setq exwm-input-global-keys
+	`(([?\s-r] . exwm-reset)
+	  ([?\s-w] . exwm-workspace-switch)
+	  ,@(mapcar (lambda (i)
+		      `(,(kbd (format "s-%d" i)) .
+			(lambda ()
+			  (interactive)
+			  (exwm-workspace-switch-create ,i))))
+		    (number-sequence 0 9))))
+
+      (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+    #+END_SRC
+**** TODO Frame Navigation Keys
+     Bind s-<XF86Back> and s-<XF86Forward> to 'previous-buffer and
+     'next-buffer respectively, or something similar to move between
+     frames or workspaces.
+**** TODO Rescue C-c
+     I don't like bindings to C-c, not really sure why.  There are
+     several bindings to C-c in EXWM, move them over to s- bindings.
+
+     Some of the default bindings are:
+     |-------------+-------------------------------+-------------------------------------------------------------------------------------|
+     | C-c C-f     | exwm-layout-set-fullscreen    | Enter fullscreen mode                                                               |
+     | C-c C-h     | exwm-floating-hide            | Hide a floating X window                                                            |
+     | C-c C-k     | exwm-input-release-keyboard   | Switch to char-mode                                                                 |
+     | C-c C-m     | exwm-workspace-move-window    | Move X window to another workspace                                                  |
+     | C-c C-q     | exwm-input-send-next-key      | Send a single key to the X window;   can be prefixed with C-u to send multiple keys |
+     | C-c C-t C-f | exwm-floating-toggle-floating | Toggle between tiling and floating mode                                             |
+     | C-c C-t C-m | exwm-layout-toggle-mode-line  | Toggle mode-line                                                                    |
+     |-------------+-------------------------------+-------------------------------------------------------------------------------------|
+
+     Probably map though them and bind them to S-c by default.
+
+     Unbind all C-c Commands.  (Not sure if this sends C-c to
+     underlying frame or just blocks it entirely.
+     #+BEGIN_SRC emacs-lisp
+       (define-key exwm-mode-map (kbd "C-c") nil)
+     #+END_SRC
+**** UNUSED Program Specific Bindings
+     I don't have any yet, but they'll follow this form if I do
+     #+BEGIN_SRC emacs-lisp
+     (add-hook 'exwm-manage-finish-hook
+          (lambda ()
+            (when (and exwm-class-name
+                       (string= exwm-class-name "XTerm"))
+              (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
+     #+END_SRC
+*** TODO Task Safety
+    Unbind M-! or have some timeout command on it.  Since Emacs is
+    single threaded starting a non-forked task though M-! will block
+    Emacs and therefore EXWM.
+*** UNUSED Multi Screen
+    If (when) I use EXWM on a multi screen computer.
+    #+BEGIN_SRC emacs-lisp
+      (require 'exwm-randr)
+      (setq exwm-randr-workspace-output-plist '(0 "VGA1"))
+      (add-hook 'exwm-randr-screen-change-hook
+		(lambda ()
+		  (start-process-shell-command
+		   "xrandr" nil "xrandr --output VGA1 --left-of LVDS1 --auto")))
+      (exwm-randr-enable)
+    #+END_SRC
+**** UNUSED Dynamic Multiple Monitors
+     For if the docking station gets a second monitor again.
+     #+BEGIN_SRC emacs-lisp
+       (defun exwm-change-screen-hook ()
+	 (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+	       default-output)
+	   (with-temp-buffer
+	     (call-process "xrandr" nil t nil)
+	     (goto-char (point-min))
+	     (re-search-forward xrandr-output-regexp nil 'noerror)
+	     (setq default-output (match-string 1))
+	     (forward-line)
+	     (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+		 (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+	       (call-process
+		"xrandr" nil nil nil
+		"--output" (match-string 1) "--primary" "--auto"
+		"--output" default-output "--off")
+	       (setq exwm-randr-workspace-output-plist (list 0 (match-string 1)))))))
+     #+END_SRC
+*** TODO Tabs
+    Find a nest-able tabbed interface to use.  Some options are:
+    Nerdtab, frame-tabs, rings, tab-group, tabbar, or there might be a
+    EXWM builtin.
 ** Org Mode
    :PROPERTIES:
    :NAME:     Org_Mode_Settings
