@@ -91,7 +91,7 @@ unDeadHerbs's emacs init file
 			       org-dotemacs
 			       org-plus-contrib
 			       org-bullets
-			       org-trello
+			       ;;org-trello
 			       org-preview-html
 			       ;; Org Bable
 			       ob-spice
@@ -169,6 +169,25 @@ unDeadHerbs's emacs init file
    :END:
    #+BEGIN_SRC emacs-lisp
      (persistent-scratch-setup-default)
+   #+END_SRC
+** Disable IDO
+   :PROPERTIES:
+   :NAME:     No_IDO
+   :END:
+   IDO mode seems like a goodish idea, but it currently badly
+   interacts with most of the rest of Emacs.  I'm disabling it for a
+   few years and then will check back on it.
+
+   At first I tried, =(ido-mode nil)= but that breaks org mode.
+
+   Using =(unload-feature 'ido)= provides helpful errors but doesn't
+   prevent ido from loading.
+
+   #+BEGIN_SRC emacs-lisp
+     (customize-set-variable
+	  'package-load-list (quote (all (ido nil))))
+     (customize-save-variable
+	  'package-load-list (quote (all (ido nil))))
    #+END_SRC
 * Global Text Presentation Settings
   :PROPERTIES:
