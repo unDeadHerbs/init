@@ -1,5 +1,6 @@
 unDeadHerbs's emacs init file
 
+* TODO README
 * Buffer-wide TODO states
   You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
   #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
@@ -219,6 +220,7 @@ unDeadHerbs's emacs init file
       (add-hook 'text-mode-hook 'turn-on-flyspell)
       (add-hook 'prog-mode-hook 'turn-on-flyspell-prog)
     #+END_SRC
+*** TODO Some modes seem to be not handled, namely org and magit-commit
 ** Undo Tree Everywhere
     :PROPERTIES:
     :NAME:     Undo_Tree_Everwhere
@@ -246,6 +248,8 @@ unDeadHerbs's emacs init file
      (make-variable-buffer-local 'indent-tabs-mode)
    #+END_SRC
 * Global Keyboard Interface
+** TODO Navigation
+   Have C-c C-c follow a link into org or eww if not in org.
 ** Frame Movement
    :PROPERTIES:
    :NAME:     frame_controll_keys
@@ -569,7 +573,7 @@ unDeadHerbs's emacs init file
     #+END_SRC
 ** TODO EWW
    :PROPERTIES:
-   :NAME:     eww_mode
+   :NAME:     EWW_Mode
    :END:
    Have each tab rename to the active site
    Have calling M-x eww make a new tab from any buffer
@@ -622,7 +626,7 @@ unDeadHerbs's emacs init file
    #+END_SRC
 ** TODO Flymake
    Move flymake errors to mini-buffer.
-* Large TODOs
+* Unsorted TODOs
 ** TODO YASnippet
    #+BEGIN_SRC emacs-lisp
                                              ;(yas-reload-all)
