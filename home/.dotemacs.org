@@ -1,6 +1,16 @@
 unDeadHerbs's emacs init file
 
 * TODO README
+* Personage Attributes
+  :PROPERTIES:
+  :NAME:     Name_and_Rank
+  :END:
+  #+BEGIN_SRC emacs-lisp
+    (setq user-full-name "Murray Fordyce")
+    (setq user-mail-address "unDeadHerbs@gmail.com")
+    (setq copyright-names-regexp
+	  (format "%s <%s>" user-full-name user-mail-address))
+  #+END_SRC
 * Buffer-wide TODO states
   You need a line like the following one somewhere in the file to be able to mark blocks as broken or unused.
   #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
