@@ -247,6 +247,7 @@ unDeadHerbs's emacs init file
 			       multiple-cursors
 			       persistent-scratch
 			       pretty-mode
+			       undo-tree
 			       ;; TODO: tmux-pane
 			       tramp
 			       ;; TODO: visible-mark
@@ -261,7 +262,6 @@ unDeadHerbs's emacs init file
 			       flymake-cursor
 			       flymake-easy
 			       smart-tabs-mode
-			       ;yasnippet
 			       ;; Git
 			       magit
 			       magit-filenotify
@@ -409,10 +409,12 @@ unDeadHerbs's emacs init file
       (defun turn-on-flyspell-prog ()
 	"Unconditionally turn on Flyspell-prog mode."
 	(flyspell-prog-mode 1))
-      (add-hook 'text-mode-hook 'turn-on-flyspell)
-      (add-hook 'prog-mode-hook 'turn-on-flyspell-prog)
+      (add-hook 'text-mode-hook #'turn-on-flyspell)
+      (add-hook 'prog-mode-hook #'turn-on-flyspell-prog)
     #+END_SRC
 *** TODO Some modes seem to be not handled, namely org and magit-commit
+    Looking into the run hooks, it claims that text-mode-hook should
+    be run, org might just be clearing the minor mode away.
 ** Undo Tree Everywhere
     :PROPERTIES:
     :NAME:     Undo_Tree_Everwhere
@@ -427,6 +429,8 @@ unDeadHerbs's emacs init file
       (add-hook 'prog-mode-hook 'turn-on-undo-tree)
     #+END_SRC
 *** TODO Can I have that enable when called rather than always on?
+    I don't expect that the efficiency implications of this will
+    matter, but it's good to care.
 ** TODO Tabs and Spaces
    :PROPERTIES:
    :NAME:     Tabs_and_Spaces_Settings
@@ -551,6 +555,8 @@ unDeadHerbs's emacs init file
 	    ))
     #+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
+** Windmills (Tower)
+*** TODO Decrease emacs default font size two points
 * Major Mode Settings
 ** EXWM
    :PROPERTIES:
@@ -933,24 +939,24 @@ unDeadHerbs's emacs init file
    :PROPERTIES:
    :NAME:     Whitespace_Mode
    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'whitespace-load-hook
-		'(lambda () (if (display-graphic-p)
-				(progn (whitespace-mode 1)
-                                       (setq whitespace-style
-                                             '(face tabs spaces trailing space-before-tab
-                                                    newline indentation empty space-after-tab
-                                                    space-mark tab-mark newline-mark)))
-                              (progn (whitespace-mode 1)
-                                     (setq whitespace-style
-                                           '(face tabs trailing space-before-tab
-                                                  newline indentation empty
-                                                  space-mark tab-mark newline-mark))))))
-      (setq whitespace-empty-at-eob-regexp "^
-      \\([
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'whitespace-load-hook
+	       '(lambda () (if (display-graphic-p)
+			       (progn (whitespace-mode 1)
+				      (setq whitespace-style
+					    '(face tabs spaces trailing space-before-tab
+						   newline indentation empty space-after-tab
+						   space-mark tab-mark newline-mark)))
+			     (progn (whitespace-mode 1)
+				    (setq whitespace-style
+					  '(face tabs trailing space-before-tab
+						 newline indentation empty
+						 space-mark tab-mark newline-mark))))))
+     (setq whitespace-empty-at-eob-regexp "^
+     \\([
 
-      ]+\\)");set it not to care about the first empty line (org files tend to have one)
-    #+END_SRC
+     ]+\\)");set it not to care about the first empty line (org files tend to have one)
+   #+END_SRC
 *** TODO Organize that code better and give the function a name
 ** TRAMP
    :PROPERTIES:
