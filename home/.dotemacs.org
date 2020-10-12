@@ -1,6 +1,8 @@
+-*- mode: org; eval: (org-show-todo-tree '()) -*-
 unDeadHerbs's emacs init file
 
 * TODO README
+  This config file is loaded by =org-dotemacs=.
 * Personage Attributes
   :PROPERTIES:
   :NAME:     Name_and_Rank
@@ -16,6 +18,190 @@ unDeadHerbs's emacs init file
   #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
 ** TODO Does the WORKING tag still disable the code?
    If so move DISABLED to there and remove WORKING
+* GTD
+  Getting Things Done is an old book with lots of opinions, some of
+  which are good ideas.
+
+  |------------------+-----------+------------|
+  | Action           | Keybind   | Location   |
+  |------------------+-----------+------------|
+  | Agenda           | C-c a g   | Global     |
+  | Capture          | C-c c     | Global     |
+  | Effort           | C-c C-x e | Org Header |
+  | Refile           | C-c C-w   | Org Header |
+  | Task List        | C-c a t   | Global     |
+  | Timestamp        | C-c .     | Org        |
+  | T-stamp Deadline | C-c d     | Org        |
+  | T-stamp Inactive | C-c !     | Org        |
+  | T-stamp Schedule | C-c s     | Org        |
+  |------------------+-----------+------------|
+** TODO Relevant Files
+   I've made a ~~/.agenda_files~, either move it's content here or
+   move the file into version control.  I made the file because I
+   couldn't get lists to work in the below code.
+   #+BEGIN_SRC emacs-lisp
+     ;;(setq org-directory "~/")
+     ;;(setq org-directory "~/org")
+     ;;(setq org-agenda-files (list "todo.org" "inbox.org"))
+     ;;the files seem to default to ~/org/* and customizing it breaks something
+   #+END_SRC
+** Capture to Inbox
+   :PROPERTIES:
+   :NAME:     GTD_Capture
+   :END:
+   Rather than delegating on capture, I'll categorize tasks and notes
+   on review.
+   #+BEGIN_SRC emacs-lisp
+     (setq org-capture-templates
+	    `(("i" "Inbox" entry  (file "inbox.org")
+	     ,(concat "* TODO %(sdate) - %?"))))
+
+     (defun org-capture-inbox ()
+       (interactive)
+       (call-interactively 'org-store-link)
+       (org-capture nil "i"))
+
+     (global-set-key (kbd "C-c a") 'org-agenda)
+     (global-set-key (kbd "C-c c") 'org-capture-inbox)
+   #+END_SRC
+*** TODO Once using mu4e add captures
+    #+BEGIN_SRC emacs-lisp
+         ("@" "Inbox [mu4e]" entry (file "inbox.org")
+         ,(concat "* TODO Process \"%a\" %?\n"
+                  "/Entered on/ %U"))
+
+         (defun org-capture-mail ()
+           (interactive)
+           (call-interactively 'org-store-link)
+           (org-capture nil "@"))
+         (define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
+         (define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
+    #+END_SRC
+*** DISABLED Fullscreen Capture
+    #+BEGIN_SRC emacs-lisp
+    ;(add-hook 'org-capture-mode-hook 'delete-other-windows)
+    #+END_SRC
+**** TODO That was enabled even though it's marked as DISABLED
+** Agenda
+   |-----------+---------|
+   | Action    | Keybind |
+   |-----------+---------|
+   | Mark Done | t       |
+   |-----------+---------|
+*** GTD Agenda Display
+    #+BEGIN_SRC emacs-lisp
+      (setq org-agenda-custom-commands
+	    '(("g" "Get Things Done (GTD)"
+	       ((agenda ""
+			((org-agenda-skip-function
+			  '(org-agenda-skip-entry-if 'deadline))
+			 (org-deadline-warning-days 0)))
+		(todo "TODO"
+		      ((org-agenda-skip-function
+			'(org-agenda-skip-entry-if 'deadline))
+		       (org-agenda-prefix-format "  %i %-12:c [%e] ")
+		       (org-agenda-overriding-header "\nTasks\n")))
+		(agenda nil
+			((org-agenda-entry-types '(:deadline))
+			 (org-agenda-format-date "")
+			 (org-deadline-warning-days 7)
+			 (org-agenda-skip-function
+			  '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+			 (org-agenda-overriding-header "\nDeadlines")))
+		(tags "CLOSED>=\"<today>\""
+		      ((org-agenda-overriding-header "\nCompleted today\n")))))))
+    #+END_SRC
+**** TODO Don't list events with deadlines in regular TODO section
+*** TODO Have Org-Agenda not close all other windows
+*** Calendar
+    #+BEGIN_SRC emacs-lisp
+      (setq org-agenda-include-diary t)
+    #+END_SRC
+**** Personal Calendar View
+     Show 9 days starting with yesterday; that is, yesterday and the
+     coming week.
+     #+BEGIN_SRC emacs-lisp
+       (setq org-agenda-start-day "-1d")
+       (setq org-agenda-span 9)
+       (setq org-agenda-start-on-weekday nil)
+     #+END_SRC
+***** TODO This only seems to show 7 days
+      This is showing 9 days in the gtd agenda view
+**** TODO Clean out obvious tasks
+     There's no need to show the daily repeating unscheduled tasks on
+     everyday after the first.
+**** DISABLED Fix Diary to Work Inside of Org Agenda
+     :PROPERTIES:
+     :NAME:     Diary_in_Agenda
+     :END:
+     I'm not sure why diary entries in agenda files don't work as
+     indicated in the [[info:org#Calendar/Diary integration][info page]] (by my reading).  I'm instead using
+     this to allow diary entries in agenda files, checking before each
+     viewing.
+     #+BEGIN_SRC emacs-lisp
+       (defun read-lines (filePath)
+	 "Return a list of lines of a file at filePath."
+	 (with-temp-buffer
+	   (insert-file-contents filePath)
+	   (split-string (buffer-string) "\n" t)))
+
+       (defun agenda-diary-entries ()
+	 "List the lines from org-agenda-files that belong in
+	     diary-files."
+	 (let ((agenda-files
+		(if (stringp org-agenda-files)
+		    (read-lines org-agenda-files)
+		  org-agenda-files)))
+	   (seq-filter
+	    (lambda (s) (string-match "^[%][%]" s))
+	    (apply #'append
+		   (mapcar 'read-lines agenda-files)))))
+
+       (defun string-list-to-file (string-list filePath)
+	 "Save a list of strings as the lines in filePath."
+	 (with-temp-file filePath
+	   (mapcar (lambda (s) (insert s "\n")) string-list)))
+
+       (defun update-diary-from-agenda ()
+	 "Update (overwrite) the diary-file with lines from
+       org-agenda-files."
+	 (string-list-to-file (agenda-diary-entries) diary-file))
+
+       ;(add-hook 'diary-hook #'update-diary-from-agenda)
+     #+END_SRC
+***** Disabled because the normal mode started working
+**** TODO Google Calendar Things
+** Time Tracking
+   |-----------+-----------+------------|
+   | Action    | Keybind   | Location   |
+   |-----------+-----------+------------|
+   | Clock in  | C-c C-x i | Org Header |
+   | Clock Out | C-c C-x o | Org Header |
+   |-----------+-----------+------------|
+*** Track When Tasks are Completed
+    #+BEGIN_SRC emacs-lisp
+      (setq org-log-done 'time)
+    #+END_SRC
+*** TODO Star a timer when opening a file via a org link
+    The idea version of this would be the project listing the folder
+    it owns and all time spent with that folder as directory of the
+    active frame is tracked.
+*** TODO C-c C-x e sets time estate
+    - Find a way to insert this into task creation
+    - Find a way to collect data to verify this
+    - Find a way to sort tasks by this (at least a little)
+      - Probably also have an importance metric
+      - This also falls into the dependency tracking and schedule solver
+*** Track when activity becomes doable
+    #+BEGIN_SRC emacs-lisp
+      (defun log-todo-next-creation-date (&rest ignore)
+	"Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
+	(when (and (string= (org-get-todo-state) "NEXT")
+		   (not (org-entry-get nil "ACTIVATED")))
+	  (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
+      (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
+    #+END_SRC
+**** TODO Have that track the NEXT to TODO change instead?
 * Emacs Core Settings
 ** Setup Packages
 *** Package Installation Settings
@@ -308,17 +494,6 @@ unDeadHerbs's emacs init file
      ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
    #+END_SRC
 *** TODO =C-d= is overridden in some modes, fix that.
-** org-mode
-   :PROPERTIES:
-   :NAME:     Org_Mode_Global_Navigation
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c l") 'org-store-link)
-     (global-set-key (kbd "C-c a") 'org-agenda)
-     (global-set-key (kbd "C-c c") 'org-capture)
-     (global-set-key (kbd "C-c b") 'org-iswitchb)
-   #+END_SRC
-*** TODO This section should probably be renamed to GTD or similar
 ** TODO ED
    :PROPERTIES:
    :NAME:     ED_Keys
@@ -535,6 +710,16 @@ unDeadHerbs's emacs init file
        (require `ob-octave)
        (setq org-confirm-babel-evaluate nil)
      #+END_SRC
+*** TODO use these settings as default
+    #+BEGIN_SRC org
+    #+STARTUP: content showstars indent inlineimages hideblocks
+    #+END_SRC
+*** TODO Move C-c C-t to C-c t to match Org-Agenda
+    This is part of a more general philosophy I'm trying to enforce;
+    that org-mode and it's agenda is part of the interface of Emacs
+    rather than a separate thing inside of it.  That all things being
+    done are being done in a project and so that perspective should be
+    wrapping it.
 ** C Like Languages
     :PROPERTIES:
     :NAME:     C_Languages
