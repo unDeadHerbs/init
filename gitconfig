@@ -32,7 +32,7 @@
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git "$@" | less -FXR; }; f"
 	# TODO: make sure that staged and unstagedness is kept
 	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
-	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstanged; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
+	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged; git "$@"; [ "$(git head-hash)" = "$(git ref-from-branch stash@{0}^)" ] && git stash pop; }; f"
 
 	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; } f"
 
@@ -156,7 +156,7 @@
 	# Stash Things #
 	################
 
-	stash-unstanged = "stash save --keep-index"
+	stash-unstaged = "stash save --keep-index"
 	stash-tracked = "stash"
 	stash-all     = "stash --include-untracked"
 	#TODO: this won't work because stash-wrap will see the new stash
