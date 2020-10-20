@@ -16,3 +16,4 @@ exists git && exists emacs && alias magit="emacs --eval \"(magit-status)\""
 exists cmatrix && alias cmatrix='cmatrix -abu 2'
 exists less && alias cat='less -FXR'
 exists cvlc && alias cvlc='cvlc --key-quit q'
+exists mpv && alias v="mpv --force-window"
