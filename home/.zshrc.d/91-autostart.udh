@@ -16,9 +16,11 @@ fi
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux split-window -h
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "while true; do sleepUntil 2 tomorrow; date; gpo update 2>/dev/null; gpo download 2>/dev/null; done" C-m
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux split-window -v
-[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "rclone mount MF_g:/ /mnt/gdrive/MF --vfs-cache-mode full" C-m
+[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "rclone mount MF_g:/ /mnt/gdrive/MF"
+[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys " --vfs-cache-mode full --bwlimit 0.1M --buffer-size=1G" C-m
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux split-window -v
-[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "rclone mount uDH_g:/ /mnt/gdrive/udh --vfs-cache-mode full" C-m
+[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "rclone mount uDH_g:/ /mnt/gdrive/udh"
+[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys " --vfs-cache-mode full --bwlimit 0.1M --buffer-size=1G" C-m
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty1" ]] && { running X || exec startx }
 [[ $(hostname) = "uDH-x201"  ]] && [[ $(tty) = "/dev/tty2" ]] && tmux && exit
