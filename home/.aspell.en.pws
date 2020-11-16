@@ -1,7 +1,9 @@
-personal_ws-1.1 en 193
+personal_ws-1.1 en 207 
 ABI
 ADHD
 APL
+Accelerationism's
+Ackermann
 Acyclic
 AmpèÃere's
 BDSM
@@ -9,6 +11,7 @@ Booleans
 CISC
 CLI
 CPP
+Collatz
 Constructable
 DeKalb
 Decrementing
@@ -41,17 +44,21 @@ Lojban's
 Lunduke
 Mordor
 MtG
+Newcomb's
 Peano
 Penrose
 Platteville
 QM's
 QS
 Reindexing
+Rerendered
 Rewatching
 RnD
 SICP
+STL
 STV
 Sanderson
+SapirWhorf
 Subitizing
 TCP
 THz
@@ -63,6 +70,7 @@ Widget's
 Zachtronics
 aave
 abelian
+accelerationism
 agreeded
 allocatable
 amongst
@@ -70,6 +78,7 @@ annulus's
 apothem
 architecting
 atomata
+atomics
 auditable
 blerg
 blerging
@@ -78,6 +87,7 @@ bruteforce
 buildable
 checkable
 colours
+combinator
 compilable
 composable
 composablilty
@@ -104,6 +114,7 @@ dissatisfactory
 encodings
 expander
 extrema
+facebook
 factorable
 fillable
 generalizable
@@ -154,8 +165,10 @@ reimagining
 rememberable
 repracticing
 representable
+reproducable
 requalify
 reselect
+safeword
 spacings
 stringification
 sudoku
@@ -175,6 +188,7 @@ uncallable
 uncheckable
 uncompared
 unenumerated
+unevaluated
 unexplicit
 unfillable
 unfindable
