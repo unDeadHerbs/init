@@ -26,4 +26,10 @@ if [ -e "$HOME/.xinitrc.d/$(hostname)" ]
 then
     source "$HOME/.xinitrc.d/$(hostname)"
 fi
+<<<<<<< Updated upstream
 
+||||||| constructed merge base
+
+exec i3
+=======
+>>>>>>> Stashed changes
