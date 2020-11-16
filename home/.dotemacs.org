@@ -991,6 +991,18 @@ unDeadHerbs's emacs init file
    #+END_SRC
 ** TODO Flymake
    Move flymake errors to mini-buffer.
+* Misc Utility Functions
+** sdate function
+   :PROPERTIES:
+   :NAME:     Sdate_Function
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (defun sdate ()
+       (replace-regexp-in-string "\n$" ""
+		  (shell-command-to-string "sdate -f 5 -d")))
+   #+END_SRC
+*** TODO Check if sdate is in path
+    This might not be needed, since sdate is in this repo's `~/bin`
 * Unsorted TODOs
 ** TODO YASnippet
    #+BEGIN_SRC emacs-lisp
