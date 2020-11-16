@@ -233,6 +233,7 @@ unDeadHerbs's emacs init file
     :END:
     #+BEGIN_SRC emacs-lisp
       (setq udh-package-list '(;;General Interface
+			       bind-key
 			       calendar
 			       centered-cursor-mode
 			       dynamic-spaces
@@ -493,7 +494,7 @@ unDeadHerbs's emacs init file
    :END:
    #+BEGIN_SRC emacs-lisp
      ;(global-set-key (kbd "C-S-l") 'mc/edit-lines)
-     (global-set-key (kbd "C-d")   'mc/mark-next-like-this)
+     (bind-key* "C-d"   'mc/mark-next-like-this)
      ;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
      ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
    #+END_SRC
