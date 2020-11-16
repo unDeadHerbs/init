@@ -253,6 +253,9 @@ unDeadHerbs's emacs init file
 			       tramp
 			       ;; TODO: visible-mark
 			       whitespace
+			       ;; Lisps
+			       geiser
+			       slime
 			       ;; C++
 			       ctags
 			       ctags-update
@@ -284,10 +287,11 @@ unDeadHerbs's emacs init file
 			       org-bullets
 			       ;;org-trello
 			       org-preview-html
-			       ;; Org Bable
+			       ;; Org Babel
 			       ob-spice
 			       ob-async
 			       ob-diagrams
+			       plantuml-mode
 			       ;; ob-tmux ;; TODO: What does this even do?
 			       ))
       (mapcar 'udh-install-and-load udh-package-list)
@@ -702,10 +706,14 @@ unDeadHerbs's emacs init file
     :END:
     #+BEGIN_SRC emacs-lisp
       (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
+	'org-babel-load-languages
+	'((emacs-lisp . t)
 	  (dot . t)
-	  (octave . t)))
+	  (octave . t)
+	  (lisp . t)
+	  (scheme . t)
+	  (python . t)
+	  (plantuml . t)))
     #+END_SRC
 **** TODO Org Babel Confirmation
      :PROPERTIES:
@@ -716,6 +724,21 @@ unDeadHerbs's emacs init file
      #+BEGIN_SRC emacs-lisp
        (require `ob-octave)
        (setq org-confirm-babel-evaluate nil)
+     #+END_SRC
+**** SLIME
+     #+BEGIN_SRC emacs-lisp
+     (setq inferior-lisp-program "clisp")
+     #+END_SRC
+**** scheme
+     #+BEGIN_SRC emacs-lisp
+       (setq scheme-program-name "guile")
+       (setq geiser-default-implementation 'guile)
+     #+END_SRC
+**** plantuml
+     Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update is needed.
+     #+BEGIN_SRC emacs-lisp
+       (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
+       (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
      #+END_SRC
 *** TODO use these settings as default
     #+BEGIN_SRC org
