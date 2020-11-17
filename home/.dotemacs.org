@@ -229,8 +229,11 @@ unDeadHerbs's emacs init file
       (udh-install-and-load 'auto-compile)
       (auto-compile-on-load-mode)
       (udh-install-and-load 'package-utils)
-      (package-utils-upgrade-all)
     #+END_SRC
+**** TODO Add a notification when there are updates
+     #+BEGIN_SRC emacs-lisp
+       ;;(package-utils-upgrade-all)
+     #+END_SRC
 *** Install and Load Required Packages
     :PROPERTIES:
     :NAME:     Install_and_Load_Packages
