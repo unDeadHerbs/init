@@ -11,10 +11,11 @@
 	     (gnu services networking)
 	     (gnu services pm)          ; power management
 	     (gnu services avahi)
-	     (gnu services dbus))
+	     (gnu services dbus)
+	     (gnu system locale))
 
 (operating-system
-  (locale "en_US.utf8")
+  (locale "en_GB.utf8")
   (timezone "America/Chicago")
   (keyboard-layout
     (keyboard-layout "us" "altgr-intl"))
