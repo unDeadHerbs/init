@@ -1,7 +1,11 @@
 -*- mode: org; eval: (org-show-todo-tree '()) -*-
 unDeadHerbs's emacs init file
 
-* TODO README
+* README
+  This is my emacs config file and is an example of litterate
+  programming.  This file is loaded on [[Computer Specific][several compters]] and is also
+  the [[EXWM][window manager]] on one of them.
+
   This config file is loaded by =org-dotemacs=.
 * Personage Attributes
   :PROPERTIES:
