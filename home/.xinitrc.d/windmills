@@ -54,10 +54,4 @@ sleep 120 && i3-msg 'workspace 11' &
 sleep 121 && i3-msg 'workspace  1' &
 sleep 122 && i3-msg 'workspace  2' &
 
-<<<<<<< Updated upstream
-exec i3
-||||||| constructed merge base
-echo "Was this important?"
-=======
- exec dbus-launch --exit-with-session i3
->>>>>>> Stashed changes
+exec dbus-launch --exit-with-session i3
