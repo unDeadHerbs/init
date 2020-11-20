@@ -525,10 +525,12 @@
    :NAME:     Frame_Control_Keys
    :END:
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x O") 'previous-multiframe-window)
+     (defun other-window-reverse (count &optional all-frames)
+       "Call `other-window' with a negitive argument."
+       (interactive "p")
+       (other-window (* -1 count) all-frames))
+     (global-set-key (kbd "C-x O") 'other-window-reverse)
    #+END_SRC
-*** TODO C-x O moves between windows
-    That's obnoxious, only move between frames in active client.
 ** Cursor Movement
    :PROPERTIES:
    :NAME:     Cursor_Movment_Changes
