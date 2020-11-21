@@ -56,7 +56,11 @@
   (services
     (append
      (list (service network-manager-service-type)
-	   (service tor-service-type)
+	   (service tor-service-type
+		    (tor-configuration
+		     (config-file
+		      (plain-file "tor-config"
+				  "HTTPTunnelPort 127.0.0.1:9250"))))
 	   (service wpa-supplicant-service-type)
 	   (service usb-modeswitch-service-type)
 	   (service avahi-service-type)
