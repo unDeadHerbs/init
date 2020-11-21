@@ -75,7 +75,12 @@
 	   (service thermald-service-type
 		    (thermald-configuration
 		     (ignore-cpuid-check? #t))))
-     %base-services)))
+     (modify-services %base-services
+		      (guix-service-type config =>
+					 (guix-configuration
+					  (inherit config)
+					  (substitute-urls (list "https://bp7o7ckwlewr4slm.onion"))
+					  (http-proxy "http://localhost:9250")))))))
 
 ;; TODO: Improve the `console-fonts` config from this
 ;; #<<service> type: #<service-type console-fonts 7f506f7ae690>
