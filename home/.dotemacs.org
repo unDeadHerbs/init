@@ -461,7 +461,7 @@
     #+BEGIN_SRC emacs-lisp
       (defun turn-on-flyspell-prog ()
 	"Unconditionally turn on Flyspell-prog mode."
-	(flyspell-prog-mode 1))
+	(flyspell-prog-mode))
       (add-hook 'text-mode-hook #'turn-on-flyspell)
       (add-hook 'prog-mode-hook #'turn-on-flyspell-prog)
     #+END_SRC
