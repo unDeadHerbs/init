@@ -1025,6 +1025,25 @@
      ;;              'rainbow-blocks-mode)
      (setq indent-tabs-mode nil)
    #+END_SRC
+*** Lisp Pretty
+    :PROPERTIES:
+    :NAME:     Lisp_Pretty
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun udh-lisp-prettify ()
+        (pretty-mode 1)
+        (pretty-regexp "lambda" "λ")
+        (pretty-regexp "#f" "⊭")
+        (pretty-regexp "#t" "⊨")
+        (pretty-regexp "()" "≬"))
+      (defun udh-lisp-prettify-maths ()
+        (pretty-regexp "member?" "∈")
+        (pretty-regexp "union" "∪")
+        (pretty-regexp "intersection" "∩"))
+      (add-hook 'scheme-mode-hook 'udh-lisp-prettify)
+      (add-hook 'clojure-mode-hook 'udh-lisp-prettify)
+    #+END_SRC
+**** TODO disable builtin pretties
 ** TODO Python
    :PROPERTIES:
    :NAME:     Python
