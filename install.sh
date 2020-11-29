@@ -91,6 +91,7 @@ fi
 if type zsh > /dev/null 2>&1
 then
     [[ "$SHELL" = "$(which zsh)" ]] || chsh -s $(which zsh)
+    # if on termux then just `chsh -s zsh`
 else
     toInstall="$toInstall zsh"
 fi
