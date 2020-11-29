@@ -225,6 +225,20 @@
 * Emacs Core Settings
   These are settings that are relating to the core of Emacs rather
   than any the things I do with it.
+** Disable Custom
+   :PROPERTIES:
+   :NAME:     Disable_Custom
+   :END:
+
+   Since I want all settings to be in this file, I'm disabling
+   `Customizing`'s ability to save settings.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq custom-file
+           (if (boundp 'server-socket-dir)
+               (expand-file-name "custom.el" server-socket-dir)
+             (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+   #+END_SRC
 ** Setup Packages
    :PROPERTIES:
    :NAME:     Package
