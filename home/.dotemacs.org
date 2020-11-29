@@ -327,6 +327,7 @@
 			       cider ;; clojure
 			       tramp-term
 			       markdown-mode
+			       openscad-mode
 			       ;helm-config
 			       ;vagrant
 			       ;vagrant-tramp
@@ -956,9 +957,8 @@
 	 (pretty-regexp "Tree" "ᛘ");𝌎
 	 ;;(pretty-regexp "Key" "🔑")
 	 (pretty-regexp "[*]" "∗")
-	 (pretty-mode -1)
       )
-      (add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
+      ;(add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
       (add-hook 'c-mode-common-hook
           '(lambda () (local-set-key (kbd "C-M-S-p")
               '(lambda () (interactive) (udh-c-mode-prettify)))))
@@ -981,6 +981,31 @@
     Fix this to be use =which= or something.
     #+BEGIN_SRC emacs-lisp
       (setq path-to-ctags "/usr/bin/ctags-emacs-24")
+    #+END_SRC
+** SCAD
+   :PROPERTIES:
+   :NAME:     SCAD
+   :END:
+*** SCAD Pretty
+    :PROPERTIES:
+    :NAME:     SCAD_Pretty
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun udh-scad-prettify ()
+	(pretty-mode 1)
+	(pretty-regexp ">=" "≥")
+	(pretty-regexp "<=" "≤")
+	(pretty-regexp "!=" "≠")
+	(pretty-regexp "==" "≡")
+	(pretty-regexp "!" "¬")
+	(pretty-regexp "||" "∥")
+	(pretty-regexp "false" "⊭")
+	(pretty-regexp "true" "⊨")
+	(pretty-regexp "//" "⑊")
+	(pretty-regexp "module" "◳")
+	(pretty-regexp "()" "≬")
+	(pretty-regexp "[*]" "∗"))
+      (add-hook 'scad-mode-hook 'udh-scad-prettify)
     #+END_SRC
 ** Markdown
    :PROPERTIES:
