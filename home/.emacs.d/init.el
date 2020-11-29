@@ -5,9 +5,9 @@
 
 (require 'package)
 (require 'cl-lib)
-(package-initialize)
 (unless (package-installed-p 'org-dotemacs)
   (progn
+    (package-initialize)
     (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			     ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
 			     ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
