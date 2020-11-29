@@ -34,5 +34,4 @@
 ;   '((eval org-show-todo-tree 'nil)
 ;     (eval flyspell-mode t)
 ;     (indent-tabs-mode quote nil))))
-(put 'magit-clean 'disabled nil)
 (org-dotemacs-load-default)

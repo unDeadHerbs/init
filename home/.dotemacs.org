@@ -1050,6 +1050,19 @@
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
    #+END_SRC
+** Magit
+   :PROPERTIES:
+   :NAME: Magit
+   :END:
+*** Disable Magit Clean
+    :PROPERTIES:
+    :NAME: Disable_Magit_Clean
+    :END:
+    Magit clean deletes temporary files, I'm using that state please
+    don't.
+    #+BEGIN_SRC emacs-lisp
+      (put 'magit-clean 'disabled nil)
+    #+END_SRC
 * Minor Mode Settings
 ** Whitespace-Mode
    :PROPERTIES:
