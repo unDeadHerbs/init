@@ -457,15 +457,16 @@
 *** TODO Check if things are parenthesises
     In many modes =<= and =>= are not bracketing symbols and shouldn't
     be counted as mismatched brackets.
-** Cyan Mini-Buffer
+** Set Theme
     :PROPERTIES:
     :NAME:     Mini_Buffer_Cyan
     :END:
     I like cyan, make that the mini buffer text colour.  This is set
     to terminal only because cyan isn't readable on white.
     #+BEGIN_SRC emacs-lisp
+      (load-theme 'wheatgrass)
       (add-hook 'tty-setup-hook
-                (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
+		(lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
     #+END_SRC
 *** TODO Make a single bigger section on colouring.
 ** Spell Check Everywhere

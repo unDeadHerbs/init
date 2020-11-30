@@ -5,7 +5,7 @@
 
 ;; Prevent startup question about my .dotemacs.org file's safety
 (set 'safe-local-variable-values
-     '(eval org-show-todo-tree 'nil))
+     '((eval org-show-todo-tree 'nil)))
 
 ;; Disable IDO mode
 ;;
