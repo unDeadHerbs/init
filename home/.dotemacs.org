@@ -599,6 +599,29 @@
    #+BEGIN_SRC emacs-lisp
      (setq is-kitchensink (string= "kitchensink" (system-name)))
    #+END_SRC
+*** Emacs
+    :PROPERTIES:
+    :NAME:     Kitchensink_Emacs
+    :END:
+**** Transparency
+     :PROPERTIES:
+     :NAME:     Kitchensink_Emacs_Transparency
+     :END:
+     Set frames to have an alpha content of 85%.  And 85% when
+     inactive.
+     #+BEGIN_SRC emacs-lisp
+       (if is-kitchensink
+	   (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
+     #+END_SRC
+**** Visual Bell
+     :PROPERTIES:
+     :NAME:     Kitchensink_Emacs_Visual_Bell
+     :END:
+     This disables the audio bell.
+     #+BEGIN_SRC emacs-lisp
+       (if is-kitchensink
+	   (setq visible-bell 1))
+     #+END_SRC
 *** GUIX
     :PROPERTIES:
     :NAME:     Kitchensink_Guix
