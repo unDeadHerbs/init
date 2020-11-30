@@ -337,7 +337,7 @@
 			       org-dotemacs
 			       org-plus-contrib
 			       org-bullets
-			       ;;org-trello
+			       ;; org-trello
 			       org-preview-html
 			       ;; Org Babel
 			       ob-spice
@@ -810,11 +810,11 @@
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
       ;; TODO: Find a better way to detect this.
-      (defun udh-org-trello-detect ()
-	(let ((filename (buffer-file-name (current-buffer))))
-	  (when (and filename (string= "trello" (file-name-extension filename)))
-	    (org-trello-mode))))
-      (add-hook 'org-mode-hook 'udh-org-trello-detect)
+      ;(defun udh-org-trello-detect ()
+      ;  (let ((filename (buffer-file-name (current-buffer))))
+      ;    (when (and filename (string= "trello" (file-name-extension filename)))
+      ;      (org-trello-mode))))
+      ;(add-hook 'org-mode-hook 'udh-org-trello-detect)
     #+END_SRC
 *** Org Babel
     :PROPERTIES:
