@@ -998,14 +998,15 @@
 		  (setq flycheck-clang-language-standard "c++1z"))
       (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
     #+END_SRC
-*** TODO etags
+*** Etags
     :PROPERTIES:
     :NAME:     Locate_Etags
     :END:
-    Fix this to be use =which= or something.
     #+BEGIN_SRC emacs-lisp
-      (setq path-to-ctags "/usr/bin/ctags-emacs-24")
+      (setq path-to-ctags (executable-find "etags"))
     #+END_SRC
+**** TODO Why do I need to search for part of the emacs package?
+     Shouldn't emacs know where etags is?
 ** SCAD
    :PROPERTIES:
    :NAME:     SCAD
