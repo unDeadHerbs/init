@@ -6,6 +6,19 @@
   for the [[EXWM][window manager]] on one of them.
 
   This file is loaded by =org-dotemacs=.
+** General Philosophy
+   Deleting a section should only effect things that are clear from
+   the section title.  While this feel obviouse once stated, it's not
+   followed without active vigilance.
+
+   #+BEGIN_QUOTE
+     Thus spake the Master Programmer:
+
+     "A well-written program is its own Heaven; a poorly-written
+     program is its own Hell."
+
+     -- The Tao of Programming : Book 4
+   #+END_QUOTE
 ** Personage Attributes
    :PROPERTIES:
    :NAME:     Name_and_Rank
@@ -1132,6 +1145,27 @@
     #+BEGIN_SRC emacs-lisp
       (put 'magit-clean 'disabled nil)
     #+END_SRC
+** COBOL and Java
+   #+BEGIN_QUOTE
+      The Tao gave birth to machine language. Machine language gave
+      birth to the assembler.
+
+      The assembler gave birth to the compiler. Now there are ten
+      thousand languages.
+
+      Each language has its purpose, however humble. Each language
+      expresses the Yin and Yang of software. Each language has its
+      place within the Tao.
+
+      But do not program in COBOL if you can avoid it.
+
+      -- The Tao of programming : Book 1 Canto 2
+   #+END_QUOTE
+   I feel that Java fills the same position as COBOL did.  It's an
+   excessively verbose language that use "best practices" as a
+   substitute for good design.  In both cases this is because the
+   language is relegated to those who haven't groked computer science;
+   but, at least COBOL recognised and embraced that.
 * Minor Mode Settings
 ** Whitespace-Mode
    :PROPERTIES:
