@@ -2,8 +2,8 @@
 
 * README
   This is my Emacs configuration file and is an example of literate
-  programming.  This file is loaded on [[Computer Specific][several compters]] and is also
-  for the [[EXWM][window manager]] on one of them.
+  programming.  This file is loaded on [[Computer Specific][several computers]] and also
+  configures the [[EXWM][window manager]] on one of them.
 
   This file is loaded by =org-dotemacs=.
 ** General Philosophy
