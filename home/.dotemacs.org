@@ -53,6 +53,9 @@
   |------------------+-----------+------------|
 ** TODO Add attribution to Cortex and Cyborganise
 ** TODO Relevant Files
+   :PROPERTIES:
+   :NAME:     org_agenda_file
+   :END:
    I've made a ~~/.agenda_files~ that is auto loaded.  Either move its
    content here or move the file into version control.  I made the
    file because I couldn't get lists to work in the below code.
@@ -82,6 +85,9 @@
      (global-set-key (kbd "C-c c") 'org-capture-inbox)
    #+END_SRC
 *** TODO Capture from mu4e
+    :PROPERTIES:
+    :NAME:     GTD_mu4e
+    :END:
     This is for once I'm using mu4e.
     #+BEGIN_SRC emacs-lisp
          ("@" "Inbox [mu4e]" entry (file "inbox.org")
@@ -106,6 +112,9 @@
     [[info:Org#Priorities]]
 *** TODO Track event creation and sorting in properties
 ** Agenda
+   :PROPERTIES:
+   :NAME:     GTD_Agenda
+   :END:
    |-----------+----------|
    | Action    | Key-bind |
    |-----------+----------|
@@ -137,12 +146,18 @@
 *** TODO Don't list events with deadlines in second, regular, TODO section.
 *** TODO Have Org-Agenda not close all other windows
 *** Include Diary Events in Calendar
+    :PROPERTIES:
+    :NAME:     GTD_diary_in_agenda
+    :END:
     Find diary style events in the agenda files and include them in
     the calendar view.
     #+BEGIN_SRC emacs-lisp
       (setq org-agenda-include-diary t)
     #+END_SRC
 *** Calendar Windowing
+    :PROPERTIES:
+    :NAME:     GTD_agenda_week_length
+    :END:
     Show 9 days starting with yesterday; that is, yesterday and the
     coming week.
     #+BEGIN_SRC emacs-lisp
@@ -215,6 +230,9 @@
    | Set Time Estimate | C-c C-x e | Org Header |
    |-------------------+-----------+------------|
 *** Track When Tasks are Completed
+    :PROPERTIES:
+    :NAME:     GTD_track_completion_time
+    :END:
     #+BEGIN_SRC emacs-lisp
       (setq org-log-done 'time)
     #+END_SRC
@@ -226,6 +244,9 @@
 *** TODO Time Estimation
     Find a way to insert this into task creation or sorting.
 *** Track when activity becomes doable
+    :PROPERTIES:
+    :NAME:     GTD_track_actionability
+    :END:
     #+BEGIN_SRC emacs-lisp
       (defun log-todo-next-creation-date (&rest ignore)
 	"Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
@@ -288,6 +309,9 @@
       (udh-install-and-load 'package-utils)
     #+END_SRC
 **** TODO Add a notification when there are updates
+     :PROPERTIES:
+     :NAME:     Package_Update_Notify
+     :END:
      #+BEGIN_SRC emacs-lisp
        ;;(package-utils-upgrade-all)
      #+END_SRC
@@ -377,6 +401,9 @@
      (global-unset-key (kbd "C-z"))
    #+END_SRC
 *** TODO Disable C-[ override
+    :PROPERTIES:
+    :NAME:     Disable_C_Bracket
+    :END:
    #+BEGIN_SRC emacs-lisp
      ;; TODO unset (kbd "C-[") from ESC
     ;(define-key key-translation-map
@@ -685,7 +712,7 @@
       (require 'exwm-systemtray)
       (exwm-systemtray-enable)
     #+END_SRC
-*** Tile All Windows
+*** No Floating Windows
     :PROPERTIES:
     :NAME:     EXWM_Force_Non_Floating
     :END:
@@ -720,6 +747,9 @@
      Bind S-<XF86Back> and S-<XF86Forward> to move between frames or
      workspaces.
 **** TODO Rescue =C-c= keys
+     :PROPERTIES:
+     :NAME:     EXWM_No_CC_Keys
+     :END:
      I don't like bindings to C-c, not really sure why.  There are
      several bindings to C-c in EXWM, move them over to s- bindings.
 
@@ -742,6 +772,9 @@
        (define-key exwm-mode-map (kbd "C-c") nil)
      #+END_SRC
 **** UNUSED Program Specific Bindings
+     :PROPERTIES:
+     :NAME:     EXWM_Program_Particulars
+     :END:
      I don't have any yet, but they'll follow this form if I do
      #+BEGIN_SRC emacs-lisp
      (add-hook 'exwm-manage-finish-hook
@@ -755,6 +788,9 @@
     single threaded starting a non-forked task though M-! will block
     Emacs and therefore EXWM.
 *** UNUSED Multi Screen
+    :PROPERTIES:
+    :NAME:     EXWM_Multi_Screen
+    :END:
     This is for when I use EXWM on a multi screen computer.
     #+BEGIN_SRC emacs-lisp
       (require 'exwm-randr)
@@ -766,6 +802,9 @@
       (exwm-randr-enable)
     #+END_SRC
 **** UNUSED Dynamic Multiple Monitors
+     :PROPERTIES:
+     :NAME:     EXWM_Multi_Screen_Dynamic
+     :END:
      For when the docking station gets a second monitor and regular
      use again.
      #+BEGIN_SRC emacs-lisp
@@ -856,21 +895,33 @@
        (setq org-confirm-babel-evaluate nil)
      #+END_SRC
 **** SLIME
+     :PROPERTIES:
+     :NAME:     Org_Babel_SLIME
+     :END:
      #+BEGIN_SRC emacs-lisp
      (setq inferior-lisp-program "clisp")
      #+END_SRC
-**** scheme
+**** Scheme
+     :PROPERTIES:
+     :NAME:     Org_Babel_Scheme
+     :END:
      #+BEGIN_SRC emacs-lisp
        (setq scheme-program-name "guile")
        (setq geiser-default-implementation 'guile)
      #+END_SRC
-**** plantuml
+**** Plantuml
+     :PROPERTIES:
+     :NAME:     Org_Babel_Plantuml
+     :END:
      Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update is needed.
      #+BEGIN_SRC emacs-lisp
        (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
        (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
      #+END_SRC
 *** TODO use these settings as default
+    :PROPERTIES:
+    :NAME:     Org_Display_Defaults
+    :END:
     #+BEGIN_SRC org
     #+STARTUP: content showstars indent inlineimages hideblocks
     #+END_SRC
@@ -880,9 +931,9 @@
     rather than a separate thing inside of it.  That all things being
     done are being done in a project and so that perspective should be
     wrapping it.
-** C Like Languages
+** C/CPP Like Languages
     :PROPERTIES:
-    :NAME:     C_Languages
+    :NAME:     C_CPP_Common_Settings
     :END:
     #+BEGIN_SRC emacs-lisp
        (smart-tabs-insinuate 'c 'c++)
@@ -1054,7 +1105,7 @@
    #+END_SRC
 ** TODO Lisp
    :PROPERTIES:
-   :NAME:     lisp_mode_settings
+   :NAME:     Lisp_Mode_Settings
    :END:
    #+BEGIN_SRC emacs-lisp
      ;;(require 'rainbow-blocks)
