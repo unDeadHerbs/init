@@ -1,1316 +1,1317 @@
 -*- mode: org; eval: (org-show-todo-tree '()) -*-
+#+STARTUP: showstars indent inlineimages
 
 * README
-  This is my Emacs configuration file and is an example of literate
-  programming.  This file is loaded on [[Computer Specific][several computers]] and also
-  configures the [[EXWM][window manager]] on one of them.
+This is my Emacs configuration file and is an example of literate
+programming.  This file is loaded on [[Computer Specific][several computers]] and also
+configures the [[EXWM][window manager]] on one of them.
 
-  This file is loaded by =org-dotemacs=.
+This file is loaded by =org-dotemacs=.
 ** General Philosophy
-   Deleting a section should only effect things that are clear from
-   the section title.  While this feel obviouse once stated, it's not
-   followed without active vigilance.
+Deleting a section should only effect things that are clear from
+the section title.  While this feel obviouse once stated, it's not
+followed without active vigilance.
 
-   #+BEGIN_QUOTE
-     Thus spake the Master Programmer:
+#+BEGIN_QUOTE
+Thus spake the Master Programmer:
 
-     "A well-written program is its own Heaven; a poorly-written
-     program is its own Hell."
+"A well-written program is its own Heaven; a poorly-written
+program is its own Hell."
 
-     -- The Tao of Programming : Book 4
-   #+END_QUOTE
+-- The Tao of Programming : Book 4
+#+END_QUOTE
 ** Personage Attributes
-   :PROPERTIES:
-   :NAME:     Name_and_Rank
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq user-full-name "Murray Fordyce")
-     (setq user-mail-address "unDeadHerbs@gmail.com")
-     (setq copyright-names-regexp
-	   (format "%s <%s>" user-full-name user-mail-address))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Name_and_Rank
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Murray Fordyce")
+  (setq user-mail-address "unDeadHerbs@gmail.com")
+  (setq copyright-names-regexp
+        (format "%s <%s>" user-full-name user-mail-address))
+#+END_SRC
 ** Buffer-wide TODO states
-   The following line allows blocks to be marked as broken or unused.
+The following line allows blocks to be marked as broken or unused.
 #+TODO: BROKEN UNUSED CHECK TODO DISABLED | WORKING
 *** TODO Does the WORKING tag still disable the code?
-    If so move DISABLED to green and remove the WORKING tag.
+If so move DISABLED to green and remove the WORKING tag.
 * GTD
-  "Getting Things Done" is an old book with lots of ideas, some of
-  which are good.  I've borrowed the core workflow and the naming.
+"Getting Things Done" is an old book with lots of ideas, some of
+which are good.  I've borrowed the core workflow and the naming.
 
-  |------------------+-----------+------------|
-  | Action           | Key-bind  | Location   |
-  |------------------+-----------+------------|
-  | Agenda           | C-c a g   | Global     |
-  | Capture          | C-c c     | Global     |
-  | Effort           | C-c C-x e | Org Header |
-  | Refile           | C-c C-w   | Org Header |
-  | Task List        | C-c a t   | Global     |
-  | Timestamp        | C-c .     | Org        |
-  | T-stamp Deadline | C-c d     | Org        |
-  | T-stamp Inactive | C-c !     | Org        |
-  | T-stamp Schedule | C-c s     | Org        |
-  |------------------+-----------+------------|
+|------------------+-----------+------------|
+| Action           | Key-bind  | Location   |
+|------------------+-----------+------------|
+| Agenda           | C-c a g   | Global     |
+| Capture          | C-c c     | Global     |
+| Effort           | C-c C-x e | Org Header |
+| Refile           | C-c C-w   | Org Header |
+| Task List        | C-c a t   | Global     |
+| Timestamp        | C-c .     | Org        |
+| T-stamp Deadline | C-c d     | Org        |
+| T-stamp Inactive | C-c !     | Org        |
+| T-stamp Schedule | C-c s     | Org        |
+|------------------+-----------+------------|
 ** TODO Add attribution to Cortex and Cyborganise
 ** TODO Relevant Files
-   :PROPERTIES:
-   :NAME:     org_agenda_file
-   :END:
-   I've made a ~~/.agenda_files~ that is auto loaded.  Either move its
-   content here or move the file into version control.  I made the
-   file because I couldn't get lists to work in the below code.
-   #+BEGIN_SRC emacs-lisp
-     ;;(setq org-directory "~/")
-     ;;(setq org-directory "~/org")
-     ;;(setq org-agenda-files (list "todo.org" "inbox.org"))
-     ;;the files seem to default to ~/org/* and customizing it breaks something
-   #+END_SRC
+:PROPERTIES:
+:NAME:     org_agenda_file
+:END:
+I've made a ~~/.agenda_files~ that is auto loaded.  Either move its
+content here or move the file into version control.  I made the
+file because I couldn't get lists to work in the below code.
+#+BEGIN_SRC emacs-lisp
+  ;;(setq org-directory "~/")
+  ;;(setq org-directory "~/org")
+  ;;(setq org-agenda-files (list "todo.org" "inbox.org"))
+  ;;the files seem to default to ~/org/* and customizing it breaks something
+#+END_SRC
 ** Capture to Inbox
-   :PROPERTIES:
-   :NAME:     GTD_Capture
-   :END:
-   Rather than delegating on capture (like in GTD), I categorise tasks
-   and notes on their review.
-   #+BEGIN_SRC emacs-lisp
-     (setq org-capture-templates
-	    `(("i" "Inbox" entry  (file "inbox.org")
-	     ,(concat "* TODO %(sdate) - %?"))))
+:PROPERTIES:
+:NAME:     GTD_Capture
+:END:
+Rather than delegating on capture (like in GTD), I categorise tasks
+and notes on their review.
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates
+        `(("i" "Inbox" entry  (file "inbox.org")
+           ,(concat "* TODO %(sdate) - %?"))))
 
-     (defun org-capture-inbox ()
-       (interactive)
-       (call-interactively 'org-store-link)
-       (org-capture nil "i"))
+  (defun org-capture-inbox ()
+    (interactive)
+    (call-interactively 'org-store-link)
+    (org-capture nil "i"))
 
-     (global-set-key (kbd "C-c a") 'org-agenda)
-     (global-set-key (kbd "C-c c") 'org-capture-inbox)
-   #+END_SRC
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture-inbox)
+#+END_SRC
 *** TODO Capture from mu4e
-    :PROPERTIES:
-    :NAME:     GTD_mu4e
-    :END:
-    This is for once I'm using mu4e.
-    #+BEGIN_SRC emacs-lisp
-         ("@" "Inbox [mu4e]" entry (file "inbox.org")
-         ,(concat "* TODO Process \"%a\" %?\n"
-                  "/Entered on/ %U"))
+:PROPERTIES:
+:NAME:     GTD_mu4e
+:END:
+This is for once I'm using mu4e.
+#+BEGIN_SRC emacs-lisp
+  ("@" "Inbox [mu4e]" entry (file "inbox.org")
+   ,(concat "* TODO Process \"%a\" %?\n"
+            "/Entered on/ %U"))
 
-         (defun org-capture-mail ()
-           (interactive)
-           (call-interactively 'org-store-link)
-           (org-capture nil "@"))
-         (define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
-         (define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
-    #+END_SRC
+  (defun org-capture-mail ()
+    (interactive)
+    (call-interactively 'org-store-link)
+    (org-capture nil "@"))
+  (define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
+  (define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
+#+END_SRC
 *** TODO Add numeric priorities.
-    [[info:Org#Priorities]]
+[[info:Org#Priorities]]
 *** TODO Track event creation and sorting in properties
 ** Agenda
-   :PROPERTIES:
-   :NAME:     GTD_Agenda
-   :END:
-   |-----------+----------|
-   | Action    | Key-bind |
-   |-----------+----------|
-   | Mark Done | t        |
-   |-----------+----------|
+:PROPERTIES:
+:NAME:     GTD_Agenda
+:END:
+|-----------+----------|
+| Action    | Key-bind |
+|-----------+----------|
+| Mark Done | t        |
+|-----------+----------|
 
-   #+BEGIN_SRC emacs-lisp
-     (setq org-agenda-custom-commands
-	   '(("g" "Get Things Done (GTD)"
-	      ((agenda ""
-		       ((org-agenda-skip-function
-			 '(org-agenda-skip-entry-if 'deadline))
-			(org-deadline-warning-days 0)))
-	       (todo "TODO"
-		     ((org-agenda-skip-function
-		       '(org-agenda-skip-entry-if 'deadline))
-		      (org-agenda-prefix-format "  %i %-12:c [%e] ")
-		      (org-agenda-overriding-header "\nTasks\n")))
-	       (agenda nil
-		       ((org-agenda-entry-types '(:deadline))
-			(org-agenda-format-date "")
-			(org-deadline-warning-days 7)
-			(org-agenda-skip-function
-			 '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
-			(org-agenda-overriding-header "\nDeadlines")))
-	       (tags "CLOSED>=\"<today>\""
-		     ((org-agenda-overriding-header "\nCompleted today\n")))))))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-custom-commands
+        '(("g" "Get Things Done (GTD)"
+           ((agenda ""
+                    ((org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'deadline))
+                     (org-deadline-warning-days 0)))
+            (todo "TODO"
+                  ((org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
+                   (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                   (org-agenda-overriding-header "\nTasks\n")))
+            (agenda nil
+                    ((org-agenda-entry-types '(:deadline))
+                     (org-agenda-format-date "")
+                     (org-deadline-warning-days 7)
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                     (org-agenda-overriding-header "\nDeadlines")))
+            (tags "CLOSED>=\"<today>\""
+                  ((org-agenda-overriding-header "\nCompleted today\n")))))))
+#+END_SRC
 *** TODO Don't list events with deadlines in second, regular, TODO section.
 *** TODO Have Org-Agenda not close all other windows
 *** Include Diary Events in Calendar
-    :PROPERTIES:
-    :NAME:     GTD_diary_in_agenda
-    :END:
-    Find diary style events in the agenda files and include them in
-    the calendar view.
-    #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-include-diary t)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     GTD_diary_in_agenda
+:END:
+Find diary style events in the agenda files and include them in
+the calendar view.
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-include-diary t)
+#+END_SRC
 *** Calendar Windowing
-    :PROPERTIES:
-    :NAME:     GTD_agenda_week_length
-    :END:
-    Show 9 days starting with yesterday; that is, yesterday and the
-    coming week.
-    #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-start-day "-1d")
-      (setq org-agenda-span 9)
-      (setq org-agenda-start-on-weekday nil)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     GTD_agenda_week_length
+:END:
+Show 9 days starting with yesterday; that is, yesterday and the
+coming week.
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-start-day "-1d")
+  (setq org-agenda-span 9)
+  (setq org-agenda-start-on-weekday nil)
+#+END_SRC
 **** TODO This only seems to show 7 days
-     This is showing 9 days in the agenda view.
+This is showing 9 days in the agenda view.
 *** TODO Don't clutter with obvious tasks.
-    There's no need to show the daily repeating unscheduled tasks on
-    everyday after the first.
+There's no need to show the daily repeating unscheduled tasks on
+everyday after the first.
 **** Yes there is
-     When planning it's important that all blocked time is displayed
-     as blocked.  It's just not helpful when looking at the agenda
-     view of the calendar.
+When planning it's important that all blocked time is displayed
+as blocked.  It's just not helpful when looking at the agenda
+view of the calendar.
 *** TODO Google Calendar Things
 *** TODO Sort events by both importance cookies and time estimate
 ** Time Tracking
-   |-------------------+-----------+------------|
-   | Action            | Key-bind  | Location   |
-   |-------------------+-----------+------------|
-   | Clock in          | C-c C-x i | Org Header |
-   | Clock Out         | C-c C-x o | Org Header |
-   | Set Time Estimate | C-c C-x e | Org Header |
-   |-------------------+-----------+------------|
+|-------------------+-----------+------------|
+| Action            | Key-bind  | Location   |
+|-------------------+-----------+------------|
+| Clock in          | C-c C-x i | Org Header |
+| Clock Out         | C-c C-x o | Org Header |
+| Set Time Estimate | C-c C-x e | Org Header |
+|-------------------+-----------+------------|
 *** Track When Tasks are Completed
-    :PROPERTIES:
-    :NAME:     GTD_track_completion_time
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (setq org-log-done 'time)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     GTD_track_completion_time
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq org-log-done 'time)
+#+END_SRC
 *** TODO Star a timer when opening a file via a org link
-    The idea version of this would be the project listing the folder
-    it owns and all time spent with that folder as directory of the
-    active frame is tracked.
+The idea version of this would be the project listing the folder
+it owns and all time spent with that folder as directory of the
+active frame is tracked.
 **** TODO Find a way to save and open project setups, track time with them.
 *** TODO Time Estimation
-    Find a way to insert this into task creation or sorting.
+Find a way to insert this into task creation or sorting.
 *** Track when activity becomes doable
-    :PROPERTIES:
-    :NAME:     GTD_track_actionability
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun log-todo-next-creation-date (&rest ignore)
-	"Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
-	(when (and (string= (org-get-todo-state) "NEXT")
-		   (not (org-entry-get nil "ACTIVATED")))
-	  (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
-      (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     GTD_track_actionability
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun log-todo-next-creation-date (&rest ignore)
+    "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
+    (when (and (string= (org-get-todo-state) "NEXT")
+               (not (org-entry-get nil "ACTIVATED")))
+      (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
+  (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
+#+END_SRC
 **** TODO Have that track the NEXT to TODO change instead?
 * Emacs Core Settings
-  These are settings that are relating to the core of Emacs rather
-  than any the things I do with it.
+These are settings that are relating to the core of Emacs rather
+than any the things I do with it.
 ** Disable Custom
-   :PROPERTIES:
-   :NAME:     Disable_Custom
-   :END:
+:PROPERTIES:
+:NAME:     Disable_Custom
+:END:
 
-   Since I want all settings to be in this file, I'm disabling
-   `Customizing`'s ability to save settings.
+Since I want all settings to be in this file, I'm disabling
+`Customizing`'s ability to save settings.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq custom-file
-           (if (boundp 'server-socket-dir)
-               (expand-file-name "custom.el" server-socket-dir)
-             (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+#+END_SRC
 ** Setup Packages
-   :PROPERTIES:
-   :NAME:     Package
-   :END:
-   Install and manage all of the packages I use.
-   #+BEGIN_SRC emacs-lisp
-     (require 'package)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Package
+:END:
+Install and manage all of the packages I use.
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+#+END_SRC
 *** Package Repositories
-    :PROPERTIES:
-    :NAME:     Package_Repos
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                               ("melpa" . "https://melpa.org/packages/") ; milkyPostman's rep
-                               ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
-      (package-initialize)
-      (when (not package-archive-contents)
-        (package-refresh-contents))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Package_Repos
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/") ; milkyPostman's rep
+                           ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
+  (package-initialize)
+  (when (not package-archive-contents)
+    (package-refresh-contents))
+#+END_SRC
 *** Package Installation Settings
-    :PROPERTIES:
-    :NAME:     Package_Install_Settings
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun udh-install-and-load (package)
-        (ignore-errors
-          (unless (package-installed-p package)
-            (package-install package))
-          (require package)))
-      (setq load-prefer-newer t)
-      (udh-install-and-load 'auto-compile)
-      (auto-compile-on-load-mode)
-      (udh-install-and-load 'package-utils)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Package_Install_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-install-and-load (package)
+    (ignore-errors
+      (unless (package-installed-p package)
+        (package-install package))
+      (require package)))
+  (setq load-prefer-newer t)
+  (udh-install-and-load 'auto-compile)
+  (auto-compile-on-load-mode)
+  (udh-install-and-load 'package-utils)
+#+END_SRC
 **** TODO Add a notification when there are updates
-     :PROPERTIES:
-     :NAME:     Package_Update_Notify
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       ;;(package-utils-upgrade-all)
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Package_Update_Notify
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;;(package-utils-upgrade-all)
+#+END_SRC
 *** Install and Load Required Packages
-    :PROPERTIES:
-    :NAME:     Install_and_Load_Packages
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (setq udh-package-list '(;;General Interface
-			       bind-key
-			       calendar
-			       centered-cursor-mode
-			       dynamic-spaces
-			       hideshow
-			       hideshowvis
-			       highlight
-			       highlight-blocks
-			       highlight-current-line
-			       highlight-indentation
-			       highlight-parentheses
-			       linum-relative
-			       multiple-cursors
-			       persistent-scratch
-			       pretty-mode
-			       undo-tree
-			       ;; TODO: tmux-pane
-			       tramp
-			       ;; TODO: visible-mark
-			       whitespace
-			       ;; Lisps
-			       geiser
-			       slime
-			       ;; C++
-			       ctags
-			       ctags-update
-			       flycheck
-			       flymake
-			       cppcheck
-			       flymake-cppcheck
-			       flymake-cursor
-			       flymake-easy
-			       smart-tabs-mode
-			       ;; Git
-			       magit
-			       magit-filenotify
-			       magit-popup
-			       magit-tramp
-			       ;; Other Modes
-			       arduino-mode
-			       cider ;; clojure
-			       tramp-term
-			       markdown-mode
-			       openscad-mode
-			       ;helm-config
-			       ;vagrant
-			       ;vagrant-tramp
-			       ;; Org Mode - After other languages are installed
-			       ;; TODO: Read though the existing org plugins.
-			       org
-			       org-dotemacs
-			       org-plus-contrib
-			       org-bullets
-			       ;; org-trello
-			       org-preview-html
-			       ;; Org Babel
-			       ob-spice
-			       ob-async
-			       ob-diagrams
-			       plantuml-mode
-			       ;; ob-tmux ;; TODO: What does this even do?
-			       ))
-      (mapcar 'udh-install-and-load udh-package-list)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Install_and_Load_Packages
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq udh-package-list '(;;General Interface
+                           bind-key
+                           calendar
+                           centered-cursor-mode
+                           dynamic-spaces
+                           hideshow
+                           hideshowvis
+                           highlight
+                           highlight-blocks
+                           highlight-current-line
+                           highlight-indentation
+                           highlight-parentheses
+                           linum-relative
+                           multiple-cursors
+                           persistent-scratch
+                           pretty-mode
+                           undo-tree
+                           ;; TODO: tmux-pane
+                           tramp
+                           ;; TODO: visible-mark
+                           whitespace
+                           ;; Lisps
+                           geiser
+                           slime
+                           ;; C++
+                           ctags
+                           ctags-update
+                           flycheck
+                           flymake
+                           cppcheck
+                           flymake-cppcheck
+                           flymake-cursor
+                           flymake-easy
+                           smart-tabs-mode
+                           ;; Git
+                           magit
+                           magit-filenotify
+                           magit-popup
+                           magit-tramp
+                           ;; Other Modes
+                           arduino-mode
+                           cider ;; clojure
+                           tramp-term
+                           markdown-mode
+                           openscad-mode
+                                          ;helm-config
+                                          ;vagrant
+                                          ;vagrant-tramp
+                           ;; Org Mode - After other languages are installed
+                           ;; TODO: Read though the existing org plugins.
+                           org
+                           org-dotemacs
+                           org-plus-contrib
+                           org-bullets
+                           ;; org-trello
+                           org-preview-html
+                           ;; Org Babel
+                           ob-spice
+                           ob-async
+                           ob-diagrams
+                           plantuml-mode
+                           ;; ob-tmux ;; TODO: What does this even do?
+                           ))
+  (mapcar 'udh-install-and-load udh-package-list)
+#+END_SRC
 **** TODO These should be moved into their respective settings locations
 ** Interface Defaults
-   :PROPERTIES:
-   :NAME:     Interface_defaults
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq inhibit-startup-message t)
-     (setq sentence-end-double-space t)
-     (menu-bar-mode -1)
-     (tool-bar-mode -1)
-     (scroll-bar-mode -1)
-     ;; TODO: Disable suspention on gui clients and in
-     ;; tmux.
-     (global-unset-key (kbd "C-z"))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Interface_defaults
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)
+  (setq sentence-end-double-space t)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  ;; TODO: Disable suspention on gui clients and in
+  ;; tmux.
+  (global-unset-key (kbd "C-z"))
+#+END_SRC
 *** TODO Disable C-[ override
-    :PROPERTIES:
-    :NAME:     Disable_C_Bracket
-    :END:
-   #+BEGIN_SRC emacs-lisp
-     ;; TODO unset (kbd "C-[") from ESC
-    ;(define-key key-translation-map
-    ;  [?\C-\[] nil);[(control left_bracket)])
-    ;(define-key key-translation-map
-    ;  (kbd "C-[") nil);[(control left_bracket)])
-    ;(define-key key-translation-map
-    ;  [escape] [?\e])
-    ;(define-key key-translation-map
-    ;  [escape] nil)
-    ;(define-key key-translation-map
-    ;  [?\e] nil)
-    ;(when (boundp 'local-function-key-map)
-    ;  ;;(define-key local-function-key-map)
-    ;  (defun remove-escape-from-local-function-key-map ()
-    ;    (define-key local-function-key-map [?\e] nil)
-    ;    (define-key local-function-key-map [escape] nil)
-    ;    (define-key local-function-key-map [?\C-\[] nil)
-    ;    (define-key local-function-key-map (kbd "C-[") nil))
-    ;  (add-hook 'term-setup-hook 'remove-escape-from-local-function-key-map))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Disable_C_Bracket
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;; TODO unset (kbd "C-[") from ESC
+                                          ;(define-key key-translation-map
+                                          ;  [?\C-\[] nil);[(control left_bracket)])
+                                          ;(define-key key-translation-map
+                                          ;  (kbd "C-[") nil);[(control left_bracket)])
+                                          ;(define-key key-translation-map
+                                          ;  [escape] [?\e])
+                                          ;(define-key key-translation-map
+                                          ;  [escape] nil)
+                                          ;(define-key key-translation-map
+                                          ;  [?\e] nil)
+                                          ;(when (boundp 'local-function-key-map)
+                                          ;  ;;(define-key local-function-key-map)
+                                          ;  (defun remove-escape-from-local-function-key-map ()
+                                          ;    (define-key local-function-key-map [?\e] nil)
+                                          ;    (define-key local-function-key-map [escape] nil)
+                                          ;    (define-key local-function-key-map [?\C-\[] nil)
+                                          ;    (define-key local-function-key-map (kbd "C-[") nil))
+                                          ;  (add-hook 'term-setup-hook 'remove-escape-from-local-function-key-map))
+#+END_SRC
 ** Ask-Before-Closing
-   :PROPERTIES:
-   :NAME:     Ask_Before_Close
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun close-frame-if-no-server ()
-       (if (server-running-p)
-           (condition-case err
-               (delete-frame)
-             (error (if (< emacs-major-version 22)
-                        (save-buffers-kill-terminal)
-                      (save-buffers-kill-emacs))))
-         (if (< emacs-major-version 22)
-             (save-buffers-kill-terminal)
-           (save-buffers-kill-emacs))))
-     (defun ask-before-closing ()
-       "Ask whether or not to close, and then close if y was pressed"
-       (interactive)
-       (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
-           (close-frame-if-no-server)
-         (message "Canceled exit")))
-     (global-set-key (kbd "C-x C-c") 'ask-before-closing)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Ask_Before_Close
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun close-frame-if-no-server ()
+    (if (server-running-p)
+        (condition-case err
+            (delete-frame)
+          (error (if (< emacs-major-version 22)
+                     (save-buffers-kill-terminal)
+                   (save-buffers-kill-emacs))))
+      (if (< emacs-major-version 22)
+          (save-buffers-kill-terminal)
+        (save-buffers-kill-emacs))))
+  (defun ask-before-closing ()
+    "Ask whether or not to close, and then close if y was pressed"
+    (interactive)
+    (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
+        (close-frame-if-no-server)
+      (message "Canceled exit")))
+  (global-set-key (kbd "C-x C-c") 'ask-before-closing)
+#+END_SRC
 ** Persistent-Scratch
-   :PROPERTIES:
-   :NAME:     Persistent_Scratch
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (persistent-scratch-setup-default)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Persistent_Scratch
+:END:
+#+BEGIN_SRC emacs-lisp
+  (persistent-scratch-setup-default)
+#+END_SRC
 ** Disable IDO
-   :PROPERTIES:
-   :NAME:     No_IDO
-   :END:
-   IDO mode seems like a good-ish idea, but it currently badly
-   interacts with much of Emacs's older ideologies and had
-   inconvenient ergonomics.  I'm disabling it for a few years and then
-   will check back on it.
+:PROPERTIES:
+:NAME:     No_IDO
+:END:
+IDO mode seems like a good-ish idea, but it currently badly
+interacts with much of Emacs's older ideologies and had
+inconvenient ergonomics.  I'm disabling it for a few years and then
+will check back on it.
 
-   The core thing that caused me to disable IDO rather than tolerate
-   it is that I can't use =C-x C-f= to open folders with it enabled.
+The core thing that caused me to disable IDO rather than tolerate
+it is that I can't use =C-x C-f= to open folders with it enabled.
 
-   At first I tried just disabling =ido= with =(ido-mode nil)=, but
-   that breaks =org-mode=.
+At first I tried just disabling =ido= with =(ido-mode nil)=, but
+that breaks =org-mode=.
 
-   Using =(unload-feature 'ido)= provides helpful errors but doesn't
-   prevent ido from interfering.
+Using =(unload-feature 'ido)= provides helpful errors but doesn't
+prevent ido from interfering.
 
-   The only method I've found is this, which adds =ido= to the list of
-   packages not to be loaded on next startup.
+The only method I've found is this, which adds =ido= to the list of
+packages not to be loaded on next startup.
 
-   #+BEGIN_SRC emacs-lisp
-     (customize-set-variable
-	  'package-load-list (quote (all (ido nil))))
-     (customize-save-variable
-	  'package-load-list (quote (all (ido nil))))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (customize-set-variable
+   'package-load-list (quote (all (ido nil))))
+  (customize-save-variable
+   'package-load-list (quote (all (ido nil))))
+#+END_SRC
 *** TODO Have an error if ido is loaded and can't unload
 * Global Text Presentation Settings
-  :PROPERTIES:
-  :NAME:     Text_Presentation_Settings
-  :END:
+:PROPERTIES:
+:NAME:     Text_Presentation_Settings
+:END:
 ** Highlight Parentheses
-    :PROPERTIES:
-    :NAME:     Highlight_Parentheses
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (show-paren-mode 1)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Highlight_Parentheses
+:END:
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+#+END_SRC
 *** TODO Check if things are parenthesises
-    In many modes =<= and =>= are not bracketing symbols and shouldn't
-    be counted as mismatched brackets.
+In many modes =<= and =>= are not bracketing symbols and shouldn't
+be counted as mismatched brackets.
 ** Set Theme
-    :PROPERTIES:
-    :NAME:     Mini_Buffer_Cyan
-    :END:
-    I like cyan, make that the mini buffer text colour.  This is set
-    to terminal only because cyan isn't readable on white.
-    #+BEGIN_SRC emacs-lisp
-      (load-theme 'wheatgrass)
-      (add-hook 'tty-setup-hook
-		(lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Mini_Buffer_Cyan
+:END:
+I like cyan, make that the mini buffer text colour.  This is set
+to terminal only because cyan isn't readable on white.
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wheatgrass)
+  (add-hook 'tty-setup-hook
+            (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
+#+END_SRC
 *** TODO Make a single bigger section on colouring.
 ** Spell Check Everywhere
-    :PROPERTIES:
-    :NAME:     Fly_Spell_Everywhere
-    :END:
-    Spelling is hard, enable spell checking everywhere I can.
-    #+BEGIN_SRC emacs-lisp
-      (defun turn-on-flyspell-prog ()
-	"Unconditionally turn on Flyspell-prog mode."
-	(flyspell-prog-mode))
-      (add-hook 'text-mode-hook #'turn-on-flyspell)
-      (add-hook 'prog-mode-hook #'turn-on-flyspell-prog)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Fly_Spell_Everywhere
+:END:
+Spelling is hard, enable spell checking everywhere I can.
+#+BEGIN_SRC emacs-lisp
+  (defun turn-on-flyspell-prog ()
+    "Unconditionally turn on Flyspell-prog mode."
+    (flyspell-prog-mode))
+  (add-hook 'text-mode-hook #'turn-on-flyspell)
+  (add-hook 'prog-mode-hook #'turn-on-flyspell-prog)
+#+END_SRC
 *** TODO org-mode and magit-commit aren't working
-    Looking into the run hooks, it claims that text-mode-hook should
-    be run, org might just be clearing the minor mode away.
+Looking into the run hooks, it claims that text-mode-hook should
+be run, org might just be clearing the minor mode away.
 ** Undo Tree Everywhere
-    :PROPERTIES:
-    :NAME:     Undo_Tree_Everwhere
-    :END:
-    While I don't use this often, it's really annoying when it's not
-    on and I do want it.
-    #+BEGIN_SRC emacs-lisp
-      (defun turn-on-undo-tree ()
-	"Unconditionally turn on undo-tree-mode."
-	(undo-tree-mode 1))
-      (add-hook 'text-mode-hook 'turn-on-undo-tree)
-      (add-hook 'prog-mode-hook 'turn-on-undo-tree)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Undo_Tree_Everwhere
+:END:
+While I don't use this often, it's really annoying when it's not
+on and I do want it.
+#+BEGIN_SRC emacs-lisp
+  (defun turn-on-undo-tree ()
+    "Unconditionally turn on undo-tree-mode."
+    (undo-tree-mode 1))
+  (add-hook 'text-mode-hook 'turn-on-undo-tree)
+  (add-hook 'prog-mode-hook 'turn-on-undo-tree)
+#+END_SRC
 *** TODO Can I have that enable when called rather than always on?
-    I don't expect that the efficiency implications of this will
-    matter, but it's good to care.
+I don't expect that the efficiency implications of this will
+matter, but it's good to care.
 ** TODO Tabs and Spaces
-   :PROPERTIES:
-   :NAME:     Tabs_and_Spaces_Settings
-   :END:
-   Move most of this into appropriate major modes instead of
-   overriding defaults.
-   #+BEGIN_SRC emacs-lisp
-     (global-smart-tab-mode 1)
-     (setq-default tab-width 2)
-     (setq tab-width 2)
-     (make-variable-buffer-local 'tab-width)
-     (setq-default indent-tabs-mode t)
-     (setq indent-tabs-mode t)
-     (make-variable-buffer-local 'indent-tabs-mode)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Tabs_and_Spaces_Settings
+:END:
+Move most of this into appropriate major modes instead of
+overriding defaults.
+#+BEGIN_SRC emacs-lisp
+  (global-smart-tab-mode 1)
+  (setq-default tab-width 2)
+  (setq tab-width 2)
+  (make-variable-buffer-local 'tab-width)
+  (setq-default indent-tabs-mode t)
+  (setq indent-tabs-mode t)
+  (make-variable-buffer-local 'indent-tabs-mode)
+#+END_SRC
 ** Line Numbers should be Relative
-   :PROPERTIES:
-   :NAME:     Relitive_Line_Numbers
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq relative-line-numbers-motion-function 'forward-visible-line)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Relitive_Line_Numbers
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq relative-line-numbers-motion-function 'forward-visible-line)
+#+END_SRC
 *** TODO Absolute reference
-    Have line numbers that are multiples of five show though the
-    relative numbers.  Align them differently so they are easy to
-    distinguish.
+Have line numbers that are multiples of five show though the
+relative numbers.  Align them differently so they are easy to
+distinguish.
 * Global Keyboard Interface
 ** TODO Navigation With C-c C-c
-   :PROPERTIES:
-   :NAME:     Follow_Links
-   :END:
-   While not in org-mode, have =C-c C-c= follow links into either org
-   or eww (or wherever the link goes since this will be in the
-   =[[dest][name]]= format).
-   #+BEGIN_SRC emacs-lisp
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Follow_Links
+:END:
+While not in org-mode, have =C-c C-c= follow links into either org
+or eww (or wherever the link goes since this will be in the
+=[[dest][name]]= format).
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
 ** Frame Movement
-   :PROPERTIES:
-   :NAME:     Frame_Control_Keys
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun other-window-reverse (count &optional all-frames)
-       "Call `other-window' with a negitive argument."
-       (interactive "p")
-       (other-window (* -1 count) all-frames))
-     (global-set-key (kbd "C-x O") 'other-window-reverse)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Frame_Control_Keys
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun other-window-reverse (count &optional all-frames)
+    "Call `other-window' with a negitive argument."
+    (interactive "p")
+    (other-window (* -1 count) all-frames))
+  (global-set-key (kbd "C-x O") 'other-window-reverse)
+#+END_SRC
 ** Cursor Movement
-   :PROPERTIES:
-   :NAME:     Cursor_Movment_Changes
-   :END:
-   I prefer =C-a= going to the logical begging of line rather than the
-   technical beginning of line.
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-a") 'back-to-indentation)
-     (global-unset-key (kbd "M-m"))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Cursor_Movment_Changes
+:END:
+I prefer =C-a= going to the logical begging of line rather than the
+technical beginning of line.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-a") 'back-to-indentation)
+  (global-unset-key (kbd "M-m"))
+#+END_SRC
 *** TODO The best option would be for =C-a= to toggle.
 ** Multiple Cursors
-   :PROPERTIES:
-   :NAME:     Multiple_Cursors
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     ;(global-set-key (kbd "C-S-l") 'mc/edit-lines)
-     (bind-key* "C-d"   'mc/mark-next-like-this)
-     ;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
-     ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Multiple_Cursors
+:END:
+#+BEGIN_SRC emacs-lisp
+                                          ;(global-set-key (kbd "C-S-l") 'mc/edit-lines)
+  (bind-key* "C-d"   'mc/mark-next-like-this)
+                                          ;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
+                                          ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
+#+END_SRC
 *** TODO =C-d= is overridden in some modes, fix that.
 ** TODO ED
-   :PROPERTIES:
-   :NAME:     ED_Keys
-   :END:
-   Replicate the features of ED that I really like.
+:PROPERTIES:
+:NAME:     ED_Keys
+:END:
+Replicate the features of ED that I really like.
 
-   This should be made into a minor mode once it's larger.
+This should be made into a minor mode once it's larger.
 
-   (require 'multiple-cursors-mode)
+(require 'multiple-cursors-mode)
 
-   When searching, highlight all lines that are matching, make sure
-   they are visible.  Reduce context around lines until all are
-   visable on screen (or a limit is hit).
+When searching, highlight all lines that are matching, make sure
+they are visible.  Reduce context around lines until all are
+visable on screen (or a limit is hit).
 
-   Really, just make a regex search that filters the visible lines.
-   And a second function to revert the view, all else is of much less
-   importance.
+Really, just make a regex search that filters the visible lines.
+And a second function to revert the view, all else is of much less
+importance.
 
-   the package `all` seems similar, give it a look.
+the package `all` seems similar, give it a look.
 * Computer Specific
 ** Kitchen Sink
-   :PROPERTIES:
-   :NAME:     Kitchen_Sink
-   :END:
-   Kitchen Sink is the name of my laptop.  Check if that is this
-   system so things can depend on that.  This computer is trying to
-   run Emacs as the operating system, LISP all the way down.  The
-   underlying system is Guix and I'll be pulling as much of the
-   configuration of that as I can into Emacs so that I can manage the
-   system as a singular whole.
-   #+BEGIN_SRC emacs-lisp
-     (setq is-kitchensink (string= "kitchensink" (system-name)))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Kitchen_Sink
+:END:
+Kitchen Sink is the name of my laptop.  Check if that is this
+system so things can depend on that.  This computer is trying to
+run Emacs as the operating system, LISP all the way down.  The
+underlying system is Guix and I'll be pulling as much of the
+configuration of that as I can into Emacs so that I can manage the
+system as a singular whole.
+#+BEGIN_SRC emacs-lisp
+  (setq is-kitchensink (string= "kitchensink" (system-name)))
+#+END_SRC
 *** Emacs
-    :PROPERTIES:
-    :NAME:     Kitchensink_Emacs
-    :END:
+:PROPERTIES:
+:NAME:     Kitchensink_Emacs
+:END:
 **** Transparency
-     :PROPERTIES:
-     :NAME:     Kitchensink_Emacs_Transparency
-     :END:
-     Set frames to have an alpha content of 85%.  And 85% when
-     inactive.
-     #+BEGIN_SRC emacs-lisp
-       (if is-kitchensink
-	   (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Kitchensink_Emacs_Transparency
+:END:
+Set frames to have an alpha content of 85%.  And 85% when
+inactive.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink
+      (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
+#+END_SRC
 **** Visual Bell
-     :PROPERTIES:
-     :NAME:     Kitchensink_Emacs_Visual_Bell
-     :END:
-     This disables the audio bell.
-     #+BEGIN_SRC emacs-lisp
-       (if is-kitchensink
-	   (setq visible-bell 1))
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Kitchensink_Emacs_Visual_Bell
+:END:
+This disables the audio bell.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink
+      (setq visible-bell 1))
+#+END_SRC
 *** GUIX
-    :PROPERTIES:
-    :NAME:     Kitchensink_Guix
-    :END:
-    Install the packages for dealing with Guix.
-    #+BEGIN_SRC emacs-lisp
-      (if is-kitchensink
-	  (mapcar 'udh-install-and-load '(guix pretty-sha-path)))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Kitchensink_Guix
+:END:
+Install the packages for dealing with Guix.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink
+      (mapcar 'udh-install-and-load '(guix pretty-sha-path)))
+#+END_SRC
 **** TODO Something doesn't work here
 **** TODO Move installed packages from zsh to here
 **** TODO Notify in scratch when updates or ageing pull
 *** Start EXWM
-    :PROPERTIES:
-    :NAME:     Kitchensink_EXWM_Init
-    :END:
-    The majority of EXWM's settings are in it's mode configuration
-    below, this is just to start it and specify any system specific
-    settings.
-    #+BEGIN_SRC emacs-lisp
-      (if is-kitchensink
-	  (progn
-	    (udh-install-and-load 'exwm)
-	    (setq mouse-autoselect-window t
-		  focus-follows-mouse t)
+:PROPERTIES:
+:NAME:     Kitchensink_EXWM_Init
+:END:
+The majority of EXWM's settings are in it's mode configuration
+below, this is just to start it and specify any system specific
+settings.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink
+      (progn
+        (udh-install-and-load 'exwm)
+        (setq mouse-autoselect-window t
+              focus-follows-mouse t)
 
-	    (mapcar 'udh-install-and-load '(exwm exwm-mff))
-	    (require 'exwm)
-	    (require 'exwm-config)
-	    (exwm-config-default)))
-    #+END_SRC
+        (mapcar 'udh-install-and-load '(exwm exwm-mff))
+        (require 'exwm)
+        (require 'exwm-config)
+        (exwm-config-default)))
+#+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
 ** Windmills (Tower)
 *** TODO Decrease emacs default font size two points
 * Major Mode Settings
 ** EXWM
-   :PROPERTIES:
-   :NAME:     EXWM_settings
-   :END:
-   EXWM isn't loaded here since it's only wanted on some systems.
+:PROPERTIES:
+:NAME:     EXWM_settings
+:END:
+EXWM isn't loaded here since it's only wanted on some systems.
 *** TODO Only run this section if exwm is loaded
 *** System Tray
-    :PROPERTIES:
-    :NAME:     EXWM_System_Tray
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (require 'exwm-systemtray)
-      (exwm-systemtray-enable)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     EXWM_System_Tray
+:END:
+#+BEGIN_SRC emacs-lisp
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
+#+END_SRC
 *** No Floating Windows
-    :PROPERTIES:
-    :NAME:     EXWM_Force_Non_Floating
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (setq exwm-manage-force-tiling t)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     EXWM_Force_Non_Floating
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq exwm-manage-force-tiling t)
+#+END_SRC
 *** Key-binds
-    :PROPERTIES:
-    :NAME:     EXWM_Keybinds
-    :END:
+:PROPERTIES:
+:NAME:     EXWM_Keybinds
+:END:
 **** Workspace Keys
-     :PROPERTIES:
-     :NAME:     EXWM_Workspace_Keys
-     :END:
-     Bind keys 0-9 to workspaces.
-    #+BEGIN_SRC emacs-lisp
-      (setq exwm-input-global-keys
-	`(([?\s-r] . exwm-reset)
-	  ([?\s-w] . exwm-workspace-switch)
-	  ,@(mapcar (lambda (i)
-		      `(,(kbd (format "s-%d" i)) .
-			(lambda ()
-			  (interactive)
-			  (exwm-workspace-switch-create ,i))))
-		    (number-sequence 0 9))))
+:PROPERTIES:
+:NAME:     EXWM_Workspace_Keys
+:END:
+Bind keys 0-9 to workspaces.
+#+BEGIN_SRC emacs-lisp
+  (setq exwm-input-global-keys
+        `(([?\s-r] . exwm-reset)
+          ([?\s-w] . exwm-workspace-switch)
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-switch-create ,i))))
+                    (number-sequence 0 9))))
 
-      (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-    #+END_SRC
+  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+#+END_SRC
 ***** TODO Also bind shift 0-9 to 10-19 to match i3
 **** TODO Map S-x to start programs
 **** TODO Back and Fourth Hardware Keys
-     Bind S-<XF86Back> and S-<XF86Forward> to move between frames or
-     workspaces.
+Bind S-<XF86Back> and S-<XF86Forward> to move between frames or
+workspaces.
 **** TODO Rescue =C-c= keys
-     :PROPERTIES:
-     :NAME:     EXWM_No_CC_Keys
-     :END:
-     I don't like bindings to C-c, not really sure why.  There are
-     several bindings to C-c in EXWM, move them over to s- bindings.
+:PROPERTIES:
+:NAME:     EXWM_No_CC_Keys
+:END:
+I don't like bindings to C-c, not really sure why.  There are
+several bindings to C-c in EXWM, move them over to s- bindings.
 
-     Some of the default bindings are:
-     |-------------+-------------------------------+-------------------------------------------------------------------------------------|
-     | C-c C-f     | exwm-layout-set-fullscreen    | Enter fullscreen mode                                                               |
-     | C-c C-h     | exwm-floating-hide            | Hide a floating X window                                                            |
-     | C-c C-k     | exwm-input-release-keyboard   | Switch to char-mode                                                                 |
-     | C-c C-m     | exwm-workspace-move-window    | Move X window to another workspace                                                  |
-     | C-c C-q     | exwm-input-send-next-key      | Send a single key to the X window;   can be prefixed with C-u to send multiple keys |
-     | C-c C-t C-f | exwm-floating-toggle-floating | Toggle between tiling and floating mode                                             |
-     | C-c C-t C-m | exwm-layout-toggle-mode-line  | Toggle mode-line                                                                    |
-     |-------------+-------------------------------+-------------------------------------------------------------------------------------|
+Some of the default bindings are:
+|-------------+-------------------------------+-------------------------------------------------------------------------------------|
+| C-c C-f     | exwm-layout-set-fullscreen    | Enter fullscreen mode                                                               |
+| C-c C-h     | exwm-floating-hide            | Hide a floating X window                                                            |
+| C-c C-k     | exwm-input-release-keyboard   | Switch to char-mode                                                                 |
+| C-c C-m     | exwm-workspace-move-window    | Move X window to another workspace                                                  |
+| C-c C-q     | exwm-input-send-next-key      | Send a single key to the X window;   can be prefixed with C-u to send multiple keys |
+| C-c C-t C-f | exwm-floating-toggle-floating | Toggle between tiling and floating mode                                             |
+| C-c C-t C-m | exwm-layout-toggle-mode-line  | Toggle mode-line                                                                    |
+|-------------+-------------------------------+-------------------------------------------------------------------------------------|
 
-     Probably map though them and bind them to S-c by default.
+Probably map though them and bind them to S-c by default.
 
-     Unbind all C-c Commands.  (Not sure if this sends C-c to
-     underlying frame or just blocks it entirely.
-     #+BEGIN_SRC emacs-lisp
-       (define-key exwm-mode-map (kbd "C-c") nil)
-     #+END_SRC
+Unbind all C-c Commands.  (Not sure if this sends C-c to
+underlying frame or just blocks it entirely.
+#+BEGIN_SRC emacs-lisp
+  (define-key exwm-mode-map (kbd "C-c") nil)
+#+END_SRC
 **** UNUSED Program Specific Bindings
-     :PROPERTIES:
-     :NAME:     EXWM_Program_Particulars
-     :END:
-     I don't have any yet, but they'll follow this form if I do
-     #+BEGIN_SRC emacs-lisp
-     (add-hook 'exwm-manage-finish-hook
-          (lambda ()
-            (when (and exwm-class-name
-                       (string= exwm-class-name "XTerm"))
-              (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
-     #+END_SRC
+:PROPERTIES:
+:NAME:     EXWM_Program_Particulars
+:END:
+I don't have any yet, but they'll follow this form if I do
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'exwm-manage-finish-hook
+            (lambda ()
+              (when (and exwm-class-name
+                         (string= exwm-class-name "XTerm"))
+                (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
+#+END_SRC
 *** TODO Task Safety
-    Unbind M-! or have some timeout command on it.  Since Emacs is
-    single threaded starting a non-forked task though M-! will block
-    Emacs and therefore EXWM.
+Unbind M-! or have some timeout command on it.  Since Emacs is
+single threaded starting a non-forked task though M-! will block
+Emacs and therefore EXWM.
 *** UNUSED Multi Screen
-    :PROPERTIES:
-    :NAME:     EXWM_Multi_Screen
-    :END:
-    This is for when I use EXWM on a multi screen computer.
-    #+BEGIN_SRC emacs-lisp
-      (require 'exwm-randr)
-      (setq exwm-randr-workspace-output-plist '(0 "VGA1"))
-      (add-hook 'exwm-randr-screen-change-hook
-		(lambda ()
-		  (start-process-shell-command
-		   "xrandr" nil "xrandr --output VGA1 --left-of LVDS1 --auto")))
-      (exwm-randr-enable)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     EXWM_Multi_Screen
+:END:
+This is for when I use EXWM on a multi screen computer.
+#+BEGIN_SRC emacs-lisp
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(0 "VGA1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output VGA1 --left-of LVDS1 --auto")))
+  (exwm-randr-enable)
+#+END_SRC
 **** UNUSED Dynamic Multiple Monitors
-     :PROPERTIES:
-     :NAME:     EXWM_Multi_Screen_Dynamic
-     :END:
-     For when the docking station gets a second monitor and regular
-     use again.
-     #+BEGIN_SRC emacs-lisp
-       (defun exwm-change-screen-hook ()
-	 (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
-	       default-output)
-	   (with-temp-buffer
-	     (call-process "xrandr" nil t nil)
-	     (goto-char (point-min))
-	     (re-search-forward xrandr-output-regexp nil 'noerror)
-	     (setq default-output (match-string 1))
-	     (forward-line)
-	     (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
-		 (call-process "xrandr" nil nil nil "--output" default-output "--auto")
-	       (call-process
-		"xrandr" nil nil nil
-		"--output" (match-string 1) "--primary" "--auto"
-		"--output" default-output "--off")
-	       (setq exwm-randr-workspace-output-plist (list 0 (match-string 1)))))))
-     #+END_SRC
+:PROPERTIES:
+:NAME:     EXWM_Multi_Screen_Dynamic
+:END:
+For when the docking station gets a second monitor and regular
+use again.
+#+BEGIN_SRC emacs-lisp
+  (defun exwm-change-screen-hook ()
+    (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+          default-output)
+      (with-temp-buffer
+        (call-process "xrandr" nil t nil)
+        (goto-char (point-min))
+        (re-search-forward xrandr-output-regexp nil 'noerror)
+        (setq default-output (match-string 1))
+        (forward-line)
+        (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+            (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+          (call-process
+           "xrandr" nil nil nil
+           "--output" (match-string 1) "--primary" "--auto"
+           "--output" default-output "--off")
+          (setq exwm-randr-workspace-output-plist (list 0 (match-string 1)))))))
+#+END_SRC
 *** TODO Tabs
-    Find a nest-able tabbed interface to use.  Some options are:
-    Nerdtab, frame-tabs, rings, tab-group, tabbar, or there might be a
-    EXWM builtin.
+Find a nest-able tabbed interface to use.  Some options are:
+Nerdtab, frame-tabs, rings, tab-group, tabbar, or there might be a
+EXWM builtin.
 *** TODO start programs with s-x
-    Currently M-& starts an async program, replicate this behaviour
-    except:
-    - automaticly rename the created x buffer
-    - create a new async buffer.
+Currently M-& starts an async program, replicate this behaviour
+except:
+- automaticly rename the created x buffer
+- create a new async buffer.
 *** TODO Center cursor on frame movement
-    This might require a call to xdotool.
+This might require a call to xdotool.
 
-    When magit opens the commit window, it currently moves the mouse
-    to the edge of the frame, guaranteeing a surprise swap with
-    kitchensink's trackpoint.
+When magit opens the commit window, it currently moves the mouse
+to the edge of the frame, guaranteeing a surprise swap with
+kitchensink's trackpoint.
 *** TODO Have all desktops generated and set to scratch on startup
 ** Org Mode
-   :PROPERTIES:
-   :NAME:     Org_Mode_Settings
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun udh-disable-tabs ()
-       (setq indent-tabs-mode nil))
-     (add-hook 'org-mode-hook 'udh-disable-tabs)
-     (defun org-collapse-element ()
-	"Moves to parent element and then collapses it."
-	(interactive)
-	(org-up-element)
-	(org-cycle))
-     (defun udh-org-mode-keys ()
-       (local-set-key (kbd "RET") 'org-return-indent)
-       ;;(local-set-key (kbd "M-C-RET") 'org-return)
-       (local-set-key (kbd "M-[") 'org-backward-element)
-       (local-set-key (kbd "M-]") 'org-forward-element)
-       (local-set-key (kbd "M-{") 'org-collapse-element)
-       (local-set-key (kbd "M-}") 'org-down-element)
-       )
-     (add-hook 'org-mode-hook
-	       'udh-org-mode-keys)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Mode_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-disable-tabs ()
+    (setq indent-tabs-mode nil))
+  (add-hook 'org-mode-hook 'udh-disable-tabs)
+  (defun org-collapse-element ()
+    "Moves to parent element and then collapses it."
+    (interactive)
+    (org-up-element)
+    (org-cycle))
+  (defun udh-org-mode-keys ()
+    (local-set-key (kbd "RET") 'org-return-indent)
+    ;;(local-set-key (kbd "M-C-RET") 'org-return)
+    (local-set-key (kbd "M-[") 'org-backward-element)
+    (local-set-key (kbd "M-]") 'org-forward-element)
+    (local-set-key (kbd "M-{") 'org-collapse-element)
+    (local-set-key (kbd "M-}") 'org-down-element)
+    )
+  (add-hook 'org-mode-hook
+            'udh-org-mode-keys)
+#+END_SRC
 *** TODO Set only last star to show and fake white-space before lines
 *** DISABLED Org Trello
-    :PROPERTIES:
-    :NAME:     Org_Trello
-    :END:
-    This is currently disabled because =org-trello= erroneously marks
-    =ido= as required.
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
-      ;; TODO: Find a better way to detect this.
-      ;(defun udh-org-trello-detect ()
-      ;  (let ((filename (buffer-file-name (current-buffer))))
-      ;    (when (and filename (string= "trello" (file-name-extension filename)))
-      ;      (org-trello-mode))))
-      ;(add-hook 'org-mode-hook 'udh-org-trello-detect)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Trello
+:END:
+This is currently disabled because =org-trello= erroneously marks
+=ido= as required.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
+  ;; TODO: Find a better way to detect this.
+                                          ;(defun udh-org-trello-detect ()
+                                          ;  (let ((filename (buffer-file-name (current-buffer))))
+                                          ;    (when (and filename (string= "trello" (file-name-extension filename)))
+                                          ;      (org-trello-mode))))
+                                          ;(add-hook 'org-mode-hook 'udh-org-trello-detect)
+#+END_SRC
 *** Org Babel
-    :PROPERTIES:
-    :NAME:     Org_Babel
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (org-babel-do-load-languages
-	'org-babel-load-languages
-	'((emacs-lisp . t)
-	  (dot . t)
-	  (octave . t)
-	  (lisp . t)
-	  (scheme . t)
-	  (python . t)
-	  (plantuml . t)))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Babel
+:END:
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (dot . t)
+     (octave . t)
+     (lisp . t)
+     (scheme . t)
+     (python . t)
+     (plantuml . t)))
+#+END_SRC
 **** TODO Org Babel Confirmation
-     :PROPERTIES:
-     :NAME:     Org_Babel_Octave_Confirmation
-     :END:
-     Have this ask once per language per file, as it's currently
-     written it's a security hole.
-     #+BEGIN_SRC emacs-lisp
-       (require `ob-octave)
-       (setq org-confirm-babel-evaluate nil)
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Babel_Octave_Confirmation
+:END:
+Have this ask once per language per file, as it's currently
+written it's a security hole.
+#+BEGIN_SRC emacs-lisp
+  (require `ob-octave)
+  (setq org-confirm-babel-evaluate nil)
+#+END_SRC
 **** SLIME
-     :PROPERTIES:
-     :NAME:     Org_Babel_SLIME
-     :END:
-     #+BEGIN_SRC emacs-lisp
-     (setq inferior-lisp-program "clisp")
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Babel_SLIME
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq inferior-lisp-program "clisp")
+#+END_SRC
 **** Scheme
-     :PROPERTIES:
-     :NAME:     Org_Babel_Scheme
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       (setq scheme-program-name "guile")
-       (setq geiser-default-implementation 'guile)
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Babel_Scheme
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq scheme-program-name "guile")
+  (setq geiser-default-implementation 'guile)
+#+END_SRC
 **** Plantuml
-     :PROPERTIES:
-     :NAME:     Org_Babel_Plantuml
-     :END:
-     Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update is needed.
-     #+BEGIN_SRC emacs-lisp
-       (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
-       (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-     #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Babel_Plantuml
+:END:
+Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update is needed.
+#+BEGIN_SRC emacs-lisp
+  (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+#+END_SRC
 ***** TODO Download this if it's not there
 *** TODO use these settings as default
-    :PROPERTIES:
-    :NAME:     Org_Display_Defaults
-    :END:
-    #+BEGIN_SRC org
-    #+STARTUP: content showstars indent inlineimages hideblocks
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Org_Display_Defaults
+:END:
+#+BEGIN_SRC org
+  ,#+STARTUP: content showstars indent inlineimages hideblocks
+#+END_SRC
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
-    This is part of a more general philosophy I'm trying to enforce;
-    that org-mode and it's agenda is part of the interface of Emacs
-    rather than a separate thing inside of it.  That all things being
-    done are being done in a project and so that perspective should be
-    wrapping it.
+This is part of a more general philosophy I'm trying to enforce;
+that org-mode and it's agenda is part of the interface of Emacs
+rather than a separate thing inside of it.  That all things being
+done are being done in a project and so that perspective should be
+wrapping it.
 ** C/CPP Like Languages
-    :PROPERTIES:
-    :NAME:     C_CPP_Common_Settings
-    :END:
-    #+BEGIN_SRC emacs-lisp
-       (smart-tabs-insinuate 'c 'c++)
+:PROPERTIES:
+:NAME:     C_CPP_Common_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (smart-tabs-insinuate 'c 'c++)
 
-       (defun udh-c-mode-layout ()
-	 ;;(glasses-mode 1)
-	 (require 'flymake-cursor)
-	 (setq-default c-basic-offset 2
-		       ;;tab-width 2
-		       ;;indent-tabs-mode t
-		       )
-	 (hs-minor-mode 1)
-	 ;(hideshowvis-minor-mode 1)
-	 ;(hideshowvis-symbols)
-	 (linum-relative-mode 1)
-	 (require 'centered-cursor-mode)
-	 (centered-cursor-mode 1)
-	 ;;(hl-line-mode 1)
-	 ;;(highlight-blocks-mode 1)
-	 ;;(highlight-current-line-minor-mode 1)
-	 ;;(highline-mode 1)
-	 (flycheck-mode 1)
-	 (flyspell-prog-mode)
-	 )
-       (add-hook 'c-mode-common-hook
-		 'udh-c-mode-layout)
-      (defun udh-c-mode-keys ()
-        (local-set-key (kbd "C-,") 'flycheck-next-error)
-	(local-set-key (kbd "C-t") 'hs-toggle-hiding)
-	(local-set-key (kbd "C-M-t") 'hs-hide-level)
-	(local-set-key (kbd "M-{") 'hs-hide-block)
-	(local-set-key (kbd "M-}") 'hs-show-block)
-	(local-set-key (kbd "C-S-b") (lambda () (interactive)
-				       ;;(flycheck-select-checker 'c/c++-cppcheck)
-				       (flymake-mode -1) (flymake-mode 1)
-				       (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-				       (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-				       ))
-	(local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-					 (flycheck-mode -1) (flymake-mode -1)
-					 (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-	(setq tags-revert-without-query 1)
-	)
-      (add-hook 'c-mode-common-hook 'udh-c-mode-keys)
-    #+END_SRC
+  (defun udh-c-mode-layout ()
+    ;;(glasses-mode 1)
+    (require 'flymake-cursor)
+    (setq-default c-basic-offset 2
+                  ;;tab-width 2
+                  ;;indent-tabs-mode t
+                  )
+    (hs-minor-mode 1)
+                                          ;(hideshowvis-minor-mode 1)
+                                          ;(hideshowvis-symbols)
+    (linum-relative-mode 1)
+    (require 'centered-cursor-mode)
+    (centered-cursor-mode 1)
+    ;;(hl-line-mode 1)
+    ;;(highlight-blocks-mode 1)
+    ;;(highlight-current-line-minor-mode 1)
+    ;;(highline-mode 1)
+    (flycheck-mode 1)
+    (flyspell-prog-mode)
+    )
+  (add-hook 'c-mode-common-hook
+            'udh-c-mode-layout)
+  (defun udh-c-mode-keys ()
+    (local-set-key (kbd "C-,") 'flycheck-next-error)
+    (local-set-key (kbd "C-t") 'hs-toggle-hiding)
+    (local-set-key (kbd "C-M-t") 'hs-hide-level)
+    (local-set-key (kbd "M-{") 'hs-hide-block)
+    (local-set-key (kbd "M-}") 'hs-show-block)
+    (local-set-key (kbd "C-S-b") (lambda () (interactive)
+                                   ;;(flycheck-select-checker 'c/c++-cppcheck)
+                                   (flymake-mode -1) (flymake-mode 1)
+                                   (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+                                   (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
+                                   ))
+    (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
+                                     (flycheck-mode -1) (flymake-mode -1)
+                                     (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
+    (setq tags-revert-without-query 1)
+    )
+  (add-hook 'c-mode-common-hook 'udh-c-mode-keys)
+#+END_SRC
 *** TODO Toggle Hiding opens a new tab in some terminal emulators
 *** DISABLED C Visual Symbols
-    :PROPERTIES:
-    :NAME:     C_Visual_Symbols
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun udh-c-mode-prettify ()
-	 (pretty-mode 1)
-	 (pretty-regexp "--" "↧");"↓"
-	 (pretty-regexp "[+][+]" "↥");"↑"
-	 (pretty-regexp " *> > >" "⋙")
-	 (pretty-regexp "< < < *" "⋘")
-	 (pretty-regexp " *> >" "≫")
-	 (pretty-regexp "< < *" "≪")
-	 (pretty-regexp "<<" "《");"⩽"
-	 ;;(pretty-regexp "< < <" "⫹")
-	 (pretty-regexp ">>" "》");"⩾"
-	 ;;(pretty-regexp "> > >" "⫺")
-	 (pretty-regexp ">=" "≥")
-	 (pretty-regexp "<=" "≤")
-	 (pretty-regexp "!=" "≠")
-	 (pretty-regexp "==" "≡")
-	 (pretty-regexp "!" "¬")
-	 (pretty-regexp "||" "∥")
-	 (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
-	 (pretty-regexp "true" "⊨")
-	 (pretty-regexp "bool" "⊢");"╠";"├";"¤"
-	 (pretty-regexp "float" "ℝ")
-	 (pretty-regexp "\bint\b" "ℤ")
-	 (pretty-regexp "char" "¶")
-	 (pretty-regexp "void" "Ø")
-	 (pretty-regexp "//" "⑊")
-	 ;;(pretty-regexp "const" "𝌸")
-	 ;;(pretty-regexp "[/][/][*]" "∫∮" )
-	 ;;(pretty-regexp "[*][/][/]" "∮∫" )
-	 ;;(pretty-regexp "[*][/]" "∮" )
-	 ;;(pretty-regexp "[/][*]" "∮" )
-	 ;;(pretty-regexp "[/][/]" "∬" )
-	 ;;(pretty-regexp "[.]unlock()" "")
-	 ;;(pretty-regexp "[.]lock()" "")
-	 (pretty-regexp "std::deque" "ℚ");ɋʠ
-	 (pretty-regexp "std::function" "ℱ");∳ƒⁿ
-	 (pretty-regexp "std::ostream" "水");⇴⌫⼮
-	 (pretty-regexp "std::atomic" "⚛");⌬
-	 (pretty-regexp "std::thread" "⎇");↛ ⇶
-	 (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
-	 (pretty-regexp "std::map" "↦");"≔"
-	 (pretty-regexp "std::pair" "⑵");"②";"ʭ"
-	 (pretty-regexp "std::make_pair" "mk⑵")
-	 (pretty-regexp "std::vector" "→")
-	 (pretty-regexp "std::cin" "⌨")
-	 ;;(pretty-regexp "std::buffer" "𝌖")
-	 (pretty-regexp "[.]second" "₂")
-	 (pretty-regexp "[.]first" "₁")
-	 (pretty-regexp "template" "◳")
-	 (pretty-regexp "()" "≬")
-	 (pretty-regexp "std" "§");"準"
-	 (pretty-regexp "::" "∷");"⁞"
-	 (pretty-regexp "symbol" "※")
-	 (pretty-regexp "Symbol" "⁜")
-	 (pretty-regexp "Stream" "川")
-	 (pretty-regexp "Thread" "⇶")
-	 (pretty-regexp "Array" "⇻")
-	 (pretty-regexp "Tree" "ᛘ");𝌎
-	 ;;(pretty-regexp "Key" "🔑")
-	 (pretty-regexp "[*]" "∗")
-      )
-      ;(add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
-      (add-hook 'c-mode-common-hook
-          '(lambda () (local-set-key (kbd "C-M-S-p")
-              '(lambda () (interactive) (udh-c-mode-prettify)))))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     C_Visual_Symbols
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-c-mode-prettify ()
+    (pretty-mode 1)
+    (pretty-regexp "--" "↧");"↓"
+    (pretty-regexp "[+][+]" "↥");"↑"
+    (pretty-regexp " *> > >" "⋙")
+    (pretty-regexp "< < < *" "⋘")
+    (pretty-regexp " *> >" "≫")
+    (pretty-regexp "< < *" "≪")
+    (pretty-regexp "<<" "《");"⩽"
+    ;;(pretty-regexp "< < <" "⫹")
+    (pretty-regexp ">>" "》");"⩾"
+    ;;(pretty-regexp "> > >" "⫺")
+    (pretty-regexp ">=" "≥")
+    (pretty-regexp "<=" "≤")
+    (pretty-regexp "!=" "≠")
+    (pretty-regexp "==" "≡")
+    (pretty-regexp "!" "¬")
+    (pretty-regexp "||" "∥")
+    (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
+    (pretty-regexp "true" "⊨")
+    (pretty-regexp "bool" "⊢");"╠";"├";"¤"
+    (pretty-regexp "float" "ℝ")
+    (pretty-regexp "\bint\b" "ℤ")
+    (pretty-regexp "char" "¶")
+    (pretty-regexp "void" "Ø")
+    (pretty-regexp "//" "⑊")
+    ;;(pretty-regexp "const" "𝌸")
+    ;;(pretty-regexp "[/][/][*]" "∫∮" )
+    ;;(pretty-regexp "[*][/][/]" "∮∫" )
+    ;;(pretty-regexp "[*][/]" "∮" )
+    ;;(pretty-regexp "[/][*]" "∮" )
+    ;;(pretty-regexp "[/][/]" "∬" )
+    ;;(pretty-regexp "[.]unlock()" "")
+    ;;(pretty-regexp "[.]lock()" "")
+    (pretty-regexp "std::deque" "ℚ");ɋʠ
+    (pretty-regexp "std::function" "ℱ");∳ƒⁿ
+    (pretty-regexp "std::ostream" "水");⇴⌫⼮
+    (pretty-regexp "std::atomic" "⚛");⌬
+    (pretty-regexp "std::thread" "⎇");↛ ⇶
+    (pretty-regexp "std::mutex" "↹");Θ ҉ ҈ ⊙ ↺
+    (pretty-regexp "std::map" "↦");"≔"
+    (pretty-regexp "std::pair" "⑵");"②";"ʭ"
+    (pretty-regexp "std::make_pair" "mk⑵")
+    (pretty-regexp "std::vector" "→")
+    (pretty-regexp "std::cin" "⌨")
+    ;;(pretty-regexp "std::buffer" "𝌖")
+    (pretty-regexp "[.]second" "₂")
+    (pretty-regexp "[.]first" "₁")
+    (pretty-regexp "template" "◳")
+    (pretty-regexp "()" "≬")
+    (pretty-regexp "std" "§");"準"
+    (pretty-regexp "::" "∷");"⁞"
+    (pretty-regexp "symbol" "※")
+    (pretty-regexp "Symbol" "⁜")
+    (pretty-regexp "Stream" "川")
+    (pretty-regexp "Thread" "⇶")
+    (pretty-regexp "Array" "⇻")
+    (pretty-regexp "Tree" "ᛘ");𝌎
+    ;;(pretty-regexp "Key" "🔑")
+    (pretty-regexp "[*]" "∗")
+    )
+                                          ;(add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
+  (add-hook 'c-mode-common-hook
+            '(lambda () (local-set-key (kbd "C-M-S-p")
+                                       '(lambda () (interactive) (udh-c-mode-prettify)))))
+#+END_SRC
 *** Etags
-    :PROPERTIES:
-    :NAME:     Locate_Etags
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (setq path-to-ctags (executable-find "etags"))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Locate_Etags
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq path-to-ctags (executable-find "etags"))
+#+END_SRC
 **** TODO Why do I need to search for part of the emacs package?
-     Shouldn't emacs know where etags is?
+Shouldn't emacs know where etags is?
 *** Non-Standard C Languages
-    :PROPERTIES:
-    :NAME:     C_CPP_Like_Languages
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
-      (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-    #+END_SRC
+:PROPERTIES:
+:NAME:     C_CPP_Like_Languages
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+#+END_SRC
 ** CPP Settings
-   :PROPERTIES:
-   :NAME:     Cpp_Settings
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun udh-set-flycheck-cpp-language-standard
-		 (setq flycheck-clang-language-standard "c++1z"))
-     (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Cpp_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-set-flycheck-cpp-language-standard
+      (setq flycheck-clang-language-standard "c++1z"))
+  (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
+#+END_SRC
 ** SCAD
-   :PROPERTIES:
-   :NAME:     SCAD
-   :END:
+:PROPERTIES:
+:NAME:     SCAD
+:END:
 *** SCAD Pretty
-    :PROPERTIES:
-    :NAME:     SCAD_Pretty
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun udh-scad-prettify ()
-	(pretty-mode 1)
-	(pretty-regexp ">=" "≥")
-	(pretty-regexp "<=" "≤")
-	(pretty-regexp "!=" "≠")
-	(pretty-regexp "==" "≡")
-	(pretty-regexp "!" "¬")
-	(pretty-regexp "||" "∥")
-	(pretty-regexp "false" "⊭")
-	(pretty-regexp "true" "⊨")
-	(pretty-regexp "//" "⑊")
-	(pretty-regexp "module" "◳")
-	(pretty-regexp "()" "≬")
-	(pretty-regexp "[*]" "∗"))
-      (add-hook 'scad-mode-hook 'udh-scad-prettify)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     SCAD_Pretty
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-scad-prettify ()
+    (pretty-mode 1)
+    (pretty-regexp ">=" "≥")
+    (pretty-regexp "<=" "≤")
+    (pretty-regexp "!=" "≠")
+    (pretty-regexp "==" "≡")
+    (pretty-regexp "!" "¬")
+    (pretty-regexp "||" "∥")
+    (pretty-regexp "false" "⊭")
+    (pretty-regexp "true" "⊨")
+    (pretty-regexp "//" "⑊")
+    (pretty-regexp "module" "◳")
+    (pretty-regexp "()" "≬")
+    (pretty-regexp "[*]" "∗"))
+  (add-hook 'scad-mode-hook 'udh-scad-prettify)
+#+END_SRC
 ** Markdown
-   :PROPERTIES:
-   :NAME:     Markdown
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Markdown
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
+#+END_SRC
 ** TODO Lisp
-   :PROPERTIES:
-   :NAME:     Lisp_Mode_Settings
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     ;;(require 'rainbow-blocks)
-     ;;(add-hook 'tty-setup-hook
-     ;;    (add-hook 'lisp-mode-hook
-     ;;              'rainbow-blocks-mode)
-     (setq indent-tabs-mode nil)
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Lisp_Mode_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;;(require 'rainbow-blocks)
+  ;;(add-hook 'tty-setup-hook
+  ;;    (add-hook 'lisp-mode-hook
+  ;;              'rainbow-blocks-mode)
+  (setq indent-tabs-mode nil)
+#+END_SRC
 *** Lisp Pretty
-    :PROPERTIES:
-    :NAME:     Lisp_Pretty
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (defun udh-lisp-prettify ()
-        (pretty-mode 1)
-        (pretty-regexp "lambda" "λ")
-        (pretty-regexp "#f" "⊭")
-        (pretty-regexp "#t" "⊨")
-        (pretty-regexp "()" "≬"))
-      (defun udh-lisp-prettify-maths ()
-        (pretty-regexp "member?" "∈")
-        (pretty-regexp "union" "∪")
-        (pretty-regexp "intersection" "∩"))
-      (add-hook 'scheme-mode-hook 'udh-lisp-prettify)
-      (add-hook 'clojure-mode-hook 'udh-lisp-prettify)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Lisp_Pretty
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-lisp-prettify ()
+    (pretty-mode 1)
+    (pretty-regexp "lambda" "λ")
+    (pretty-regexp "#f" "⊭")
+    (pretty-regexp "#t" "⊨")
+    (pretty-regexp "()" "≬"))
+  (defun udh-lisp-prettify-maths ()
+    (pretty-regexp "member?" "∈")
+    (pretty-regexp "union" "∪")
+    (pretty-regexp "intersection" "∩"))
+  (add-hook 'scheme-mode-hook 'udh-lisp-prettify)
+  (add-hook 'clojure-mode-hook 'udh-lisp-prettify)
+#+END_SRC
 **** TODO disable builtin pretties
 ** TODO Python
-   :PROPERTIES:
-   :NAME:     Python
-   :END:
-   ;;;for python
-   ;;enable elpy
-   ;(elpy-enable)
-   ;; set compleat to C-c k
-   ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-   ;; set iedit mode
-   ;(define-key global-map (kbd "C-c o") 'iedit-mode)
+:PROPERTIES:
+:NAME:     Python
+:END:
+;;;for python
+;;enable elpy
+;(elpy-enable)
+;; set compleat to C-c k
+;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+;; set iedit mode
+;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** IRC (ERC)
-   :PROPERTIES:
-   :NAME:     IRC
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'erc-mode-hook
-               (lambda ()
-                 (flyspell-mode 1)
-                 ))
-     (add-hook 'erc-disconnected-hook
-               (lambda (nick host-name reason)
-                 ;; Re-establish the connection even if the server closed it.
-                 (setq erc-server-error-occurred nil)))
-     (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT","MODE"))
-     (setq erc-lurker-threshold-time 3600)
-                                             ;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
-                                             ;(setq erc-hide-list '())
-     (setq erc-log-channels-directory "~/.erc/logs/")
-     (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
-                                             ;that might make erc slow
-                                             ;the forums are unsure
-                                             ;https://www.emacswiki.org/emacs/ErcLogging#toc6
-    #+END_SRC
+:PROPERTIES:
+:NAME:     IRC
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'erc-mode-hook
+            (lambda ()
+              (flyspell-mode 1)
+              ))
+  (add-hook 'erc-disconnected-hook
+            (lambda (nick host-name reason)
+              ;; Re-establish the connection even if the server closed it.
+              (setq erc-server-error-occurred nil)))
+  (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT","MODE"))
+  (setq erc-lurker-threshold-time 3600)
+                                          ;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
+                                          ;(setq erc-hide-list '())
+  (setq erc-log-channels-directory "~/.erc/logs/")
+  (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
+                                          ;that might make erc slow
+                                          ;the forums are unsure
+                                          ;https://www.emacswiki.org/emacs/ErcLogging#toc6
+#+END_SRC
 *** TODO Merge with Pidgen and Discord when they exist
 ** TODO EWW
-   :PROPERTIES:
-   :NAME:     EWW
-   :END:
-   Have each tab rename to the active site
-   Have calling M-x eww make a new tab from any buffer
-   Make a bookmark org file
-   Have a "bookmark and close" function
-   Have a "Dump all tabs to bookmarks" function
+:PROPERTIES:
+:NAME:     EWW
+:END:
+Have each tab rename to the active site
+Have calling M-x eww make a new tab from any buffer
+Make a bookmark org file
+Have a "bookmark and close" function
+Have a "Dump all tabs to bookmarks" function
 ** Pascal
-   :PROPERTIES:
-   :NAME:     Pascal
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Pascal
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
+#+END_SRC
 ** Magit
-   :PROPERTIES:
-   :NAME: Magit
-   :END:
+:PROPERTIES:
+:NAME:     Magit
+:END:
 *** TODO Emit Hashes into *Messages*
-    Have magit print the hash of a commit after making it.
+Have magit print the hash of a commit after making it.
 *** Disable Magit Clean
-    :PROPERTIES:
-    :NAME: Disable_Magit_Clean
-    :END:
-    Magit clean deletes temporary files, I'm using that state please
-    don't.
-    #+BEGIN_SRC emacs-lisp
-      (put 'magit-clean 'disabled nil)
-    #+END_SRC
+:PROPERTIES:
+:NAME:     Disable_Magit_Clean
+:END:
+Magit clean deletes temporary files, I'm using that state please
+don't.
+#+BEGIN_SRC emacs-lisp
+  (put 'magit-clean 'disabled nil)
+#+END_SRC
 *** TODO follow sym links
-    Magit dosen't seem to find this reposistory when I open this file
-    from its linked location.
+Magit dosen't seem to find this reposistory when I open this file
+from its linked location.
 ** COBOL and Java
-   #+BEGIN_QUOTE
-      The Tao gave birth to machine language. Machine language gave
-      birth to the assembler.
+#+BEGIN_QUOTE
+The Tao gave birth to machine language. Machine language gave
+birth to the assembler.
 
-      The assembler gave birth to the compiler. Now there are ten
-      thousand languages.
+The assembler gave birth to the compiler. Now there are ten
+thousand languages.
 
-      Each language has its purpose, however humble. Each language
-      expresses the Yin and Yang of software. Each language has its
-      place within the Tao.
+Each language has its purpose, however humble. Each language
+expresses the Yin and Yang of software. Each language has its
+place within the Tao.
 
-      But do not program in COBOL if you can avoid it.
+But do not program in COBOL if you can avoid it.
 
-      -- The Tao of programming : Book 1 Canto 2
-   #+END_QUOTE
-   I feel that Java fills the same position as COBOL did.  It's an
-   excessively verbose language that use "best practices" as a
-   substitute for good design.  In both cases this is because the
-   language is relegated to those who haven't groked computer science;
-   but, at least COBOL recognised and embraced that.
+-- The Tao of programming : Book 1 Canto 2
+#+END_QUOTE
+I feel that Java fills the same position as COBOL did.  It's an
+excessively verbose language that use "best practices" as a
+substitute for good design.  In both cases this is because the
+language is relegated to those who haven't groked computer science;
+but, at least COBOL recognised and embraced that.
 * Minor Mode Settings
 ** Whitespace-Mode
-   :PROPERTIES:
-   :NAME:     Whitespace_Mode
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun udh-whitespace-settings
-	 (lambda ()
-	   (whitespace-mode 1)
-	   (if (display-graphic-p)
-	       (setq whitespace-style
-		     '(face tabs spaces trailing space-before-tab
-			    newline indentation empty space-after-tab
-			    space-mark tab-mark newline-mark))
-	     (setq whitespace-style
-		   '(face tabs trailing space-before-tab
-			  newline indentation empty
-			  space-mark tab-mark newline-mark)))))
-     (add-hook 'whitespace-load-hook 'udh-whitespace-settings)
-     (setq whitespace-empty-at-eob-regexp "^
-     \\([
+:PROPERTIES:
+:NAME:     Whitespace_Mode
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh-whitespace-settings
+      (lambda ()
+        (whitespace-mode 1)
+        (if (display-graphic-p)
+            (setq whitespace-style
+                  '(face tabs spaces trailing space-before-tab
+                         newline indentation empty space-after-tab
+                         space-mark tab-mark newline-mark))
+          (setq whitespace-style
+                '(face tabs trailing space-before-tab
+                       newline indentation empty
+                       space-mark tab-mark newline-mark)))))
+  (add-hook 'whitespace-load-hook 'udh-whitespace-settings)
+  (setq whitespace-empty-at-eob-regexp "^
+  \\([
 
-     ]+\\)");set it not to care about the first empty line (org files tend to have one)
-   #+END_SRC
+  ]+\\)");set it not to care about the first empty line (org files tend to have one)
+#+END_SRC
 *** TODO Organize that code better and give the function a name
 ** TRAMP
-   :PROPERTIES:
-   :NAME:     Tramp
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (setq tramp-default-method "ssh")
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Tramp
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq tramp-default-method "ssh")
+#+END_SRC
 ** TODO Flymake
-   Move flymake errors to mini-buffer.
+Move flymake errors to mini-buffer.
 * Misc Utility Functions
 ** sdate function
-   :PROPERTIES:
-   :NAME:     Sdate_Function
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     (defun sdate ()
-       (replace-regexp-in-string "\n$" ""
-		  (shell-command-to-string "sdate -f 5 -d")))
-   #+END_SRC
+:PROPERTIES:
+:NAME:     Sdate_Function
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun sdate ()
+    (replace-regexp-in-string "\n$" ""
+                              (shell-command-to-string "sdate -f 5 -d")))
+#+END_SRC
 *** TODO Check if sdate is in path
-    This might not be needed, since sdate is in this repo's `~/bin`
+This might not be needed, since sdate is in this repo's `~/bin`
 * Unsorted TODOs
 ** TODO YASnippet
-   #+BEGIN_SRC emacs-lisp
-                                             ;(yas-reload-all)
-                                             ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
-                                             ;(setq yas/root-directory '"~/.emacs.d/snippets")
-                                             ;(yas/reload-all)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+                                          ;(yas-reload-all)
+                                          ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
+                                          ;(setq yas/root-directory '"~/.emacs.d/snippets")
+                                          ;(yas/reload-all)
+#+END_SRC
 ** TODO Helm
-   (helm-mode 1)
+(helm-mode 1)
 ** correct M-arrow to move paragraphs rather than single lines
-   (defun org-transpose-paragraphs (arg)
-   (interactive)
-   (when (and (not (or (org-at-table-p) (org-on-heading-p) (org-at-item-p)))
-   (thing-at-point 'sentence))
-   (transpose-paragraphs arg)
-   (backward-paragraph)
-   (re-search-forward "[[:graph:]]")
-   (goto-char (match-beginning 0))
-   t))
-   (add-to-list 'org-metaup-hook
-   (lambda () (interactive) (org-transpose-paragraphs -1)))
-   (add-to-list 'org-metadown-hook
-   (lambda () (interactive) (org-transpose-paragraphs 1)))
+(defun org-transpose-paragraphs (arg)
+(interactive)
+(when (and (not (or (org-at-table-p) (org-on-heading-p) (org-at-item-p)))
+(thing-at-point 'sentence))
+(transpose-paragraphs arg)
+(backward-paragraph)
+(re-search-forward "[[:graph:]]")
+(goto-char (match-beginning 0))
+t))
+(add-to-list 'org-metaup-hook
+(lambda () (interactive) (org-transpose-paragraphs -1)))
+(add-to-list 'org-metadown-hook
+(lambda () (interactive) (org-transpose-paragraphs 1)))
 ** magit change logs use current org heading as function for description
-   (defun org-log-current-defun ()
-   (save-excursion
-   (org-back-to-heading)
-   (if (looking-at org-complex-heading-regexp)
-   (match-string 4))))
-   (add-hook 'org-mode-hook
-   (lambda ()
-   (make-variable-buffer-local 'add-log-current-defun-function)
-   (setq add-log-current-defun-function 'org-log-current-defun)))
+(defun org-log-current-defun ()
+(save-excursion
+(org-back-to-heading)
+(if (looking-at org-complex-heading-regexp)
+(match-string 4))))
+(add-hook 'org-mode-hook
+(lambda ()
+(make-variable-buffer-local 'add-log-current-defun-function)
+(setq add-log-current-defun-function 'org-log-current-defun)))
 ** org-export latex settings
-   (add-to-list 'org-latex-classes
-   '("udh-books"
-   "\\documentclass{book}
-   \\usepackage{braket}"
-   ("\\part{%s}" . "\\part*{%s}")
-   ("\\chapter{%s}" . "\\chapter*{%s}")
-   ("\\section{%s}" . "\\section*{%s}")
-   ("\\subsection{%s}" . "\\subsection*{%s}")
-   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+(add-to-list 'org-latex-classes
+'("udh-books"
+"\\documentclass{book}
+\\usepackage{braket}"
+("\\part{%s}" . "\\part*{%s}")
+("\\chapter{%s}" . "\\chapter*{%s}")
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")
+("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-   (add-to-list 'org-latex-classes
-   '("udh-article"
-   "\\documentclass{scrartcl}
-   \\usepackage{braket}"
-   ("\\section{%s}" . "\\section*{%s}")
-   ("\\subsection{%s}" . "\\subsection*{%s}")
-   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(add-to-list 'org-latex-classes
+'("udh-article"
+"\\documentclass{scrartcl}
+\\usepackage{braket}"
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")
+("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+("\\paragraph{%s}" . "\\paragraph*{%s}")
+("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-   (add-to-list 'org-latex-classes
-   '("udh-pub"
-   "\\documentclass{book}
-   \\usepackage{braket}"
-   ("\\chapter{%s}" . "\\chapter*{%s}")
-   ("\\section{%s}" . "\\section*{%s}")
-   ("\\subsection{%s}" . "\\subsection*{%s}")
-   ;("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-   ;("\\paragraph{%s}" . "\\paragraph*{%s}")
-   ;("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-   ))
+(add-to-list 'org-latex-classes
+'("udh-pub"
+"\\documentclass{book}
+\\usepackage{braket}"
+("\\chapter{%s}" . "\\chapter*{%s}")
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")
+;("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;("\\paragraph{%s}" . "\\paragraph*{%s}")
+;("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+))
 
-   ; Forward/Preface
-   ; Table of Contents
-   ; Introduction
-   ; Chapter 1
-   ; ...
+; Forward/Preface
+; Table of Contents
+; Introduction
+; Chapter 1
+; ...
 ** TODO <XF86Back> and <XF86Forward> are overridden in info-mode
 ** Packages to look at
-   Org-drill?
-   outline-toc?
+Org-drill?
+outline-toc?
