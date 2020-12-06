@@ -101,13 +101,6 @@
          (define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
          (define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
     #+END_SRC
-*** DISABLED Full-Screen Capture
-    I prefer that capture is not full screen.  Keeping this for reference.
-    #+BEGIN_SRC emacs-lisp
-    ;(add-hook 'org-capture-mode-hook 'delete-other-windows)
-    #+END_SRC
-    That's commented since it was enabled even though it's marked as
-    DISABLED.
 *** TODO Add numeric priorities.
     [[info:Org#Priorities]]
 *** TODO Track event creation and sorting in properties
@@ -174,51 +167,6 @@
      When planning it's important that all blocked time is displayed
      as blocked.  It's just not helpful when looking at the agenda
      view of the calendar.
-*** DISABLED Fix Diary to Work Inside of Org Agenda
-    :PROPERTIES:
-    :NAME:     Diary_in_Agenda
-    :END:
-    This section is marked as DISABLED because the functionality
-    started working.  This section is being kept in case of future
-    need.  As this is lava code it may be tucked away into the git
-    log soon.
-
-    I'm not sure why diary entries in agenda files don't work as
-    indicated in the [[info:org#Calendar/Diary integration][info page]] (by my reading).  I'm instead using
-    this to allow diary entries in agenda files, checking before each
-    viewing.
-    #+BEGIN_SRC emacs-lisp
-      (defun read-lines (filePath)
-	"Return a list of lines of a file at filePath."
-	(with-temp-buffer
-	  (insert-file-contents filePath)
-	  (split-string (buffer-string) "\n" t)))
-
-      (defun agenda-diary-entries ()
-	"List the lines from org-agenda-files that belong in
-	    diary-files."
-	(let ((agenda-files
-	       (if (stringp org-agenda-files)
-		   (read-lines org-agenda-files)
-		 org-agenda-files)))
-	  (seq-filter
-	   (lambda (s) (string-match "^[%][%]" s))
-	   (apply #'append
-		  (mapcar 'read-lines agenda-files)))))
-
-      (defun string-list-to-file (string-list filePath)
-	"Save a list of strings as the lines in filePath."
-	(with-temp-file filePath
-	  (mapcar (lambda (s) (insert s "\n")) string-list)))
-
-      (defun update-diary-from-agenda ()
-	"Update (overwrite) the diary-file with lines from
-      org-agenda-files."
-	(string-list-to-file (agenda-diary-entries) diary-file))
-
-      ;(add-hook 'diary-hook #'update-diary-from-agenda)
-    #+END_SRC
-**** Disabled because the normal mode started working
 *** TODO Google Calendar Things
 *** TODO Sort events by both importance cookies and time estimate
 ** Time Tracking
@@ -626,6 +574,8 @@
    Really, just make a regex search that filters the visible lines.
    And a second function to revert the view, all else is of much less
    importance.
+
+   the package `all` seems similar, give it a look.
 * Computer Specific
 ** Kitchen Sink
    :PROPERTIES:
@@ -829,6 +779,18 @@
     Find a nest-able tabbed interface to use.  Some options are:
     Nerdtab, frame-tabs, rings, tab-group, tabbar, or there might be a
     EXWM builtin.
+*** TODO start programs with s-x
+    Currently M-& starts an async program, replicate this behaviour
+    except:
+    - automaticly rename the created x buffer
+    - create a new async buffer.
+*** TODO Center cursor on frame movement
+    This might require a call to xdotool.
+
+    When magit opens the commit window, it currently moves the mouse
+    to the edge of the frame, guaranteeing a surprise swap with
+    kitchensink's trackpoint.
+*** TODO Have all desktops generated and set to scratch on startup
 ** Org Mode
    :PROPERTIES:
    :NAME:     Org_Mode_Settings
@@ -918,6 +880,7 @@
        (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
        (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
      #+END_SRC
+***** TODO Download this if it's not there
 *** TODO use these settings as default
     :PROPERTIES:
     :NAME:     Org_Display_Defaults
@@ -1051,17 +1014,6 @@
           '(lambda () (local-set-key (kbd "C-M-S-p")
               '(lambda () (interactive) (udh-c-mode-prettify)))))
     #+END_SRC
-*** CPP Settings
-    :PROPERTIES:
-    :NAME:     Cpp_Settings
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
-      (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-      (defun udh-set-flycheck-cpp-language-standard
-		  (setq flycheck-clang-language-standard "c++1z"))
-      (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
-    #+END_SRC
 *** Etags
     :PROPERTIES:
     :NAME:     Locate_Etags
@@ -1071,6 +1023,23 @@
     #+END_SRC
 **** TODO Why do I need to search for part of the emacs package?
      Shouldn't emacs know where etags is?
+*** Non-Standard C Languages
+    :PROPERTIES:
+    :NAME:     C_CPP_Like_Languages
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+      (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+    #+END_SRC
+** CPP Settings
+   :PROPERTIES:
+   :NAME:     Cpp_Settings
+   :END:
+   #+BEGIN_SRC emacs-lisp
+     (defun udh-set-flycheck-cpp-language-standard
+		 (setq flycheck-clang-language-standard "c++1z"))
+     (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
+   #+END_SRC
 ** SCAD
    :PROPERTIES:
    :NAME:     SCAD
@@ -1167,6 +1136,7 @@
                                              ;the forums are unsure
                                              ;https://www.emacswiki.org/emacs/ErcLogging#toc6
     #+END_SRC
+*** TODO Merge with Pidgen and Discord when they exist
 ** TODO EWW
    :PROPERTIES:
    :NAME:     EWW
@@ -1187,6 +1157,8 @@
    :PROPERTIES:
    :NAME: Magit
    :END:
+*** TODO Emit Hashes into *Messages*
+    Have magit print the hash of a commit after making it.
 *** Disable Magit Clean
     :PROPERTIES:
     :NAME: Disable_Magit_Clean
@@ -1196,6 +1168,9 @@
     #+BEGIN_SRC emacs-lisp
       (put 'magit-clean 'disabled nil)
     #+END_SRC
+*** TODO follow sym links
+    Magit dosen't seem to find this reposistory when I open this file
+    from its linked location.
 ** COBOL and Java
    #+BEGIN_QUOTE
       The Tao gave birth to machine language. Machine language gave
@@ -1223,18 +1198,19 @@
    :NAME:     Whitespace_Mode
    :END:
    #+BEGIN_SRC emacs-lisp
-     (add-hook 'whitespace-load-hook
-	       '(lambda () (if (display-graphic-p)
-			       (progn (whitespace-mode 1)
-				      (setq whitespace-style
-					    '(face tabs spaces trailing space-before-tab
-						   newline indentation empty space-after-tab
-						   space-mark tab-mark newline-mark)))
-			     (progn (whitespace-mode 1)
-				    (setq whitespace-style
-					  '(face tabs trailing space-before-tab
-						 newline indentation empty
-						 space-mark tab-mark newline-mark))))))
+     (defun udh-whitespace-settings
+	 (lambda ()
+	   (whitespace-mode 1)
+	   (if (display-graphic-p)
+	       (setq whitespace-style
+		     '(face tabs spaces trailing space-before-tab
+			    newline indentation empty space-after-tab
+			    space-mark tab-mark newline-mark))
+	     (setq whitespace-style
+		   '(face tabs trailing space-before-tab
+			  newline indentation empty
+			  space-mark tab-mark newline-mark)))))
+     (add-hook 'whitespace-load-hook 'udh-whitespace-settings)
      (setq whitespace-empty-at-eob-regexp "^
      \\([
 
