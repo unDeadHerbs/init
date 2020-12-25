@@ -1,0 +1,15 @@
+-*- mode: org; eval: (org-show-todo-tree '()) -*-
+#+STARTUP: showstars indent inlineimages
+
+* .zshrc.d
+This folder is a modular zshrc file. Files in this folder are named in
+a standard form for and loaded by [[../.zshrc][.zshrc]].
+* Behavior
+1. Scripts are sourced into the environment in lexicographic order.
+2. Only sources scripts that are either marked as "base", the current
+   `$HOST`, or the current `$USER` are loaded.
+3. If there are two scripts with the same load number, the one that is
+   most specific will be preferred.  (`$USER`, `$HOST`, "base" is the
+   order of specificity.)
+   - Technically anything before the first hypen counts, I just prefer
+     numbers.
