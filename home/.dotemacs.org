@@ -1114,7 +1114,8 @@ Shouldn't emacs know where etags is?
 ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 ;; set iedit mode
 ;(define-key global-map (kbd "C-c o") 'iedit-mode)
-** IRC (ERC)
+** Chats
+*** IRC (ERC)
 :PROPERTIES:
 :NAME:     IRC
 :END:
@@ -1137,7 +1138,28 @@ Shouldn't emacs know where etags is?
                                           ;the forums are unsure
                                           ;https://www.emacswiki.org/emacs/ErcLogging#toc6
 #+END_SRC
-*** TODO Merge with Pidgen and Discord when they exist
+**** TODO Merge with Pidgen and Discord when they exist
+*** Telega
+:PROPERTIES:
+:NAME:     Telega
+:END:
+The package `telega` is for connecting to the telegram chat service.
+Install via `guix install emacs-telega -c 1` if guix is installed,
+otherwise use the melpa package and hope the compile stage succeeds
+(happens on first run).
+**** Use Tor for Telega
+:PROPERTIES:
+:NAME:     Telega_Tor
+:END:
+This will need to be smarter about which system it is on later.  Once
+tor is working as a global proxy this can grab settings from there.
+#+BEGIN_SRC emacs-lisp
+  (setq telega-proxies
+        (list
+         '(:server "127.0.0.1" :port 9250 :enable t
+                   :type (:@type "proxyTypeSocks5"))))
+                                 ;:username "rkn" :password "jopa"))
+#+END_SRC
 ** TODO EWW
 :PROPERTIES:
 :NAME:     EWW
