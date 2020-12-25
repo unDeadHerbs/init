@@ -1,0 +1,20 @@
+* uDH's init Files
+
+This is a collection of config files that I actively use and want
+synchronized across computers.  This is such that consistency is
+exists between computers and future computers are just an import away.
+
+* Interesting Files
+The most intresting files to look at are my [[home/.dotemacs.org][emacs config]] and my [[home/.zshrc.d/][zsh
+config]].
+
+* Install
+
+To install on linux run:
+
+```bash
+./install.sh
+```
+
+The Windews PowerShell script is still under testing, since I don't
+use Windows often.
