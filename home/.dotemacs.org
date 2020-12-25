@@ -91,16 +91,16 @@ and notes on their review.
 :END:
 This is for once I'm using mu4e.
 #+BEGIN_SRC emacs-lisp
-  ("@" "Inbox [mu4e]" entry (file "inbox.org")
-   ,(concat "* TODO Process \"%a\" %?\n"
-            "/Entered on/ %U"))
-
-  (defun org-capture-mail ()
-    (interactive)
-    (call-interactively 'org-store-link)
-    (org-capture nil "@"))
-  (define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
-  (define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
+  ;("@" "Inbox [mu4e]" entry (file "inbox.org")
+  ; ,(concat "* TODO Process \"%a\" %?\n"
+  ;          "/Entered on/ %U"))
+  ;
+  ;(defun org-capture-mail ()
+  ;  (interactive)
+  ;  (call-interactively 'org-store-link)
+  ;  (org-capture nil "@"))
+  ;(define-key mu4e-headers-mode-map (kbd "C-c c") 'mu4e-org-store-and-capture)
+  ;(define-key mu4e-view-mode-map    (kbd "C-c c") 'mu4e-org-store-and-capture)
 #+END_SRC
 *** TODO Add numeric priorities.
 [[info:Org#Priorities]]
