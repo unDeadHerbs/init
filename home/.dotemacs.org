@@ -682,13 +682,34 @@ settings.
 #+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
 *** Hardware Controls
+:PROPERTIES:
+:NAME:     Kitchensink_hardware
+:END:
 **** Volume Keys
+:PROPERTIES:
+:NAME:     Kitchensink_hardware_volume
+:END:
 #+BEGIN_SRC emacs-lisp
   (if is-kitchensink (progn
                        (global-set-key (kbd "<XF86AudioRaiseVolume>") #'alsamixer-up-volume)
                        (global-set-key (kbd "<XF86AudioLowerVolume>") #'alsamixer-down-volume)
-                       (global-set-key (kbd "<XF86AudioMute>") #'alsamixer-toggle-mute))
+                       (global-set-key (kbd "<XF86AudioMute>") #'alsamixer-toggle-mute)))
 #+END_SRC
+**** Screen Brightness
+:PROPERTIES:
+:NAME:     Kitchensink_hardware_brightness
+:END:
+The keys already work correctly, but Emacs also receives them and complains.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink (progn
+                       (global-set-key (kbd "<XF86MonBrightnessUp>") #'void)
+                       (global-set-key (kbd "<XF86MonBrightnessDown>") #'void)))
+#+END_SRC
+**** TODO Smart Light
+:PROPERTIES:
+:NAME:     Kitchensink_hardware_thinklight
+:END:
+Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kitchensink.scm]].
 ** Windmills (Tower)
 *** TODO Decrease emacs default font size two points
 * Major Mode Settings
