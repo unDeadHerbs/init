@@ -1177,6 +1177,13 @@ tor is working as a global proxy this can grab settings from there.
   ;       '(:server "127.0.0.1" :port 9250 :enable t
   ;                 :type (:@type "proxyTypeSocks5"))))
 #+END_SRC
+**** Spell Check
+:PROPERTIES:
+:NAME:     Telega_Spell
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'telega-chat-mode-hook
+            #'turn-on-flyspell)
 #+END_SRC
 ** TODO EWW
 :PROPERTIES:
