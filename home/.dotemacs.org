@@ -646,6 +646,14 @@ settings.
         (exwm-config-default)))
 #+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
+*** Hardware Controls
+**** Volume Keys
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink (progn
+                       (global-set-key (kbd "<XF86AudioRaiseVolume>") #'alsamixer-up-volume)
+                       (global-set-key (kbd "<XF86AudioLowerVolume>") #'alsamixer-down-volume)
+                       (global-set-key (kbd "<XF86AudioMute>") #'alsamixer-toggle-mute))
+#+END_SRC
 ** Windmills (Tower)
 *** TODO Decrease emacs default font size two points
 * Major Mode Settings
