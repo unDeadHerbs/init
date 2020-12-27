@@ -616,9 +616,13 @@ removes the need for `progn` later.
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs
 :END:
-**** Transparency
+**** Theme
 :PROPERTIES:
-:NAME:     Kitchensink_Emacs_Transparency
+:NAME:     Kitchensink_Emacs_Theme
+:END:
+***** Transparency
+:PROPERTIES:
+:NAME:     Kitchensink_Emacs_Theme_Transparency
 :END:
 Set frames to have an alpha content of 85%.  And 85% when
 inactive.
@@ -626,9 +630,16 @@ inactive.
   (if is-kitchensink
       (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
 #+END_SRC
-***** TODO This makes everything transparent, not just the backgroud.
-This differnce only matters with viewing pictures in telega.  PDFs
+****** TODO This makes everything transparent, not just the background.
+This difference only matters with viewing pictures in telega.  PDFs
 seem to be opaque.
+***** Font
+:PROPERTIES:
+:NAME:     Kitchensink_Emacs_Theme_Font
+:END:
+#+BEGIN_SRC emacs-lisp
+(custom-set-faces '(default ((t (:height 93)))))
+#+END_SRC
 **** Visual Bell
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs_Visual_Bell
