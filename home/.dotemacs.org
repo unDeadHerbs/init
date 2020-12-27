@@ -437,6 +437,19 @@ packages not to be loaded on next startup.
    'package-load-list (quote (all (ido nil))))
 #+END_SRC
 *** TODO Have an error if ido is loaded and can't unload
+** ELisp features
+*** void
+:PROPERTIES:
+:NAME:     Elisp_custom_void
+:END:
+Sometimes it's important to assign a function to something, but the
+function doesn't matter.  For example, Kitchensink's [[Screen Brightness]]
+keys.
+#+BEGIN_SRC emacs-lisp
+  (defun void (&rest ignored)
+    "Do nothing, quietly."
+    (interactive "p"))
+#+END_SRC
 * Global Text Presentation Settings
 :PROPERTIES:
 :NAME:     Text_Presentation_Settings
