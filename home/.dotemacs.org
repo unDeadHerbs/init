@@ -85,6 +85,11 @@ and notes on their review.
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture-inbox)
 #+END_SRC
+*** TODO Capture from anywhere
+When I press `C-c c` in some buffers (like *scratch*) I get the error
+#+BEGIN_QUOTE
+user-error: No method for storing a link from this buffer
+#+END_QUOTE
 *** TODO Capture from mu4e
 :PROPERTIES:
 :NAME:     GTD_mu4e
@@ -591,6 +596,9 @@ system as a singular whole.
 #+BEGIN_SRC emacs-lisp
   (setq is-kitchensink (string= "kitchensink" (system-name)))
 #+END_SRC
+*** TODO clean up readability
+Have `is-kitchensink` be a function that runs it's paramaters, this
+removes the need for `progn` later.
 *** Emacs
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs
@@ -605,6 +613,9 @@ inactive.
   (if is-kitchensink
       (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
 #+END_SRC
+***** TODO This makes everything transparent, not just the backgroud.
+This differnce only matters with viewing pictures in telega.  PDFs
+seem to be opaque.
 **** Visual Bell
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs_Visual_Bell
@@ -1123,15 +1134,14 @@ Shouldn't emacs know where etags is?
 ;; set iedit mode
 ;(define-key global-map (kbd "C-c o") 'iedit-mode)
 ** Chats
-*** IRC (ERC)
+*** IRC
 :PROPERTIES:
 :NAME:     IRC
 :END:
+The mode ERC is used for IRC in emacs.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'erc-mode-hook
-            (lambda ()
-              (flyspell-mode 1)
-              ))
+            #'turn-on-flyspell)
   (add-hook 'erc-disconnected-hook
             (lambda (nick host-name reason)
               ;; Re-establish the connection even if the server closed it.
@@ -1147,7 +1157,7 @@ Shouldn't emacs know where etags is?
                                           ;https://www.emacswiki.org/emacs/ErcLogging#toc6
 #+END_SRC
 **** TODO Merge with Pidgen and Discord when they exist
-*** Telega
+*** Telegram
 :PROPERTIES:
 :NAME:     Telega
 :END:
@@ -1155,18 +1165,18 @@ The package `telega` is for connecting to the telegram chat service.
 Install via `guix install emacs-telega -c 1` if guix is installed,
 otherwise use the melpa package and hope the compile stage succeeds
 (happens on first run).
-**** Use Tor for Telega
+**** BROKEN Use Tor for Telega
 :PROPERTIES:
 :NAME:     Telega_Tor
 :END:
 This will need to be smarter about which system it is on later.  Once
 tor is working as a global proxy this can grab settings from there.
 #+BEGIN_SRC emacs-lisp
-  (setq telega-proxies
-        (list
-         '(:server "127.0.0.1" :port 9250 :enable t
-                   :type (:@type "proxyTypeSocks5"))))
-                                 ;:username "rkn" :password "jopa"))
+  ;(setq telega-proxies
+  ;      (list
+  ;       '(:server "127.0.0.1" :port 9250 :enable t
+  ;                 :type (:@type "proxyTypeSocks5"))))
+#+END_SRC
 #+END_SRC
 ** TODO EWW
 :PROPERTIES:
