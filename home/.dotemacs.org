@@ -252,15 +252,15 @@ Install and manage all of the packages I use.
 :NAME:     Package_Install_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-install-and-load (package)
+  (defun udh/install-and-load (package)
     (ignore-errors
       (unless (package-installed-p package)
         (package-install package))
       (require package)))
   (setq load-prefer-newer t)
-  (udh-install-and-load 'auto-compile)
+  (udh/install-and-load 'auto-compile)
   (auto-compile-on-load-mode)
-  (udh-install-and-load 'package-utils)
+  (udh/install-and-load 'package-utils)
 #+END_SRC
 **** TODO Add a notification when there are updates
 :PROPERTIES:
@@ -274,7 +274,7 @@ Install and manage all of the packages I use.
 :NAME:     Install_and_Load_Packages
 :END:
 #+BEGIN_SRC emacs-lisp
-  (setq udh-package-list '(;;General Interface
+  (setq udh/package-list '(;;General Interface
                            bind-key
                            calendar
                            centered-cursor-mode
@@ -337,7 +337,7 @@ Install and manage all of the packages I use.
                            plantuml-mode
                            ;; ob-tmux ;; TODO: What does this even do?
                            ))
-  (mapcar 'udh-install-and-load udh-package-list)
+  (mapcar 'udh/install-and-load udh/package-list)
 #+END_SRC
 **** TODO These should be moved into their respective settings locations
 ** Interface Defaults
@@ -656,7 +656,7 @@ This disables the audio bell.
 Install the packages for dealing with Guix.
 #+BEGIN_SRC emacs-lisp
   (if is-kitchensink
-      (mapcar 'udh-install-and-load '(guix pretty-sha-path)))
+      (mapcar 'udh/install-and-load '(guix pretty-sha-path)))
 #+END_SRC
 **** TODO Something doesn't work here
 **** TODO Move installed packages from zsh to here
@@ -671,11 +671,11 @@ settings.
 #+BEGIN_SRC emacs-lisp
   (if is-kitchensink
       (progn
-        (udh-install-and-load 'exwm)
+        (udh/install-and-load 'exwm)
         (setq mouse-autoselect-window t
               focus-follows-mouse t)
 
-        (mapcar 'udh-install-and-load '(exwm exwm-mff))
+        (mapcar 'udh/install-and-load '(exwm exwm-mff))
         (require 'exwm)
         (require 'exwm-config)
         (exwm-config-default)))
@@ -861,15 +861,15 @@ kitchensink's trackpoint.
 :NAME:     Org_Mode_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-disable-tabs ()
+  (defun udh/disable-tabs ()
     (setq indent-tabs-mode nil))
-  (add-hook 'org-mode-hook 'udh-disable-tabs)
+  (add-hook 'org-mode-hook 'udh/disable-tabs)
   (defun org-collapse-element ()
     "Moves to parent element and then collapses it."
     (interactive)
     (org-up-element)
     (org-cycle))
-  (defun udh-org-mode-keys ()
+  (defun udh/org-mode-keys ()
     (local-set-key (kbd "RET") 'org-return-indent)
     ;;(local-set-key (kbd "M-C-RET") 'org-return)
     (local-set-key (kbd "M-[") 'org-backward-element)
@@ -878,7 +878,7 @@ kitchensink's trackpoint.
     (local-set-key (kbd "M-}") 'org-down-element)
     )
   (add-hook 'org-mode-hook
-            'udh-org-mode-keys)
+            'udh/org-mode-keys)
 #+END_SRC
 *** TODO Set only last star to show and fake white-space before lines
 *** DISABLED Org Trello
@@ -890,11 +890,11 @@ This is currently disabled because =org-trello= erroneously marks
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
   ;; TODO: Find a better way to detect this.
-                                          ;(defun udh-org-trello-detect ()
+                                          ;(defun udh/org-trello-detect ()
                                           ;  (let ((filename (buffer-file-name (current-buffer))))
                                           ;    (when (and filename (string= "trello" (file-name-extension filename)))
                                           ;      (org-trello-mode))))
-                                          ;(add-hook 'org-mode-hook 'udh-org-trello-detect)
+                                          ;(add-hook 'org-mode-hook 'udh/org-trello-detect)
 #+END_SRC
 *** Org Babel
 :PROPERTIES:
@@ -966,7 +966,7 @@ wrapping it.
 #+BEGIN_SRC emacs-lisp
   (smart-tabs-insinuate 'c 'c++)
 
-  (defun udh-c-mode-layout ()
+  (defun udh/c-mode-layout ()
     ;;(glasses-mode 1)
     (require 'flymake-cursor)
     (setq-default c-basic-offset 2
@@ -987,8 +987,8 @@ wrapping it.
     (flyspell-prog-mode)
     )
   (add-hook 'c-mode-common-hook
-            'udh-c-mode-layout)
-  (defun udh-c-mode-keys ()
+            'udh/c-mode-layout)
+  (defun udh/c-mode-keys ()
     (local-set-key (kbd "C-,") 'flycheck-next-error)
     (local-set-key (kbd "C-t") 'hs-toggle-hiding)
     (local-set-key (kbd "C-M-t") 'hs-hide-level)
@@ -1005,7 +1005,7 @@ wrapping it.
                                      (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
     (setq tags-revert-without-query 1)
     )
-  (add-hook 'c-mode-common-hook 'udh-c-mode-keys)
+  (add-hook 'c-mode-common-hook 'udh/c-mode-keys)
 #+END_SRC
 *** TODO Toggle Hiding opens a new tab in some terminal emulators
 *** DISABLED C Visual Symbols
@@ -1013,7 +1013,7 @@ wrapping it.
 :NAME:     C_Visual_Symbols
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-c-mode-prettify ()
+  (defun udh/c-mode-prettify ()
     (pretty-mode 1)
     (pretty-regexp "--" "↧");"↓"
     (pretty-regexp "[+][+]" "↥");"↑"
@@ -1074,10 +1074,10 @@ wrapping it.
     ;;(pretty-regexp "Key" "🔑")
     (pretty-regexp "[*]" "∗")
     )
-                                          ;(add-hook 'c-mode-common-hook 'udh-c-mode-prettify)
+                                          ;(add-hook 'c-mode-common-hook 'udh/c-mode-prettify)
   (add-hook 'c-mode-common-hook
             '(lambda () (local-set-key (kbd "C-M-S-p")
-                                       '(lambda () (interactive) (udh-c-mode-prettify)))))
+                                       '(lambda () (interactive) (udh/c-mode-prettify)))))
 #+END_SRC
 *** Etags
 :PROPERTIES:
@@ -1101,9 +1101,9 @@ Shouldn't emacs know where etags is?
 :NAME:     Cpp_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-set-flycheck-cpp-language-standard
+  (defun udh/set-flycheck-cpp-language-standard
       (setq flycheck-clang-language-standard "c++1z"))
-  (add-hook 'c++-mode-hook 'udh-set-flycheck-cpp-language-standard)
+  (add-hook 'c++-mode-hook 'udh/set-flycheck-cpp-language-standard)
 #+END_SRC
 ** SCAD
 :PROPERTIES:
@@ -1114,7 +1114,7 @@ Shouldn't emacs know where etags is?
 :NAME:     SCAD_Pretty
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-scad-prettify ()
+  (defun udh/scad-prettify ()
     (pretty-mode 1)
     (pretty-regexp ">=" "≥")
     (pretty-regexp "<=" "≤")
@@ -1128,7 +1128,7 @@ Shouldn't emacs know where etags is?
     (pretty-regexp "module" "◳")
     (pretty-regexp "()" "≬")
     (pretty-regexp "[*]" "∗"))
-  (add-hook 'scad-mode-hook 'udh-scad-prettify)
+  (add-hook 'scad-mode-hook 'udh/scad-prettify)
 #+END_SRC
 ** Markdown
 :PROPERTIES:
@@ -1153,18 +1153,18 @@ Shouldn't emacs know where etags is?
 :NAME:     Lisp_Pretty
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-lisp-prettify ()
+  (defun udh/lisp-prettify ()
     (pretty-mode 1)
     (pretty-regexp "lambda" "λ")
     (pretty-regexp "#f" "⊭")
     (pretty-regexp "#t" "⊨")
     (pretty-regexp "()" "≬"))
-  (defun udh-lisp-prettify-maths ()
+  (defun udh/lisp-prettify-maths ()
     (pretty-regexp "member?" "∈")
     (pretty-regexp "union" "∪")
     (pretty-regexp "intersection" "∩"))
-  (add-hook 'scheme-mode-hook 'udh-lisp-prettify)
-  (add-hook 'clojure-mode-hook 'udh-lisp-prettify)
+  (add-hook 'scheme-mode-hook 'udh/lisp-prettify)
+  (add-hook 'clojure-mode-hook 'udh/lisp-prettify)
 #+END_SRC
 **** TODO disable builtin pretties
 ** TODO Python
@@ -1291,7 +1291,7 @@ but, at least COBOL recognised and embraced that.
 :NAME:     Whitespace_Mode
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh-whitespace-settings
+  (defun udh/whitespace-settings
       (lambda ()
         (whitespace-mode 1)
         (if (display-graphic-p)
@@ -1303,7 +1303,7 @@ but, at least COBOL recognised and embraced that.
                 '(face tabs trailing space-before-tab
                        newline indentation empty
                        space-mark tab-mark newline-mark)))))
-  (add-hook 'whitespace-load-hook 'udh-whitespace-settings)
+  (add-hook 'whitespace-load-hook 'udh/whitespace-settings)
   (setq whitespace-empty-at-eob-regexp "^
   \\([
 
