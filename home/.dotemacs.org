@@ -207,7 +207,8 @@ Find a way to insert this into task creation or sorting.
     (when (and (string= (org-get-todo-state) "NEXT")
                (not (org-entry-get nil "ACTIVATED")))
       (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
-  (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
+  (add-hook 'org-after-todo-state-change-hook
+            #'log-todo-next-creation-date)
 #+END_SRC
 **** TODO Have that track the NEXT to TODO change instead?
 * Emacs Core Settings
@@ -377,7 +378,8 @@ Install and manage all of the packages I use.
                                           ;    (define-key local-function-key-map [escape] nil)
                                           ;    (define-key local-function-key-map [?\C-\[] nil)
                                           ;    (define-key local-function-key-map (kbd "C-[") nil))
-                                          ;  (add-hook 'term-setup-hook 'remove-escape-from-local-function-key-map))
+                                          ;(add-hook 'term-setup-hook
+                                          ;	  #'remove-escape-from-local-function-key-map))
 #+END_SRC
 ** Ask-Before-Closing
 :PROPERTIES:
@@ -485,8 +487,10 @@ Spelling is hard, enable spell checking everywhere I can.
   (defun turn-on-flyspell-prog ()
     "Unconditionally turn on Flyspell-prog mode."
     (flyspell-prog-mode))
-  (add-hook 'text-mode-hook #'turn-on-flyspell)
-  (add-hook 'prog-mode-hook #'turn-on-flyspell-prog)
+  (add-hook 'text-mode-hook
+            #'turn-on-flyspell)
+  (add-hook 'prog-mode-hook
+            #'turn-on-flyspell-prog)
 #+END_SRC
 *** TODO org-mode and magit-commit aren't working
 Looking into the run hooks, it claims that text-mode-hook should
@@ -501,8 +505,10 @@ on and I do want it.
   (defun turn-on-undo-tree ()
     "Unconditionally turn on undo-tree-mode."
     (undo-tree-mode 1))
-  (add-hook 'text-mode-hook 'turn-on-undo-tree)
-  (add-hook 'prog-mode-hook 'turn-on-undo-tree)
+  (add-hook 'text-mode-hook
+            #'turn-on-undo-tree)
+  (add-hook 'prog-mode-hook
+            #'turn-on-undo-tree)
 #+END_SRC
 *** TODO Can I have that enable when called rather than always on?
 I don't expect that the efficiency implications of this will
@@ -862,8 +868,10 @@ kitchensink's trackpoint.
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun udh/disable-tabs ()
+    (make-variable-buffer-local 'indent-tabs-mode)
     (setq indent-tabs-mode nil))
-  (add-hook 'org-mode-hook 'udh/disable-tabs)
+  (add-hook 'org-mode-hook
+            #'udh/disable-tabs)
   (defun org-collapse-element ()
     "Moves to parent element and then collapses it."
     (interactive)
@@ -878,7 +886,7 @@ kitchensink's trackpoint.
     (local-set-key (kbd "M-}") 'org-down-element)
     )
   (add-hook 'org-mode-hook
-            'udh/org-mode-keys)
+            #'udh/org-mode-keys)
 #+END_SRC
 *** TODO Set only last star to show and fake white-space before lines
 *** DISABLED Org Trello
@@ -894,7 +902,7 @@ This is currently disabled because =org-trello= erroneously marks
                                           ;  (let ((filename (buffer-file-name (current-buffer))))
                                           ;    (when (and filename (string= "trello" (file-name-extension filename)))
                                           ;      (org-trello-mode))))
-                                          ;(add-hook 'org-mode-hook 'udh/org-trello-detect)
+                                          ;(add-hook 'org-mode-hook #'udh/org-trello-detect)
 #+END_SRC
 *** Org Babel
 :PROPERTIES:
@@ -987,7 +995,7 @@ wrapping it.
     (flyspell-prog-mode)
     )
   (add-hook 'c-mode-common-hook
-            'udh/c-mode-layout)
+            #'udh/c-mode-layout)
   (defun udh/c-mode-keys ()
     (local-set-key (kbd "C-,") 'flycheck-next-error)
     (local-set-key (kbd "C-t") 'hs-toggle-hiding)
@@ -1005,7 +1013,8 @@ wrapping it.
                                      (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
     (setq tags-revert-without-query 1)
     )
-  (add-hook 'c-mode-common-hook 'udh/c-mode-keys)
+  (add-hook 'c-mode-common-hook
+            #'udh/c-mode-keys)
 #+END_SRC
 *** TODO Toggle Hiding opens a new tab in some terminal emulators
 *** DISABLED C Visual Symbols
@@ -1074,10 +1083,10 @@ wrapping it.
     ;;(pretty-regexp "Key" "🔑")
     (pretty-regexp "[*]" "∗")
     )
-                                          ;(add-hook 'c-mode-common-hook 'udh/c-mode-prettify)
+  ;;(add-hook 'c-mode-common-hook #'udh/c-mode-prettify)
   (add-hook 'c-mode-common-hook
-            '(lambda () (local-set-key (kbd "C-M-S-p")
-                                       '(lambda () (interactive) (udh/c-mode-prettify)))))
+            (lambda () (local-set-key (kbd "C-M-S-p")
+                                      (lambda () (interactive) (udh/c-mode-prettify)))))
 #+END_SRC
 *** Etags
 :PROPERTIES:
@@ -1103,7 +1112,8 @@ Shouldn't emacs know where etags is?
 #+BEGIN_SRC emacs-lisp
   (defun udh/set-flycheck-cpp-language-standard
       (setq flycheck-clang-language-standard "c++1z"))
-  (add-hook 'c++-mode-hook 'udh/set-flycheck-cpp-language-standard)
+  (add-hook 'c++-mode-hook
+            #'udh/set-flycheck-cpp-language-standard)
 #+END_SRC
 ** SCAD
 :PROPERTIES:
