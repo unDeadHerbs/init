@@ -242,7 +242,7 @@ Install and manage all of the packages I use.
 :END:
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/") ; milkyPostman's rep
+                           ("melpa" . "https://melpa.org/packages/") ; milkyPostman's repo
                            ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
   (package-initialize)
   (when (not package-archive-contents)
@@ -452,6 +452,26 @@ keys.
     "Do nothing, quietly."
     (interactive "p"))
 #+END_SRC
+*** TODO setq-append
+:PROPERTIES:
+:NAME:     Elisp_custom_setq_append
+:END:
+I often want to append to a configuration value in this config,
+particularly for exwm and customize.  Build a macro `(setq-append var
+val)` that becomes `(setq var (append var val))`.  If i understand
+correctly, this needs to be a macro because the first param to `setq`
+need to be referencable by name.  This might be false if the refrence
+is back treaceable in elisp.
+*** sdate
+:PROPERTIES:
+:NAME:     Sdate_Function
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun sdate ()
+    (replace-regexp-in-string "\n$" ""
+                              (shell-command-to-string "sdate -f 5 -d")))
+#+END_SRC
+**** TODO rewrite this in elisp
 * Global Text Presentation Settings
 :PROPERTIES:
 :NAME:     Text_Presentation_Settings
@@ -549,6 +569,11 @@ or eww (or wherever the link goes since this will be in the
 =[[dest][name]]= format).
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
+While in org-mode if nothing to do at point follow link.
+#+BEGIN_SRC emacs-lisp
+; (org-open-at-point)
+#+END_SRC
+*** TODO This will need to link with GTD and maybe start a timer.
 ** Frame Movement
 :PROPERTIES:
 :NAME:     Frame_Control_Keys
@@ -602,7 +627,7 @@ importance.
 
 the package `all` seems similar, give it a look.
 * Computer Specific
-** Kitchen Sink
+** Kitchensink (x201)
 :PROPERTIES:
 :NAME:     Kitchen_Sink
 :END:
@@ -622,6 +647,16 @@ removes the need for `progn` later.
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs
 :END:
+**** BROKEN Use Tor
+There are open questions on the [[https://lists.gnu.org/archive/html/emacs-devel/2020-11/msg00679.html][Emacs mailing list]] as to what's wrong
+with this.
+#+BEGIN_SRC emacs-lisp
+  ;(setq socks-override-functions 1)
+  ;(setq socks-noproxy '("localhost"))
+  ;(require 'socks)
+  ;(setq url-gateway-method 'socks)
+  ;(setq socks-server '("Default server" "127.0.0.1" 9250 5))
+#+END_SRC
 **** Theme
 :PROPERTIES:
 :NAME:     Kitchensink_Emacs_Theme
@@ -687,6 +722,12 @@ settings.
         (exwm-config-default)))
 #+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
+**** TODO Verify EXWM load order
+I know that some exwm settings don't work if configured after exwm is
+loaded, verify that things are setup correctly, particularly the [[EXWM]]
+major mode being below here.
+
+Use `emacs-startup-hook` to fix this.
 *** Hardware Controls
 :PROPERTIES:
 :NAME:     Kitchensink_hardware
@@ -744,9 +785,9 @@ EXWM isn't loaded here since it's only wanted on some systems.
 :PROPERTIES:
 :NAME:     EXWM_Keybinds
 :END:
-**** Workspace Keys
+**** Workspaces
 :PROPERTIES:
-:NAME:     EXWM_Workspace_Keys
+:NAME:     EXWM_Workspaces
 :END:
 Bind keys 0-9 to workspaces.
 #+BEGIN_SRC emacs-lisp
@@ -792,7 +833,7 @@ underlying frame or just blocks it entirely.
 #+BEGIN_SRC emacs-lisp
   (define-key exwm-mode-map (kbd "C-c") nil)
 #+END_SRC
-**** UNUSED Program Specific Bindings
+**** Program Specific Bindings
 :PROPERTIES:
 :NAME:     EXWM_Program_Particulars
 :END:
@@ -804,6 +845,12 @@ I don't have any yet, but they'll follow this form if I do
                          (string= exwm-class-name "XTerm"))
                 (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
 #+END_SRC
+***** TODO IceCat
+:PROPERTIES:
+:NAME:     EXWM_IceCat_Keys
+:END:
+C-s for find
+C-< and C-> for home and end
 *** TODO Task Safety
 Unbind M-! or have some timeout command on it.  Since Emacs is
 single threaded starting a non-forked task though M-! will block
@@ -855,6 +902,11 @@ Currently M-& starts an async program, replicate this behaviour
 except:
 - automaticly rename the created x buffer
 - create a new async buffer.
+#+BEGIN_SRC emacs-lisp
+  ;(setq exwm-input-global-keys (append exwm-input-global-keys
+  ;                                     `(,(kbd "s-x") .
+  ;                                       #'async-shell-command)))
+#+END_SRC
 *** TODO Center cursor on frame movement
 This might require a call to xdotool.
 
@@ -1240,6 +1292,9 @@ tor is working as a global proxy this can grab settings from there.
   (add-hook 'telega-chat-mode-hook
             #'turn-on-flyspell)
 #+END_SRC
+*** TODO Emojify
+Emoji are nice to have in some chat programs in order to keep parity
+with the standard interface.
 ** TODO EWW
 :PROPERTIES:
 :NAME:     EWW
@@ -1330,19 +1385,11 @@ but, at least COBOL recognised and embraced that.
 ** TODO Flymake
 Move flymake errors to mini-buffer.
 * Misc Utility Functions
-** sdate function
-:PROPERTIES:
-:NAME:     Sdate_Function
-:END:
-#+BEGIN_SRC emacs-lisp
-  (defun sdate ()
-    (replace-regexp-in-string "\n$" ""
-                              (shell-command-to-string "sdate -f 5 -d")))
-#+END_SRC
-*** TODO Check if sdate is in path
-This might not be needed, since sdate is in this repo's `~/bin`
 * Unsorted TODOs
 ** TODO YASnippet
+:PROPERTIES:
+:NAME:     YAS_todo
+:END:
 #+BEGIN_SRC emacs-lisp
                                           ;(yas-reload-all)
                                           ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
@@ -1413,7 +1460,6 @@ t))
 ; Introduction
 ; Chapter 1
 ; ...
-** TODO <XF86Back> and <XF86Forward> are overridden in info-mode
 ** Packages to look at
 Org-drill?
 outline-toc?
