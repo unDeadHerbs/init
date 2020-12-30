@@ -710,13 +710,9 @@ The majority of EXWM's settings are in it's mode configuration
 below, this is just to start it and specify any system specific
 settings.
 #+BEGIN_SRC emacs-lisp
-  (if is-kitchensink
+  (when is-kitchensink
       (progn
         (udh/install-and-load 'exwm)
-        (setq mouse-autoselect-window t
-              focus-follows-mouse t)
-
-        (mapcar 'udh/install-and-load '(exwm exwm-mff))
         (require 'exwm)
         (require 'exwm-config)
         (exwm-config-default)))
@@ -907,12 +903,15 @@ except:
   ;                                     `(,(kbd "s-x") .
   ;                                       #'async-shell-command)))
 #+END_SRC
-*** TODO Center cursor on frame movement
-This might require a call to xdotool.
-
-When magit opens the commit window, it currently moves the mouse
-to the edge of the frame, guaranteeing a surprise swap with
-kitchensink's trackpoint.
+*** Center cursor on frame movement
+#+BEGIN_SRC emacs-lisp
+  (when is-kitchensink
+    (udh/install-and-load 'exwm-mff)
+    (setq exwm-mff-mode t
+          mouse-autoselect-window t
+          focus-follows-mouse t))
+#+END_SRC
+**** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
 *** TODO Have all desktops generated and set to scratch on startup
 ** Org Mode
 :PROPERTIES:
