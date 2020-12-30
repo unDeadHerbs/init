@@ -748,6 +748,15 @@ The keys already work correctly, but Emacs also receives them and complains.
                        (global-set-key (kbd "<XF86MonBrightnessUp>") #'void)
                        (global-set-key (kbd "<XF86MonBrightnessDown>") #'void)))
 #+END_SRC
+**** Sleep
+:PROPERTIES:
+:NAME:     Kitchensink_Sleep_Key
+:END:
+This keys already work correctly , but Emacs also receives them and complains.
+#+BEGIN_SRC emacs-lisp
+  (if is-kitchensink (progn
+                       (global-set-key (kbd "<XF86Sleep>") #'void)))
+#+END_SRC
 **** TODO Smart Light
 :PROPERTIES:
 :NAME:     Kitchensink_hardware_thinklight
