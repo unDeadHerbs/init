@@ -270,6 +270,10 @@ Install and manage all of the packages I use.
 #+BEGIN_SRC emacs-lisp
   ;;(package-utils-upgrade-all)
 #+END_SRC
+**** TODO Convert to macro so that package name doesn't need quoting
+**** TODO Take the package configuration as a second argument
+When Emacs gains support for threadding package installation and
+configuration should be made asynchronous.
 *** Install and Load Required Packages
 :PROPERTIES:
 :NAME:     Install_and_Load_Packages
@@ -606,7 +610,7 @@ technical beginning of line.
                                           ;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
                                           ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
 #+END_SRC
-*** TODO =C-d= is overridden in some modes, fix that.
+*** TODO =ret= terminates multiple_cursors for some reason
 ** TODO ED
 :PROPERTIES:
 :NAME:     ED_Keys
@@ -919,6 +923,7 @@ except:
           focus-follows-mouse t))
 #+END_SRC
 **** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
+**** TODO This needs to center the mouse on workspace switch
 *** TODO Have all desktops generated and set to scratch on startup
 ** Org Mode
 :PROPERTIES:
@@ -1025,6 +1030,8 @@ that org-mode and it's agenda is part of the interface of Emacs
 rather than a separate thing inside of it.  That all things being
 done are being done in a project and so that perspective should be
 wrapping it.
+*** TODO LaTeX
+`guix install emacs-auctex texlive`
 ** C/CPP Like Languages
 :PROPERTIES:
 :NAME:     C_CPP_Common_Settings
