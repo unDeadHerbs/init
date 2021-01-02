@@ -6,7 +6,7 @@ This is my Emacs configuration file and is an example of literate
 programming.  This file is loaded on [[Computer Specific][several computers]] and also
 configures the [[EXWM][window manager]] on one of them.
 
-This file is loaded by =org-dotemacs=.
+This file is loaded by =org-dotemacs= in [[.emacs.d/init.el]].
 ** General Philosophy
 Deleting a section should only effect things that are clear from
 the section title.  While this feel obviouse once stated, it's not
@@ -248,7 +248,7 @@ Install and manage all of the packages I use.
   (when (not package-archive-contents)
     (package-refresh-contents))
 #+END_SRC
-*** Package Installation Settings
+*** Package Installation and Loading Settings
 :PROPERTIES:
 :NAME:     Package_Install_Settings
 :END:
@@ -274,77 +274,6 @@ Install and manage all of the packages I use.
 **** TODO Take the package configuration as a second argument
 When Emacs gains support for threadding package installation and
 configuration should be made asynchronous.
-*** Install and Load Required Packages
-:PROPERTIES:
-:NAME:     Install_and_Load_Packages
-:END:
-#+BEGIN_SRC emacs-lisp
-  (setq udh/package-list '(;;General Interface
-                           bind-key
-                           calendar
-                           centered-cursor-mode
-                           dynamic-spaces
-                           hideshow
-                           hideshowvis
-                           highlight
-                           highlight-blocks
-                           highlight-current-line
-                           highlight-indentation
-                           highlight-parentheses
-                           linum-relative
-                           multiple-cursors
-                           persistent-scratch
-                           pretty-mode
-                           undo-tree
-                           ;; TODO: tmux-pane
-                           tramp
-                           ;; TODO: visible-mark
-                           whitespace
-                           ;; Lisps
-                           geiser
-                           slime
-                           ;; C++
-                           ctags
-                           ctags-update
-                           flycheck
-                           flymake
-                           cppcheck
-                           flymake-cppcheck
-                           flymake-cursor
-                           flymake-easy
-                           smart-tabs-mode
-                           ;; Git
-                           magit
-                           magit-filenotify
-                           magit-popup
-                           magit-tramp
-                           ;; Other Modes
-                           arduino-mode
-                           cider ;; clojure
-                           tramp-term
-                           markdown-mode
-                           openscad-mode
-                                          ;helm-config
-                                          ;vagrant
-                                          ;vagrant-tramp
-                           ;; Org Mode - After other languages are installed
-                           ;; TODO: Read though the existing org plugins.
-                           org
-                           org-dotemacs
-                           org-plus-contrib
-                           org-bullets
-                           ;; org-trello
-                           org-preview-html
-                           ;; Org Babel
-                           ob-spice
-                           ob-async
-                           ob-diagrams
-                           plantuml-mode
-                           ;; ob-tmux ;; TODO: What does this even do?
-                           ))
-  (mapcar 'udh/install-and-load udh/package-list)
-#+END_SRC
-**** TODO These should be moved into their respective settings locations
 ** Interface Defaults
 :PROPERTIES:
 :NAME:     Interface_defaults
@@ -413,6 +342,7 @@ configuration should be made asynchronous.
 :NAME:     Persistent_Scratch
 :END:
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'persistent-scratch)
   (persistent-scratch-setup-default)
 #+END_SRC
 ** Disable IDO
@@ -492,16 +422,31 @@ In many modes =<= and =>= are not bracketing symbols and shouldn't
 be counted as mismatched brackets.
 ** Set Theme
 :PROPERTIES:
-:NAME:     Mini_Buffer_Cyan
+:NAME:     Theme_Global
+:END:
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wheatgrass)
+#+END_SRC
+*** Pretty Mode
+:PROPERTIES:
+:NAME:     Theme_Pretty_Modes
+:END:
+Having a good notation improves both reading speed and comprehension.
+Using `pretty-mode` I can reduce the amount of visual and mental space
+taken up by language boilerplate without reducing clarity.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'pretty-mode)
+#+END_SRC
+*** Cyan Mini-Buffer
+:PROPERTIES:
+:NAME:     Theme_Cyan_Mini_Buffer
 :END:
 I like cyan, make that the mini buffer text colour.  This is set
 to terminal only because cyan isn't readable on white.
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
   (add-hook 'tty-setup-hook
             (lambda () (set-face-foreground 'minibuffer-prompt "cyan")))
 #+END_SRC
-*** TODO Make a single bigger section on colouring.
 ** Spell Check Everywhere
 :PROPERTIES:
 :NAME:     Fly_Spell_Everywhere
@@ -526,6 +471,7 @@ be run, org might just be clearing the minor mode away.
 While I don't use this often, it's really annoying when it's not
 on and I do want it.
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'undo-tree)
   (defun turn-on-undo-tree ()
     "Unconditionally turn on undo-tree-mode."
     (undo-tree-mode 1))
@@ -537,14 +483,18 @@ on and I do want it.
 *** TODO Can I have that enable when called rather than always on?
 I don't expect that the efficiency implications of this will
 matter, but it's good to care.
-** TODO Tabs and Spaces
+** Whitespace
 :PROPERTIES:
-:NAME:     Tabs_and_Spaces_Settings
+:NAME:     Global_Whitespace
 :END:
-Move most of this into appropriate major modes instead of
-overriding defaults.
+These are some pretty universal changes to how white-space is handled
+and represented.  I turn them on in each mode that needs them.
 #+BEGIN_SRC emacs-lisp
-  (global-smart-tab-mode 1)
+  (udh/install-and-load 'dynamic-spaces)
+  (udh/install-and-load 'whitespace)
+#+END_SRC
+These set the basics of how I want tabs but also insulate buffers.
+#+BEGIN_SRC emacs-lisp
   (setq-default tab-width 2)
   (setq tab-width 2)
   (make-variable-buffer-local 'tab-width)
@@ -557,13 +507,40 @@ overriding defaults.
 :NAME:     Relitive_Line_Numbers
 :END:
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'linum-relative)
   (setq relative-line-numbers-motion-function 'forward-visible-line)
 #+END_SRC
 *** TODO Absolute reference
 Have line numbers that are multiples of five show though the
 relative numbers.  Align them differently so they are easy to
 distinguish.
+** Code Folding
+:PROPERTIES:
+:NAME:     Code_Folding
+:END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'hideshow)
+  (udh/install-and-load 'hideshowvis)
+#+END_SRC
+** Keep Cursor Centred
+:PROPERTIES:
+:NAME:     Centered_Cursor
+:END:
+Being able to manage one's perspective into code independently to the
+location being edited is a pretty reasonable request and has been very
+advantageous for many years.  However, given the increase in screen
+sizes, better [[Code Folding]], and [[Pretty Mode]], this independence is
+often unhelpful and extra work to maintain.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'centered-cursor-mode)
+#+END_SRC
 * Global Keyboard Interface
+:PROPERTIES:
+:NAME:     Global_Keyboard
+:END:
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'bind-key)
+#+END_SRC
 ** TODO Navigation With C-c C-c
 :PROPERTIES:
 :NAME:     Follow_Links
@@ -605,10 +582,11 @@ technical beginning of line.
 :NAME:     Multiple_Cursors
 :END:
 #+BEGIN_SRC emacs-lisp
-                                          ;(global-set-key (kbd "C-S-l") 'mc/edit-lines)
-  (bind-key* "C-d"   'mc/mark-next-like-this)
-                                          ;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
-                                          ;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
+  (udh/install-and-load 'multiple-cursors)
+  ;;(global-set-key (kbd "C-S-l") 'mc/edit-lines)
+  (bind-key* "C-d" 'mc/mark-next-like-this)
+  ;;(global-set-key (kbd "C-S-d") 'mc/mark-previous-like-this)
+  ;;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
 #+END_SRC
 *** TODO =ret= terminates multiple_cursors for some reason
 ** TODO ED
@@ -713,11 +691,14 @@ below, this is just to start it and specify any system specific
 settings.
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
+      ;(defun udh/start-exwm ()
       (progn
         (udh/install-and-load 'exwm)
         (require 'exwm)
         (require 'exwm-config)
         (exwm-config-default)))
+      ;(add-hook 'emacs-startup-hook
+      ;          #'udh/start-exwm))
 #+END_SRC
 **** TODO Check that =mouse-autoselect-window= don't stop the mouse following the window, it justs add synchrony.
 **** TODO Verify EXWM load order
@@ -767,6 +748,14 @@ Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kit
 ** Windmills (Tower)
 *** TODO Decrease emacs default font size two points
 * Major Mode Settings
+** TODO Calendar
+:PROPERTIES:
+:NAME:     Calendar
+:END:
+Not sure what installing this adds, but it needed reorganising.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'calendar)
+#+END_SRC
 ** EXWM
 :PROPERTIES:
 :NAME:     EXWM_settings
@@ -930,11 +919,25 @@ except:
 :NAME:     Org_Mode_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh/disable-tabs ()
+  (udh/install-and-load 'org)
+#+END_SRC
+*** Disable Tabs
+:PROPERTIES:
+:NAME:     Org_Mode_No_Tabs
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/org-disable-tabs ()
+    "Made sure tabs settings are local and then turn them off."
     (make-variable-buffer-local 'indent-tabs-mode)
     (setq indent-tabs-mode nil))
   (add-hook 'org-mode-hook
-            #'udh/disable-tabs)
+            #'udh/org-disable-tabs)
+#+END_SRC
+*** TODO Folding
+:PROPERTIES:
+:NAME:     Org_Mode_Folding_Keys
+:END:
+#+BEGIN_SRC emacs-lisp
   (defun org-collapse-element ()
     "Moves to parent element and then collapses it."
     (interactive)
@@ -946,12 +949,14 @@ except:
     (local-set-key (kbd "M-[") 'org-backward-element)
     (local-set-key (kbd "M-]") 'org-forward-element)
     (local-set-key (kbd "M-{") 'org-collapse-element)
-    (local-set-key (kbd "M-}") 'org-down-element)
-    )
-  (add-hook 'org-mode-hook
-            #'udh/org-mode-keys)
+    (local-set-key (kbd "M-}") 'org-down-element))
+  ;;(add-hook 'org-mode-hook
+  ;;         #'udh/org-mode-keys)
 #+END_SRC
 *** TODO Set only last star to show and fake white-space before lines
+I'd like to have `showstars`, `indent`, and `inlineimages` enabled by
+default; however, I'm not sure if that's a safe idea, since it's
+better to have each file be self contained.
 *** DISABLED Org Trello
 :PROPERTIES:
 :NAME:     Org_Trello
@@ -961,11 +966,11 @@ This is currently disabled because =org-trello= erroneously marks
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.trello$"  . org-mode))
   ;; TODO: Find a better way to detect this.
-                                          ;(defun udh/org-trello-detect ()
-                                          ;  (let ((filename (buffer-file-name (current-buffer))))
-                                          ;    (when (and filename (string= "trello" (file-name-extension filename)))
-                                          ;      (org-trello-mode))))
-                                          ;(add-hook 'org-mode-hook #'udh/org-trello-detect)
+  ;;(defun udh/org-trello-detect ()
+  ;;  (let ((filename (buffer-file-name (current-buffer))))
+  ;;    (when (and filename (string= "trello" (file-name-extension filename)))
+  ;;     (org-trello-mode))))
+  ;;(add-hook 'org-mode-hook #'udh/org-trello-detect)
 #+END_SRC
 *** Org Babel
 :PROPERTIES:
@@ -982,6 +987,16 @@ This is currently disabled because =org-trello= erroneously marks
      (python . t)
      (plantuml . t)))
 #+END_SRC
+**** TODO Sort - other languages
+:PROPERTIES:
+:NAME:     Org_Babel_Other_Langs
+:END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'ob-spice)
+  (udh/install-and-load 'ob-async)
+  (udh/install-and-load 'ob-diagrams)
+  (udh/install-and-load 'ob-octave)
+#+END_SRC
 **** TODO Org Babel Confirmation
 :PROPERTIES:
 :NAME:     Org_Babel_Octave_Confirmation
@@ -989,7 +1004,6 @@ This is currently disabled because =org-trello= erroneously marks
 Have this ask once per language per file, as it's currently
 written it's a security hole.
 #+BEGIN_SRC emacs-lisp
-  (require `ob-octave)
   (setq org-confirm-babel-evaluate nil)
 #+END_SRC
 **** SLIME
@@ -997,6 +1011,7 @@ written it's a security hole.
 :NAME:     Org_Babel_SLIME
 :END:
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'slime)
   (setq inferior-lisp-program "clisp")
 #+END_SRC
 **** Scheme
@@ -1004,6 +1019,7 @@ written it's a security hole.
 :NAME:     Org_Babel_Scheme
 :END:
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'geiser)
   (setq scheme-program-name "guile")
   (setq geiser-default-implementation 'guile)
 #+END_SRC
@@ -1013,17 +1029,13 @@ written it's a security hole.
 :END:
 Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update is needed.
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'plantuml-mode)
   (setq org-plantuml-jar-path (expand-file-name "~/build/planttext/plantuml.jar"))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 #+END_SRC
 ***** TODO Download this if it's not there
-*** TODO use these settings as default
-:PROPERTIES:
-:NAME:     Org_Display_Defaults
-:END:
-#+BEGIN_SRC org
-  ,#+STARTUP: content showstars indent inlineimages hideblocks
-#+END_SRC
+**** TODO tmux
+I used to have `ob-tmux` installed, see why.
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
 This is part of a more general philosophy I'm trying to enforce;
 that org-mode and it's agenda is part of the interface of Emacs
@@ -1032,13 +1044,54 @@ done are being done in a project and so that perspective should be
 wrapping it.
 *** TODO LaTeX
 `guix install emacs-auctex texlive`
-** C/CPP Like Languages
+*** TODO Unknown
+These two used to be installed, what where they for?
+;; org-plus-contrib
+;; org-preview-html
+** C Family Setting
 :PROPERTIES:
-:NAME:     C_CPP_Common_Settings
+:NAME:     C_Family
 :END:
+*** Common Settings
+:PROPERTIES:
+:NAME:     C_Family_Common
+:END:
+**** Indent and Align
+:PROPERTIES:
+:NAME:     C_Family_Indent_Alight
+:END:
+Indentation and alignment are a contentious topic in C family
+languages.  I think the most reasonable solution is to have user's
+editors display it however they like.  The indentation paradigm that
+most respects users in this is tabs for indentation and spaces for
+alignment.
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'smart-tabs-mode)
   (smart-tabs-insinuate 'c 'c++)
-
+#+END_SRC
+**** Interactive Compiling
+:PROPERTIES:
+:NAME:     Flymake_check
+:END:
+Having compiler annotations and warning inline is very helpful to some
+forms of debugging and prototyping.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'flycheck)
+  (udh/install-and-load 'flymake)
+  (udh/install-and-load 'flymake-cursor)
+  (udh/install-and-load 'flymake-easy)
+#+END_SRC
+**** Arduino Language
+:PROPERTIES:
+:NAME:     Arduino_Language
+:END:
+Arduino doesn't have much configuration yet, so it's just hidden in
+here.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'arduino-mode)
+#+END_SRC
+**** Sort
+#+BEGIN_SRC emacs-lisp
   (defun udh/c-mode-layout ()
     ;;(glasses-mode 1)
     (require 'flymake-cursor)
@@ -1047,18 +1100,16 @@ wrapping it.
                   ;;indent-tabs-mode t
                   )
     (hs-minor-mode 1)
-                                          ;(hideshowvis-minor-mode 1)
-                                          ;(hideshowvis-symbols)
+    ;;(hideshowvis-minor-mode 1)
+    ;;(hideshowvis-symbols)
     (linum-relative-mode 1)
-    (require 'centered-cursor-mode)
     (centered-cursor-mode 1)
     ;;(hl-line-mode 1)
     ;;(highlight-blocks-mode 1)
     ;;(highlight-current-line-minor-mode 1)
     ;;(highline-mode 1)
     (flycheck-mode 1)
-    (flyspell-prog-mode)
-    )
+    (flyspell-prog-mode))
   (add-hook 'c-mode-common-hook
             #'udh/c-mode-layout)
   (defun udh/c-mode-keys ()
@@ -1067,47 +1118,84 @@ wrapping it.
     (local-set-key (kbd "C-M-t") 'hs-hide-level)
     (local-set-key (kbd "M-{") 'hs-hide-block)
     (local-set-key (kbd "M-}") 'hs-show-block)
-    (local-set-key (kbd "C-S-b") (lambda () (interactive)
-                                   ;;(flycheck-select-checker 'c/c++-cppcheck)
-                                   (flymake-mode -1) (flymake-mode 1)
-                                   (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
-                                   (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)
-                                   ))
-    (local-set-key (kbd "C-M-S-b") (lambda () (interactive)
-                                     (flycheck-mode -1) (flymake-mode -1)
-                                     (local-unset-key (kbd "C-M-S-e")) (local-unset-key (kbd "C-M-S-r"))))
-    (setq tags-revert-without-query 1)
-    )
+    (local-set-key (kbd "C-S-b")
+                   (lambda ()
+                     "Enable flymake keys."
+                     (interactive)
+                     ;;(flycheck-select-checker 'c/c++-cppcheck)
+                     (flymake-mode -1)
+                     (flymake-mode 1)
+                     (local-set-key (kbd "C-M-S-e") 'flymake-goto-next-error)
+                     (local-set-key (kbd "C-M-S-r") 'flymake-goto-prev-error)))
+    (local-set-key (kbd "C-M-S-b")
+                   (lambda ()
+                     "Disable flymake keys."
+                     (interactive)
+                     (flycheck-mode -1)
+                     (flymake-mode -1)
+                     (local-unset-key (kbd "C-M-S-e"))
+                     (local-unset-key (kbd "C-M-S-r")))))
+  (setq tags-revert-without-query 1)
   (add-hook 'c-mode-common-hook
             #'udh/c-mode-keys)
 #+END_SRC
-*** TODO Toggle Hiding opens a new tab in some terminal emulators
-*** DISABLED C Visual Symbols
+***** TODO I don't use most of those, prune them and make a help table
+**** Etags
 :PROPERTIES:
-:NAME:     C_Visual_Symbols
+:NAME:     Locate_Etags
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh/c-mode-prettify ()
+  (setq path-to-ctags (executable-find "etags"))
+#+END_SRC
+***** TODO Why do I need to search for part of the emacs package?
+Shouldn't emacs know where etags is?
+**** Non-Standard C Languages
+:PROPERTIES:
+:NAME:     C_CPP_Like_Languages
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+#+END_SRC
+**** Pretty
+:PROPERTIES:
+:NAME:     SCAD_Pretty
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/C-Family-prettify ()
+    "Enable pretty symbols - Targeted at C family languages."
     (pretty-mode 1)
-    (pretty-regexp "--" "↧");"↓"
-    (pretty-regexp "[+][+]" "↥");"↑"
-    (pretty-regexp " *> > >" "⋙")
-    (pretty-regexp "< < < *" "⋘")
-    (pretty-regexp " *> >" "≫")
-    (pretty-regexp "< < *" "≪")
-    (pretty-regexp "<<" "《");"⩽"
-    ;;(pretty-regexp "< < <" "⫹")
-    (pretty-regexp ">>" "》");"⩾"
-    ;;(pretty-regexp "> > >" "⫺")
     (pretty-regexp ">=" "≥")
     (pretty-regexp "<=" "≤")
     (pretty-regexp "!=" "≠")
     (pretty-regexp "==" "≡")
     (pretty-regexp "!" "¬")
     (pretty-regexp "||" "∥")
-    (pretty-regexp "false" "⊭");⊥ true ᚁ and false ᚆ?
+    (pretty-regexp "false" "⊭")
     (pretty-regexp "true" "⊨")
-    (pretty-regexp "bool" "⊢");"╠";"├";"¤"
+    (pretty-regexp "//" "⑊")
+    (pretty-regexp "()" "≬")
+    (pretty-regexp "[*]" "∗"))
+  (add-hook 'scad-mode-hook 'udh/scad-prettify)
+#+END_SRC
+*** C and CPP Settings
+:PROPERTIES:
+:NAME:     C_and_CPP_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'ctags)
+  (udh/install-and-load 'ctags-update)
+#+END_SRC
+**** C Common Pretty
+:PROPERTIES:
+:NAME:     C_Common_Pretty
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/c-common-prettify ()
+    "Enable pretty symbols in C."
+    (udh/C-Family-prettify)
+    (pretty-regexp "--" "↧");"↓"
+    (pretty-regexp "[+][+]" "↥");"↑"
     (pretty-regexp "float" "ℝ")
     (pretty-regexp "\bint\b" "ℤ")
     (pretty-regexp "char" "¶")
@@ -1118,7 +1206,48 @@ wrapping it.
     ;;(pretty-regexp "[*][/][/]" "∮∫" )
     ;;(pretty-regexp "[*][/]" "∮" )
     ;;(pretty-regexp "[/][*]" "∮" )
-    ;;(pretty-regexp "[/][/]" "∬" )
+    )
+  (add-hook 'c-mode-common-hook
+            #'udh/c-common-prettify)
+#+END_SRC
+*** C Settings
+:PROPERTIES:
+:NAME:     C_Settings
+:END:
+*** CPP Settings
+:PROPERTIES:
+:NAME:     Cpp_Settings
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/set-flycheck-cpp-language-standard
+      (setq flycheck-clang-language-standard "c++1z"))
+  (add-hook 'c++-mode-hook
+            #'udh/set-flycheck-cpp-language-standard)
+#+END_SRC
+**** CPP Check
+:PROPERTIES:
+:NAME:     CPP_cppcheck
+:END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'cppcheck)
+  (udh/install-and-load 'flymake-cppcheck)
+#+END_SRC
+**** CPP Pretty
+:PROPERTIES:
+:NAME:     CPP_Pretty
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/cpp-prettify ()
+    "Enable pretty symbols in Cpp."
+    (udh/c-common-prettify)
+    (pretty-regexp " *> > >" "⋙")
+    (pretty-regexp "< < < *" "⋘")
+    (pretty-regexp " *> >" "≫")
+    (pretty-regexp "< < *" "≪")
+    (pretty-regexp "<<" "《");"⩽"
+    ;;(pretty-regexp "< < <" "⫹")
+    (pretty-regexp ">>" "》");"⩾"
+    ;;(pretty-regexp "> > >" "⫺")
     ;;(pretty-regexp "[.]unlock()" "")
     ;;(pretty-regexp "[.]lock()" "")
     (pretty-regexp "std::deque" "ℚ");ɋʠ
@@ -1146,63 +1275,28 @@ wrapping it.
     (pretty-regexp "Array" "⇻")
     (pretty-regexp "Tree" "ᛘ");𝌎
     ;;(pretty-regexp "Key" "🔑")
-    (pretty-regexp "[*]" "∗")
-    )
+    (pretty-regexp "[*]" "∗"))
   ;;(add-hook 'c-mode-common-hook #'udh/c-mode-prettify)
-  (add-hook 'c-mode-common-hook
-            (lambda () (local-set-key (kbd "C-M-S-p")
-                                      (lambda () (interactive) (udh/c-mode-prettify)))))
+  (add-hook 'cpp-edit-mode-hook
+            #'udh/cpp-prettify)
 #+END_SRC
-*** Etags
-:PROPERTIES:
-:NAME:     Locate_Etags
-:END:
-#+BEGIN_SRC emacs-lisp
-  (setq path-to-ctags (executable-find "etags"))
-#+END_SRC
-**** TODO Why do I need to search for part of the emacs package?
-Shouldn't emacs know where etags is?
-*** Non-Standard C Languages
-:PROPERTIES:
-:NAME:     C_CPP_Like_Languages
-:END:
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-#+END_SRC
-** CPP Settings
-:PROPERTIES:
-:NAME:     Cpp_Settings
-:END:
-#+BEGIN_SRC emacs-lisp
-  (defun udh/set-flycheck-cpp-language-standard
-      (setq flycheck-clang-language-standard "c++1z"))
-  (add-hook 'c++-mode-hook
-            #'udh/set-flycheck-cpp-language-standard)
-#+END_SRC
-** SCAD
+*** SCAD
 :PROPERTIES:
 :NAME:     SCAD
 :END:
-*** SCAD Pretty
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'openscad-mode)
+#+END_SRC
+**** SCAD Pretty
 :PROPERTIES:
 :NAME:     SCAD_Pretty
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun udh/scad-prettify ()
+    "Enable pretty symbols in SCAD."
     (pretty-mode 1)
-    (pretty-regexp ">=" "≥")
-    (pretty-regexp "<=" "≤")
-    (pretty-regexp "!=" "≠")
-    (pretty-regexp "==" "≡")
-    (pretty-regexp "!" "¬")
-    (pretty-regexp "||" "∥")
-    (pretty-regexp "false" "⊭")
-    (pretty-regexp "true" "⊨")
-    (pretty-regexp "//" "⑊")
-    (pretty-regexp "module" "◳")
-    (pretty-regexp "()" "≬")
-    (pretty-regexp "[*]" "∗"))
+    (udh/c-family-prettify)
+    (pretty-regexp "module" "◳"))
   (add-hook 'scad-mode-hook 'udh/scad-prettify)
 #+END_SRC
 ** Markdown
@@ -1210,9 +1304,10 @@ Shouldn't emacs know where etags is?
 :NAME:     Markdown
 :END:
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.md\\'"      . markdown-mode))
+  (udh/install-and-load 'markdown-mode)
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 #+END_SRC
-** TODO Lisp
+** TODO Lisps
 :PROPERTIES:
 :NAME:     Lisp_Mode_Settings
 :END:
@@ -1221,11 +1316,17 @@ Shouldn't emacs know where etags is?
   ;;(add-hook 'tty-setup-hook
   ;;    (add-hook 'lisp-mode-hook
   ;;              'rainbow-blocks-mode)
-  (setq indent-tabs-mode nil)
+
 #+END_SRC
-*** Lisp Pretty
+*** Scheme
+**** No Tabs
+#+BEGIN_SRC emacs-lisp
+    (add-hook 'scheme-mode-hook
+              (lambda () (setq indent-tabs-mode nil)))
+#+END_SRC
+**** Pretty
 :PROPERTIES:
-:NAME:     Lisp_Pretty
+:NAME:     Scheme_Pretty
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun udh/lisp-prettify ()
@@ -1241,7 +1342,15 @@ Shouldn't emacs know where etags is?
   (add-hook 'scheme-mode-hook 'udh/lisp-prettify)
   (add-hook 'clojure-mode-hook 'udh/lisp-prettify)
 #+END_SRC
-**** TODO disable builtin pretties
+***** TODO disable builtin pretties
+*** Clojure
+:PROPERTIES:
+:NAME:     Clojure
+:END:
+I don't remember needing this.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'cider)
+#+END_SRC
 ** TODO Python
 :PROPERTIES:
 :NAME:     Python
@@ -1308,6 +1417,9 @@ tor is working as a global proxy this can grab settings from there.
 *** TODO Emojify
 Emoji are nice to have in some chat programs in order to keep parity
 with the standard interface.
+#+BEGIN_SRC emacs-lisp
+  ;(udh/install-and-load 'emojify)
+#+END_SRC
 ** TODO EWW
 :PROPERTIES:
 :NAME:     EWW
@@ -1322,12 +1434,19 @@ Have a "Dump all tabs to bookmarks" function
 :NAME:     Pascal
 :END:
 #+BEGIN_SRC emacs-lisp
+  ;; udh/install-and-load pascal-mode ; I presume
   (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
 #+END_SRC
 ** Magit
 :PROPERTIES:
 :NAME:     Magit
 :END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'magit)
+  (udh/install-and-load 'magit-filenotify)
+  (udh/install-and-load 'magit-popup)
+  (udh/install-and-load 'magit-tramp)
+#+END_SRC
 *** TODO Emit Hashes into *Messages*
 Have magit print the hash of a commit after making it.
 *** Disable Magit Clean
@@ -1342,6 +1461,15 @@ don't.
 *** TODO follow sym links
 Magit dosen't seem to find this reposistory when I open this file
 from its linked location.
+** TODO Tramp
+:PROPERTIES:
+:NAME:     Tramp
+:END:
+Tramp is an thing about remote computers.  Fill this in later with more details.
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'tramp)
+  (udh/install-and-load 'tramp-term)
+#+END_SRC
 ** COBOL and Java
 #+BEGIN_QUOTE
 The Tao gave birth to machine language. Machine language gave
@@ -1399,18 +1527,27 @@ but, at least COBOL recognised and embraced that.
 Move flymake errors to mini-buffer.
 * Misc Utility Functions
 * Unsorted TODOs
-** TODO YASnippet
+** Highlight Mode
+`hilight` `highlight-blocks` `highlight-current-line` `highlight-indentation` `highlight-parentheses`
+** tmux pane
+;; (udh/install-and-load 'tmux-pane)
+** visible-mark
+;; (udh/install-and-load 'visible-mark)
+** YASnippet
 :PROPERTIES:
 :NAME:     YAS_todo
 :END:
 #+BEGIN_SRC emacs-lisp
-                                          ;(yas-reload-all)
-                                          ;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
-                                          ;(setq yas/root-directory '"~/.emacs.d/snippets")
-                                          ;(yas/reload-all)
+  ;;(yas-reload-all)
+  ;;(setq yas-snippet-dirs '("~/emacs.d/snippets"))
+  ;;(setq yas/root-directory '"~/.emacs.d/snippets")
+  ;;(yas/reload-all)
 #+END_SRC
-** TODO Helm
+** Helm
+(udh/install-and-load 'helm-config)
 (helm-mode 1)
+** Vagrant
+Packages `vagrant` and `vagrant-tramp`
 ** correct M-arrow to move paragraphs rather than single lines
 (defun org-transpose-paragraphs (arg)
 (interactive)
