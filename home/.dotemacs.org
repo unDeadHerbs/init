@@ -903,16 +903,17 @@ except:
   ;                                     `(,(kbd "s-x") .
   ;                                       #'async-shell-command)))
 #+END_SRC
-*** Center cursor on frame movement
+*** Centre X cursor on frame movement
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
     (udh/install-and-load 'exwm-mff)
-    (setq exwm-mff-mode t
-          mouse-autoselect-window t
-          focus-follows-mouse t))
+    (customize-set-variable 'exwm-mff-mode 't))
+    ;(setq mouse-autoselect-window t
+    ;      focus-follows-mouse t)
 #+END_SRC
 **** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
 **** TODO This needs to center the mouse on workspace switch
+**** TODO Sometimes this seems to stop and need re-enabling
 *** TODO Have all desktops generated and set to scratch on startup
 ** Org Mode
 :PROPERTIES:
