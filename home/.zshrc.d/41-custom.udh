@@ -60,13 +60,13 @@ exists ssh && ,(){
 	rm $TF
 	return $RET
     }
-exists , && ,u(){
-	until , "$@"
-	do
-	    echo "Reconnecting"
-	    sleep 5
-	done
-    }
+u(){
+    until "$@"
+    do
+	echo "Retrying"
+	sleep 5
+    done
+}
 
 exists avahi-browse && hosts_list(){
 	if [ "$1" = "--names" ]; then {
