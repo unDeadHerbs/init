@@ -55,32 +55,34 @@
   (name-service-switch %mdns-host-lookup-nss)
   (services
     (append
-     (list (service network-manager-service-type)
-	   (service tor-service-type
-		    (tor-configuration
-		     (config-file
-		      (plain-file "tor-config"
-				  "HTTPTunnelPort 127.0.0.1:9250"))))
-	   (service wpa-supplicant-service-type)
-	   (service usb-modeswitch-service-type)
-	   (service avahi-service-type)
-	   (service dbus-root-service-type)
-	   (service polkit-service-type)
-	   (service elogind-service-type)
-	   (service ntp-service-type)
-	   (service alsa-service-type)
-	   (service tlp-service-type
-		    (tlp-configuration
-		     (tlp-default-mode "BAT")))
-	   (service thermald-service-type
-		    (thermald-configuration
-		     (ignore-cpuid-check? #t))))
+     (list
+      (service network-manager-service-type)
+	    (service tor-service-type
+		           (tor-configuration
+		            (config-file
+		             (plain-file "tor-config"
+				                     "HTTPTunnelPort 127.0.0.1:9250"))))
+	    (service wpa-supplicant-service-type)
+	    (service usb-modeswitch-service-type)
+	    (service avahi-service-type)
+	    (service dbus-root-service-type)
+	    (service polkit-service-type)
+	    (service elogind-service-type)
+	    (service ntp-service-type)
+	    (service alsa-service-type)
+	    (service tlp-service-type
+		           (tlp-configuration
+		            (tlp-default-mode "BAT")))
+	    (service thermald-service-type
+		           (thermald-configuration
+		            (ignore-cpuid-check? #t))))
      (modify-services %base-services
-		      (guix-service-type config =>
-					 (guix-configuration
-					  (inherit config)
-					  (substitute-urls (list "https://bp7o7ckwlewr4slm.onion"))
-					  (http-proxy "http://localhost:9250")))))))
+		                  (guix-service-type
+                       config => (guix-configuration
+					                       (inherit config)
+					                       (substitute-urls
+                                  (list "https://bp7o7ckwlewr4slm.onion"))
+					                       (http-proxy "http://localhost:9250")))))))
 
 ;; TODO: Improve the `console-fonts` config from this
 ;; #<<service> type: #<service-type console-fonts 7f506f7ae690>
