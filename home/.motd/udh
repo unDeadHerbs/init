@@ -1,3 +1,5 @@
+#! /usr/bin/env zsh
+
 if type neofetch >/dev/null ; then
     neofetch --color_blocks off
 else
@@ -14,7 +16,11 @@ else
 fi
 
 if type weather >/dev/null && type paste >/dev/null; then
-    paste <(cal --color=always) <(weather)
+    if uname -a |grep -v "(ubuntu|debian)" > /dev/null; then
+		    paste <(cal) <(weather)
+		else
+			  paste <(cal --color=always) <(weather)
+		fi
 else
     cal -3
 fi
