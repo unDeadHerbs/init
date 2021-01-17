@@ -98,6 +98,12 @@ Install and manage all of the packages I use.
 **** TODO Take the package configuration as a second argument
 When Emacs gains support for threadding package installation and
 configuration should be made asynchronous.
+*** TODO Some packages need to be installed on the OS level
+This probably belongs in [[Computer Specific]] before [[GTD]].  Have a pair of
+functions to query what is installed and install things.  This should
+probably be only one function.  The Guix one will just install it, but
+for other OSs it will check if it's installed and add a warning to
+[*scratch*] if it's not.
 ** Interface Defaults
 :PROPERTIES:
 :NAME:     Interface_defaults
@@ -198,7 +204,7 @@ packages not to be loaded on next startup.
 #+END_SRC
 *** TODO Have an error if ido is loaded and can't unload
 ** ELisp features
-*** void
+*** Void
 :PROPERTIES:
 :NAME:     Elisp_custom_void
 :END:
@@ -231,8 +237,8 @@ is back treaceable in elisp.
 #+END_SRC
 **** TODO rewrite this in elisp
 * GTD
-"Getting Things Done" is an old book with lots of ideas, some of
-which are good.  I've borrowed the core workflow and the naming.
+"Getting Things Done" is an old book with lots of ideas, some of which
+are good.  I've borrowed some of the core workflow and the naming.
 
 |------------------+-----------+------------|
 | Action           | Key-bind  | Location   |
@@ -406,6 +412,10 @@ Find a way to insert this into task creation or sorting.
             #'log-todo-next-creation-date)
 #+END_SRC
 **** TODO Have that track the NEXT to TODO change instead?
+** TODO Project Management
+I plan to have `README.org` files in all projects.  They should work
+together with my GTD setup to track actions and time.  Look into
+`eproject` package for possible features.
 * Global Text Presentation Settings
 :PROPERTIES:
 :NAME:     Text_Presentation_Settings
@@ -725,7 +735,8 @@ Use `emacs-startup-hook` to fix this.
 :PROPERTIES:
 :NAME:     Kitchensink_hardware_brightness
 :END:
-The keys already work correctly, but Emacs also receives them and complains.
+These keys are already work correctly, but Emacs also receives them
+and complains.
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
     (global-set-key (kbd "<XF86MonBrightnessUp>") #'void)
@@ -735,11 +746,13 @@ The keys already work correctly, but Emacs also receives them and complains.
 :PROPERTIES:
 :NAME:     Kitchensink_Sleep_Key
 :END:
-This keys already work correctly , but Emacs also receives them and complains.
+This key is already work correctly, but Emacs also receives it and
+complains.
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
     (global-set-key (kbd "<XF86Sleep>") #'void))
 #+END_SRC
+***** TODO Start a VTerm Lock on sleep
 **** TODO ThinkLight
 :PROPERTIES:
 :NAME:     Kitchensink_hardware_thinklight
@@ -894,6 +907,9 @@ Find a nest-able tabbed interface to use.  Some options are:
 Nerdtab, frame-tabs, rings, tab-group, tabbar, or there might be a
 EXWM builtin.
 *** TODO start programs with s-x
+:PROPERTIES:
+:NAME:     EXWM_s_x_programs
+:END:
 Currently M-& starts an async program, replicate this behaviour
 except:
 - automaticly rename the created x buffer
@@ -904,6 +920,9 @@ except:
   ;                                       #'async-shell-command)))
 #+END_SRC
 *** Centre X cursor on frame movement
+:PROPERTIES:
+:NAME:     EXWM_X_Mouse
+:END:
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
     (udh/install-and-load 'exwm-mff)
@@ -914,7 +933,14 @@ except:
 **** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
 **** TODO This needs to center the mouse on workspace switch
 **** TODO Sometimes this seems to stop and need re-enabling
+I think it just needs to be run after X has started
+
+Nope, it's defiantly disabling sometimes.
+**** TODO Perhaps also center on typing?
+This would remove the case where the window sudenly switches from the
+track point being tapped.
 *** TODO Have all desktops generated and set to scratch on startup
+*** TODO <s-XF86Back> and <s-XF86Forward> to "incremnet" and "decrement" workspace
 ** Org Mode
 :PROPERTIES:
 :NAME:     Org_Mode_Settings
@@ -1035,6 +1061,14 @@ Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update i
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 #+END_SRC
 ***** TODO Download this if it's not there
+**** Python
+***** TODO Python Environment
+#+BEGIN_SRC emacs-lisp
+;(udh/install-and-load 'pyvevn)
+#+END_SRC
+****** TODO Try to detect environments folders and use them
+Maybe check for a folder with the same name as the current file.
+Might use the pyenv.make I wrote earlier.
 **** TODO tmux
 I used to have `ob-tmux` installed, see why.
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
@@ -1045,10 +1079,30 @@ done are being done in a project and so that perspective should be
 wrapping it.
 *** TODO LaTeX
 `guix install emacs-auctex texlive`
+*** TODO have org-fill-paragraph respect latexpreview
+I use a lot of latex in some of my documents, it would be nice if
+auto-fill didn't wrap at what seems like random locations.  It's
+wrapping based on the underlying latex text rather than the image
+size.
 *** TODO Unknown
 These two used to be installed, what where they for?
 ;; org-plus-contrib
 ;; org-preview-html
+*** TODO When I global cycle the visibility to none, center the cursor
+I often switch to the overview and then need to scroll up to see
+everything, even though it all fits.
+*** TODO follow-mode
+I like follow mode some times.  Enable this (or the like) in org
+ buffers that are split and in the same frame and workspace.
+** Dired
+:PROPERTIES:
+:NAME:     Dired
+:END:
+*** TODO Replace buffers on open
+I don't like the pile of old dired buffers that builds up.
+*** TODO preview GIFs/mp4s
+This might be better served by a specific mode for previewing folders.
+`envrc`?
 ** C Family Setting
 :PROPERTIES:
 :NAME:     C_Family
@@ -1225,6 +1279,7 @@ Shouldn't emacs know where etags is?
   (add-hook 'c++-mode-hook
             #'udh/set-flycheck-cpp-language-standard)
 #+END_SRC
+**** TODO This compalines about something macro related, also we're on 2a now
 **** CPP Check
 :PROPERTIES:
 :NAME:     CPP_cppcheck
@@ -1321,6 +1376,9 @@ Shouldn't emacs know where etags is?
 #+END_SRC
 *** Scheme
 **** No Tabs
+:PROPERTIES:
+:NAME:     Scheme_no_tabs
+:END:
 #+BEGIN_SRC emacs-lisp
     (add-hook 'scheme-mode-hook
               (lambda () (setq indent-tabs-mode nil)))
@@ -1415,11 +1473,30 @@ tor is working as a global proxy this can grab settings from there.
   (add-hook 'telega-chat-mode-hook
             #'turn-on-flyspell)
 #+END_SRC
-*** TODO Emojify
+**** TODO Timestamps
+Have the time next to the day for older messages.
+
+Use day name for past few days.  I think it currently is just doing it
+for this week.
+*** Emojify
+:PROPERTIES:
+:NAME:     Emojify
+:END:
 Emoji are nice to have in some chat programs in order to keep parity
 with the standard interface.
 #+BEGIN_SRC emacs-lisp
   ;(udh/install-and-load 'emojify)
+#+END_SRC
+**** TODO There are probbably settings to look though.
+**** TODO Have combined emoji display as each part rather than one.
+For example the emoji for a person shrugging can be modified by a skin
+colour and a gender.  Display each of those three icons in a row
+instead of combining them..
+**** TODO Don't change text emoticons
+Currently text emoticons like ":)" are changed into icons as well.
+*** mu4e
+#+BEGIN_SRC emacs-lisp
+  ;TODO: guix install mu isync
 #+END_SRC
 ** TODO EWW
 :PROPERTIES:
@@ -1438,6 +1515,11 @@ Have a "Dump all tabs to bookmarks" function
   ;; udh/install-and-load pascal-mode ; I presume
   (add-to-list 'auto-mode-alist '("\\.simba\\'" . pascal-mode))
 #+END_SRC
+** TODO Python
+:PROPERTIES:
+:NAME:     Python
+:END:
+'guix install python python-ipython`
 ** Magit
 :PROPERTIES:
 :NAME:     Magit
@@ -1471,6 +1553,13 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
   (udh/install-and-load 'tramp)
   (udh/install-and-load 'tramp-term)
 #+END_SRC
+** TODO Term
+*** TODO Term keeps stealing focus when the screen updates.
+Hmm, now that I'm watching, it's not.
+
+This is a particular problem when the same term is open on two
+desktops.  The mouse flickers between them so you can't type without
+selectin
 ** COBOL and Java
 #+BEGIN_QUOTE
 The Tao gave birth to machine language. Machine language gave
