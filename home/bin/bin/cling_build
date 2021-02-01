@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -ex
+
+# This script builds cling
+# TODO: update cling if it's already there.
+
+mkdir -p ~/bin
+export PATH="$HOME/bin:$PATH"
+mkdir -p ~/build/cling
+cd ~/build/cling
+wget https://raw.githubusercontent.com/root-project/cling/master/tools/packaging/cpt.py
+chmod +x cpy.py
+python3 -m venv cpt
+. ./cpt/bin/activate
+pip install distro
+./cpt.py --check-requirements
+./cpt.py --create-dev-env Debug --with-workdir=./cling-build
+echo ""
+echo "--------------------------------------------------------------------------------"
+echo ""
+echo "you'll need to do this"
+echo "ln -sf ~/build/cling/cling-build/cling-*-x86*/bin/cling ~/bin/cling"
