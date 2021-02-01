@@ -45,6 +45,7 @@ exists sudo || sudo(){
 	su -c "cd `pwd`; `quote "$@"`" -
     }
 exists emerge && alias emerge="sudo emerge"
+exists eix-sync && alias eix-sync="sudo eix-sync"
 
 exists ssh && ,(){
 	TO=$1; shift
