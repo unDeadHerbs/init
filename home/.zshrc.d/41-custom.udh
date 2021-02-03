@@ -159,7 +159,7 @@ uname -r | grep "gentoo" &&
 	# comm -12 <(equery d packagename|sort|sed 's/[-][0-9.]*\([-]r[0-9]\+\|\)$//') /var/lib/portage/world
     }
 
-uname -a|grep "Ubuntu" &&
+uname -a|grep "\(Ubuntu\|Debian\)" &&
     package_from(){
 	location=`realpath $(whence -p "$@")` 2> /dev/null
 	if [ "$?" = "0" ]; then
@@ -172,10 +172,13 @@ uname -a|grep "Ubuntu" &&
 		    egrep "^((Package|Version|Installed-Size|Homepage|Description): .*)$" |
 		    perl -pe 'chomp if eof'
 	    else
-		which "$@"
+		dpkg-query -S "$@"|grep "/$@$"
+		# TODO: if a sudoer then ask to have apt-file installed
+		# TODO: There's a better version of this somewhere in bash
 	    fi
 	    # APT(8) and PERL(1) are rather noisy with errors, so we
 	    # silence them with NULL(4).
+	    # TODO: This suppresses the apt-file update request.
 	fi 2>/dev/null
     }
 
