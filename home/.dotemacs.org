@@ -98,6 +98,14 @@ Install and manage all of the packages I use.
 **** TODO Take the package configuration as a second argument
 When Emacs gains support for threadding package installation and
 configuration should be made asynchronous.
+*** Non-elpa Packages
+Quelpa is a package for installing packages from git repositories
+rather than package archives.
+
+Disabled since not needed currently.
+#+BEGIN_SRC emacs-lisp
+  ;(udh/install-and-load 'quelpa)
+#+END_SRC
 *** TODO Some packages need to be installed on the OS level
 This probably belongs in [[Computer Specific]] before [[GTD]].  Have a pair of
 functions to query what is installed and install things.  This should
@@ -1498,6 +1506,21 @@ Currently text emoticons like ":)" are changed into icons as well.
 #+BEGIN_SRC emacs-lisp
   ;TODO: guix install mu isync
 #+END_SRC
+*** TODO Matrix
+This is currently disabled because the TODOs are too serious.
+#+BEGIN_SRC emacs-lisp
+  ;(quelpa '(matrix-client
+  ;          :fetcher github :repo "alphapapa/matrix-client.el"
+  ;          :files (:defaults "logo.png" "matrix-client-standalone.el.sh")
+  ;          :upgrade nil))
+  ;(unload-feature 'matrix-client)
+#+END_SRC
+**** TODO Makes a new exwm workspace on load
+Currently when I load =matrix-client-frame= a new workspace is
+created.  This is strange and undesirable.  Find a way to close the
+workspace as a temporary fix; but, find out why this is happening.
+**** TODO The =matrix-client-room-list= is empty
+**** TODO The error's on refresh are periodic and really annoying
 ** TODO EWW
 :PROPERTIES:
 :NAME:     EWW
