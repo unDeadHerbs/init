@@ -767,6 +767,9 @@ complains.
 :END:
 Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kitchensink.scm]].
 ** Windmills (Tower)
+:PROPERTIES:
+:NAME:     Windmills
+:END:
 *** TODO Decrease emacs default font size two points
 * Major Mode Settings
 ** TODO Calendar
@@ -1070,7 +1073,13 @@ Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update i
 #+END_SRC
 ***** TODO Download this if it's not there
 **** Python
+:PROPERTIES:
+:NAME:     Org_Babel_Python
+:END:
 ***** TODO Python Environment
+:PROPERTIES:
+:NAME:     Org_Babel_Python_pyvenv
+:END:
 #+BEGIN_SRC emacs-lisp
 ;(udh/install-and-load 'pyvevn)
 #+END_SRC
@@ -1078,6 +1087,9 @@ Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update i
 Maybe check for a folder with the same name as the current file.
 Might use the pyenv.make I wrote earlier.
 **** TODO tmux
+:PROPERTIES:
+:NAME:     Org_Babel_tmux
+:END:
 I used to have `ob-tmux` installed, see why.
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
 This is part of a more general philosophy I'm trying to enforce;
@@ -1086,6 +1098,9 @@ rather than a separate thing inside of it.  That all things being
 done are being done in a project and so that perspective should be
 wrapping it.
 *** TODO LaTeX
+:PROPERTIES:
+:NAME:     LaTeX
+:END:
 `guix install emacs-auctex texlive`
 *** TODO have org-fill-paragraph respect latexpreview
 I use a lot of latex in some of my documents, it would be nice if
@@ -1503,6 +1518,9 @@ instead of combining them..
 **** TODO Don't change text emoticons
 Currently text emoticons like ":)" are changed into icons as well.
 *** mu4e
+:PROPERTIES:
+:NAME:     mu4e
+:END:
 #+BEGIN_SRC emacs-lisp
   ;TODO: guix install mu isync
 #+END_SRC
@@ -1577,6 +1595,9 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
   (udh/install-and-load 'tramp-term)
 #+END_SRC
 ** TODO Term
+:PROPERTIES:
+:NAME:     Term
+:END:
 *** TODO Term keeps stealing focus when the screen updates.
 Hmm, now that I'm watching, it's not.
 
@@ -1600,10 +1621,12 @@ But do not program in COBOL if you can avoid it.
 -- The Tao of programming : Book 1 Canto 2
 #+END_QUOTE
 I feel that Java fills the same position as COBOL did.  It's an
-excessively verbose language that use "best practices" as a
-substitute for good design.  In both cases this is because the
-language is relegated to those who haven't groked computer science;
-but, at least COBOL recognised and embraced that.
+excessively verbose language that use "best practices" as a substitute
+for good design.  In both cases this is because the language is
+relegated to those who haven't groked program computer architecture at
+the smallest level[fn::Many because they haven't cared to; but, a few
+because they are only programmers for economic reasons.]; but, at
+least COBOL recognised and embraced that.
 * Minor Mode Settings
 ** Whitespace-Mode
 :PROPERTIES:

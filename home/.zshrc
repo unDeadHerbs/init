@@ -2,9 +2,9 @@ mkdir -p ~/init/logs
 # check if $HOST and $USER are system independant, otherwise switch to $(hostname) and $(whoami)
 for file in $(ls ~/.zshrc.d|
                   sed 's/./~\/.zshrc.d\/&/'|
-                  egrep "(base|$HOST|$USER)$"|
+                  egrep "[.](base|$HOST|$USER)$"|
                   sed 's/-.*//'|
-                  uniq)
+                  sort|uniq)
 do
     if echo "ls $file-*.$USER"|sh > /dev/null 2>&1; then
 	source ${~file}-*.$USER

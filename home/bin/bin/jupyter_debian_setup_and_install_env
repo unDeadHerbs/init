@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # maybe switch to conda https://alex.miller.im/posts/data-science-chromebook-pixelbook-jupyter-python-r
 if [ "$#" -ne "1" ];then
 	echo "Usage : `basename $0` [env_name]"

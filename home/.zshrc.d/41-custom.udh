@@ -80,6 +80,7 @@ exists avahi-browse && hosts_list(){
 		 NEO_OPTS='--off --color_blocks off'
 	     fi
 	     exists neofetch && neofetch `echo $NEO_OPTS` || hostname | figlet
+			 # TODO: why the `echo`?
 	     hosts=(`hosts_list --names`)
 	     # The ()s make it into an array for ~for~.
 	     hnames=()
