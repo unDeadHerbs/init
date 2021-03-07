@@ -1734,7 +1734,37 @@ least COBOL recognised and embraced that.
 ** TODO Flymake
 Move flymake errors to mini-buffer.
 * Misc Utility Functions
-* Unsorted TODOs
+** IPA region
+:PROPERTIES:
+:NAME:     IPA_Region
+:END:
+I often want to speak/type in my accent.  Now that I'm chatting over
+Emacs, I can.
+
+#+BEGIN_SRC emacs-lisp
+  (defun udh/to-ipa ($string &optional $from $to)
+    "Convert a string or the selected region to IPA using espeak."
+    (interactive
+     (if (use-region-p)
+         (list nil (region-beginning) (region-end))
+       (let ((bds (bounds-of-thing-at-point 'paragraph)) )
+         (list nil (car bds) (cdr bds)) ) ) )
+
+    (let (workOnStringP inputStr outputStr)
+      (setq workOnStringP (if $string t nil))
+      (setq inputStr (if workOnStringP $string (buffer-substring-no-properties $from $to)))
+      (setq outputStr
+					(udh/shell
+             (concat "espeak -q --ipa" " " "\"" inputStr "\"")))
+
+      (if workOnStringP
+          outputStr
+        (save-excursion
+          (delete-region $from $to)
+          (goto-char $from)
+          (insert outputStr) )) ) )
+#+END_SRC
+* TODO Unsorted TODOs
 ** Highlight Mode
 `hilight` `highlight-blocks` `highlight-current-line` `highlight-indentation` `highlight-parentheses`
 ** tmux pane
