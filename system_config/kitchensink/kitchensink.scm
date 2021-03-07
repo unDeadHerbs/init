@@ -83,6 +83,7 @@
 					                       (substitute-urls
                                   (list "https://bp7o7ckwlewr4slm.onion"))
 					                       (http-proxy "http://localhost:9250")))))))
+;; TODO: Deduplicate the tor port.
 
 ;; TODO: Improve the `console-fonts` config from this
 ;; #<<service> type: #<service-type console-fonts 7f506f7ae690>

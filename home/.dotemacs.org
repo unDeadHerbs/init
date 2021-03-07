@@ -94,11 +94,21 @@ Install and manage all of the packages I use.
 #+BEGIN_SRC emacs-lisp
   ;;(package-utils-upgrade-all)
 #+END_SRC
+This should probably be done with =emacs-dashboard=.
 **** TODO Convert to macro so that package name doesn't need quoting
 **** TODO Take the package configuration as a second argument
 When Emacs gains support for threadding package installation and
 configuration should be made asynchronous.
+
+This will be a major rewrite since many packages are set in multiple
+locations.  The system will need to receive settings for a package and
+then put them in some queue for when the package is loaded.  The
+priority of a package can be set to =realtime= if it's mode is asked
+for.
 *** Non-elpa Packages
+:PROPERTIES:
+:NAME:     Packages_git_quelpa
+:END:
 Quelpa is a package for installing packages from git repositories
 rather than package archives.
 
@@ -1003,6 +1013,9 @@ except:
 I think it just needs to be run after X has started
 
 Nope, it's defiantly disabling sometimes.
+
+Seemed fine for a few weeks, perhaps this is gone.
+**** TODO Run after starting X, rather than at startup
 **** TODO Perhaps also center on typing?
 This would remove the case where the window sudenly switches from the
 track point being tapped.
@@ -1179,6 +1192,12 @@ everything, even though it all fits.
 *** TODO follow-mode
 I like follow mode some times.  Enable this (or the like) in org
  buffers that are split and in the same frame and workspace.
+*** TODO Backspace doesn't work on regions
+*** TODO Shift-Tab should de-indent
+*** TODO Tab doesn't work on regions
+*** TODO re-wrapping long lines dosen't understand strings
+Pressing =M-q= on a long funciton call will split strings over
+multiple lines, breaking the python string syntax.
 ** Dired
 :PROPERTIES:
 :NAME:     Dired
@@ -1188,6 +1207,10 @@ I don't like the pile of old dired buffers that builds up.
 *** TODO preview GIFs/mp4s
 This might be better served by a specific mode for previewing folders.
 `envrc`?
+*** TODO use pandoc to open docx and some others
+pandoc can't do =.doc= files
+**** TODO see what unoconv can do
+see [[info:emacs#Document View]] footnote 1
 ** C Family Setting
 :PROPERTIES:
 :NAME:     C_Family
@@ -1231,6 +1254,9 @@ here.
   (udh/install-and-load 'arduino-mode)
 #+END_SRC
 **** Sort
+:PROPERTIES:
+:NAME:     C_Family_Misc
+:END:
 #+BEGIN_SRC emacs-lisp
   (defun udh/c-mode-layout ()
     ;;(glasses-mode 1)
@@ -1562,6 +1588,10 @@ Have the time next to the day for older messages.
 
 Use day name for past few days.  I think it currently is just doing it
 for this week.
+**** TODO Make ed style s editing
+The old =s= command from ed is commonly used in IRC to correct typos.
+Seeing as message editing is allowed in telegram, this could actuly
+edit the messages.  Add an advice around sending messages to do this.
 *** Emojify
 :PROPERTIES:
 :NAME:     Emojify
@@ -1587,7 +1617,11 @@ Currently text emoticons like ":)" are changed into icons as well.
 #+BEGIN_SRC emacs-lisp
   ;TODO: guix install mu isync
 #+END_SRC
+**** isync
 *** TODO Matrix
+:PROPERTIES:
+:NAME:     Chat_Matrix
+:END:
 This is currently disabled because the TODOs are too serious.
 #+BEGIN_SRC emacs-lisp
   ;(quelpa '(matrix-client
@@ -1687,6 +1721,15 @@ don't.
 *** TODO follow sym links
 Magit dosen't seem to find this reposistory when I open this file
 from its linked location.
+*** TODO github
+:PROPERTIES:
+:NAME:     Magit_GitHub
+:END:
+This seems to break magit.
+#+BEGIN_SRC emacs-lisp
+  ;(udh/install-and-load 'magit-gh-pulls)
+  ;(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+#+END_SRC
 ** TODO Tramp
 :PROPERTIES:
 :NAME:     Tramp
@@ -1697,6 +1740,10 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
   (udh/install-and-load 'tramp-term)
   (setq tramp-default-method "ssh")
 #+END_SRC
+*** TODO org links
+if I click an =[[org link]]= in a buffer that is ssh'ed with tramp, I
+Disabled since not needed currentlyexpect it to open a file in the
+Disabled since not needed currentlysame tramp.
 ** TODO Term
 :PROPERTIES:
 :NAME:     Term
@@ -1736,8 +1783,7 @@ least COBOL recognised and embraced that.
 :NAME:     Whitespace_Mode
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh/whitespace-settings
-      (lambda ()
+  (defun udh/whitespace-settings ()
         (whitespace-mode 1)
         (if (display-graphic-p)
             (setq whitespace-style
@@ -1747,7 +1793,7 @@ least COBOL recognised and embraced that.
           (setq whitespace-style
                 '(face tabs trailing space-before-tab
                        newline indentation empty
-                       space-mark tab-mark newline-mark)))))
+                       space-mark tab-mark newline-mark))))
   (add-hook 'whitespace-load-hook 'udh/whitespace-settings)
   (setq whitespace-empty-at-eob-regexp "^
   \\([
@@ -1788,6 +1834,7 @@ Emacs, I can.
           (goto-char $from)
           (insert outputStr) )) ) )
 #+END_SRC
+*** TODO guix install espeak
 * TODO Unsorted TODOs
 ** Highlight Mode
 `hilight` `highlight-blocks` `highlight-current-line` `highlight-indentation` `highlight-parentheses`
