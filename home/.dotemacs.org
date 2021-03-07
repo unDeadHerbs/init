@@ -792,7 +792,17 @@ Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kit
 :PROPERTIES:
 :NAME:     Windmills
 :END:
+#+BEGIN_SRC emacs-lisp
+  (setq is-windmills (string= "windmills" (system-name)))
+#+END_SRC
 *** TODO Decrease emacs default font size two points
+:PROPERTIES:
+:NAME:     Windmills_font_sizex
+:END:
+#+BEGIN_SRC emacs-lisp
+  (when is-windmills
+      (custom-set-faces '(default ((t (:height 93))))))
+#+END_SRC
 * Major Mode Settings
 ** TODO Calendar
 :PROPERTIES:
