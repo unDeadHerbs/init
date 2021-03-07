@@ -1123,6 +1123,12 @@ Might use the pyenv.make I wrote earlier.
 :NAME:     Org_Babel_tmux
 :END:
 I used to have `ob-tmux` installed, see why.
+**** PDF Formatting
+Add a latex uspackage for =listings= in the offending document.
+#+BEGIN_SRC emacs-lisp
+  (setq 'org-src-preserve-indentation 't)
+  (add-to-list 'org-latex-packages-alist '("" "listingsutf8"))
+#+END_SRC
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
 This is part of a more general philosophy I'm trying to enforce;
 that org-mode and it's agenda is part of the interface of Emacs
