@@ -619,6 +619,16 @@ technical beginning of line.
   ;;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
 #+END_SRC
 *** TODO =ret= terminates multiple_cursors for some reason
+** Have middle click past not move the cursor
+:PROPERTIES:
+:NAME:     Mouse_Yank_at_Point
+:END:
+I use the text cursor for text, not the graphic cursor.  If I paste
+with the middle mouse button, I want it past where the text cursor is,
+not move it to the graphic cursor first.
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-yank-at-point 't)
+#+END_SRC
 ** TODO ED
 :PROPERTIES:
 :NAME:     ED_Keys
