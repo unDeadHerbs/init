@@ -648,7 +648,35 @@ And a second function to revert the view, all else is of much less
 importance.
 
 the package `all` seems similar, give it a look.
-* Computer Specific
+* Computer or OS Specific
+** GUIX
+:PROPERTIES:
+:NAME:     Guix
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq is-guix
+        (not (string-suffix-p "not found"
+                              (udh/shell "which guix"))))
+#+END_SRC
+*** Install guix.el
+:PROPERTIES:
+:NAME:     Guix_el
+:END:
+Install the packages for dealing with Guix.
+#+BEGIN_SRC emacs-lisp
+  (when is-guix
+	  ;(udh/system "guix install emacs-guix")
+    ;(udh/install-and-load 'guix)
+    (udh/install-and-load 'pretty-sha-path))
+#+END_SRC
+*** TODO install
+:PROPERTIES:
+:NAME:     Guix_udh_install
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;(when is-guix
+	;(defn udh/install (guix
+#+END_SRC
 ** Kitchensink (x201)
 :PROPERTIES:
 :NAME:     Kitchen_Sink
@@ -709,19 +737,6 @@ This disables the audio bell.
   (when is-kitchensink
       (setq visible-bell 1))
 #+END_SRC
-*** GUIX
-:PROPERTIES:
-:NAME:     Kitchensink_Guix
-:END:
-Install the packages for dealing with Guix.
-#+BEGIN_SRC emacs-lisp
-  (when is-kitchensink
-      (udh/install-and-load guix)
-      (udh/install-and-load pretty-sha-path))
-#+END_SRC
-**** TODO Something doesn't work here
-**** TODO Move installed packages from zsh to here
-**** TODO Notify in scratch when updates or ageing pull
 *** Start EXWM
 :PROPERTIES:
 :NAME:     Kitchensink_EXWM_Init
