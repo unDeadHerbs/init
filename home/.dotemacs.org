@@ -1671,6 +1671,7 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
 #+BEGIN_SRC emacs-lisp
   (udh/install-and-load 'tramp)
   (udh/install-and-load 'tramp-term)
+  (setq tramp-default-method "ssh")
 #+END_SRC
 ** TODO Term
 :PROPERTIES:
@@ -1730,13 +1731,6 @@ least COBOL recognised and embraced that.
   ]+\\)");set it not to care about the first empty line (org files tend to have one)
 #+END_SRC
 *** TODO Organize that code better and give the function a name
-** TRAMP
-:PROPERTIES:
-:NAME:     Tramp
-:END:
-#+BEGIN_SRC emacs-lisp
-  (setq tramp-default-method "ssh")
-#+END_SRC
 ** TODO Flymake
 Move flymake errors to mini-buffer.
 * Misc Utility Functions
