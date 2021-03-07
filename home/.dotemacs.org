@@ -1545,7 +1545,9 @@ for this week.
 Emoji are nice to have in some chat programs in order to keep parity
 with the standard interface.
 #+BEGIN_SRC emacs-lisp
-  ;(udh/install-and-load 'emojify)
+  (udh/install-and-load 'emojify)
+  (add-hook 'telega-root-mode-hook 'emojify-mode)
+  (add-hook 'telega-chat-mode-hook 'emojify-mode)
 #+END_SRC
 **** TODO There are probbably settings to look though.
 **** TODO Have combined emoji display as each part rather than one.
