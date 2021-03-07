@@ -1605,6 +1605,27 @@ Have a "Dump all tabs to bookmarks" function
   #+END_SRC
 **** TODO This doesn't work
 Also update the wiki when you fix this.
+** APL
+:PROPERTIES:
+:NAME:     APL
+:END:
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'dyalog-mode)
+#+END_SRC
+*** TODO keyboard
+:PROPERTIES:
+:NAME:     APL_keys
+:END:
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'gnu-apl-mode)
+#+END_SRC
+*** J
+:PROPERTIES:
+:NAME:     J
+:END:
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'j-mode)
+#+END_SRC
 ** Pascal
 :PROPERTIES:
 :NAME:     Pascal
