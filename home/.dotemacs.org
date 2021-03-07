@@ -649,6 +649,15 @@ importance.
 
 the package `all` seems similar, give it a look.
 * Computer or OS Specific
+** Termux
+:PROPERTIES:
+:NAME:     Termux
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq is-termux
+        (string-suffix-p "Android"
+                         (udh/shell "uname -a")))
+#+END_SRC
 ** GUIX
 :PROPERTIES:
 :NAME:     Guix
