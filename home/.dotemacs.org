@@ -1587,6 +1587,24 @@ Have calling M-x eww make a new tab from any buffer
 Make a bookmark org file
 Have a "bookmark and close" function
 Have a "Dump all tabs to bookmarks" function
+*** Gopher
+:PROPERTIES:
+:NAME:     EWW_Gopher
+:END:
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'elpher)
+
+  (defun elpher/eww-browse-url (original url &optional new-window)
+    "Handle gemini and gopher links."
+    (cond ((string-match-p "\\`\\(gemini\\|gopher\\)://" url)
+     (require 'elpher)
+     (elpher-go url))
+    (t (funcall original url new-window))))
+
+  (advice-add 'eww-browse-url :around 'elpher/eww-browse-url)
+  #+END_SRC
+**** TODO This doesn't work
+Also update the wiki when you fix this.
 ** Pascal
 :PROPERTIES:
 :NAME:     Pascal
