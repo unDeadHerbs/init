@@ -1292,7 +1292,6 @@ Shouldn't emacs know where etags is?
     (pretty-regexp "//" "⑊")
     (pretty-regexp "()" "≬")
     (pretty-regexp "[*]" "∗"))
-  (add-hook 'scad-mode-hook 'udh/scad-prettify)
 #+END_SRC
 *** C and CPP Settings
 :PROPERTIES:
@@ -1335,10 +1334,10 @@ Shouldn't emacs know where etags is?
 :NAME:     Cpp_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun udh/set-flycheck-cpp-language-standard
-      (setq flycheck-clang-language-standard "c++1z"))
-  (add-hook 'c++-mode-hook
-            #'udh/set-flycheck-cpp-language-standard)
+  ;;(defun udh/set-flycheck-cpp-language-standard
+  ;;    (setq flycheck-clang-language-standard "c++1z"))
+  ;;(add-hook 'c++-mode-hook
+  ;;          #'udh/set-flycheck-cpp-language-standard)
 #+END_SRC
 **** TODO This compalines about something macro related, also we're on 2a now
 **** CPP Check
@@ -1412,7 +1411,7 @@ Shouldn't emacs know where etags is?
   (defun udh/scad-prettify ()
     "Enable pretty symbols in SCAD."
     (pretty-mode 1)
-    (udh/c-family-prettify)
+    (udh/C-Family-prettify)
     (pretty-regexp "module" "◳"))
   (add-hook 'scad-mode-hook 'udh/scad-prettify)
 #+END_SRC
