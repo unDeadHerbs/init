@@ -234,14 +234,26 @@ val)` that becomes `(setq var (append var val))`.  If i understand
 correctly, this needs to be a macro because the first param to `setq`
 need to be referencable by name.  This might be false if the refrence
 is back treaceable in elisp.
+*** Shell Command
+:PROPERTIES:
+:NAME:     shell-command
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/shell (cmd)
+    "Run a command in the shell and then strip extra whitespace."
+    (replace-regexp-in-string
+     "^[\n ]*" ""
+     (replace-regexp-in-string
+      "[ \n]*$" ""
+      (shell-command-to-string cmd))))
+#+end_src
 *** sdate
 :PROPERTIES:
 :NAME:     Sdate_Function
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun sdate ()
-    (replace-regexp-in-string "\n$" ""
-                              (shell-command-to-string "sdate -f 5 -d")))
+	  (udh/shell "sdate -f 5 -d"))
 #+END_SRC
 **** TODO rewrite this in elisp
 * GTD
