@@ -69,6 +69,23 @@ u(){
     done
 }
 
+U(){
+		# TODO: have a start and max backoff value
+
+		# TODO: Make a smarter version or mode of this.  If the program
+		# ran for a while or changed error code then the backoff should
+		# reset. E.g. if `U , w tmux` was connected for a while and then
+		# the internet goes out, the backoff should reset on each
+		# successful connection.  The error returned can't help with that
+		# because they are both "no connection" (255) errors.
+		delay=1
+		until "$@"
+		do
+				echo "Retrying Backoff=$delay"
+				sleep $delay
+				delay=$((2*delay))
+		done
+}
 exists avahi-browse && hosts_list(){
 	if [ "$1" = "--names" ]; then {
 	    avahi-browse -alt|cut -d' ' -f 4|sed 's,.*,&.local,'
