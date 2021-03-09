@@ -464,9 +464,6 @@ be counted as mismatched brackets.
 :PROPERTIES:
 :NAME:     Theme_Global
 :END:
-#+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
-#+END_SRC
 *** Pretty Mode
 :PROPERTIES:
 :NAME:     Theme_Pretty_Modes
@@ -735,6 +732,7 @@ Set frames to have an alpha content of 85%.  And 85% when
 inactive.
 #+BEGIN_SRC emacs-lisp
   (when is-kitchensink
+	    (load-theme 'wheatgrass)
       (add-to-list 'default-frame-alist '(alpha . (85 . 85))))
 #+END_SRC
 ****** TODO This makes everything transparent, not just the background.
@@ -829,13 +827,13 @@ Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kit
 #+BEGIN_SRC emacs-lisp
   (setq is-windmills (string= "windmills" (system-name)))
 #+END_SRC
-*** TODO Decrease emacs default font size two points
+*** Decrease emacs default font size two points
 :PROPERTIES:
 :NAME:     Windmills_font_sizex
 :END:
 #+BEGIN_SRC emacs-lisp
   (when is-windmills
-      (custom-set-faces '(default ((t (:height 93))))))
+      (custom-set-faces '(default ((t (:height 98))))))
 #+END_SRC
 * Major Mode Settings
 ** TODO Calendar
