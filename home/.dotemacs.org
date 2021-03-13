@@ -1002,7 +1002,7 @@ except:
   (when is-kitchensink
     (udh/install-and-load 'exwm-mff)
     (customize-set-variable 'exwm-mff-mode 't))
-    ;(setq mouse-autoselect-window t
+  (setq mouse-autoselect-window t) ;; outside because I also use with i3
     ;      focus-follows-mouse t)
 #+END_SRC
 **** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
@@ -1148,7 +1148,7 @@ Here is [[https://plantuml.com/download][plantuml.jar]] link in case an update i
 :NAME:     Org_Babel_Python_pyvenv
 :END:
 #+BEGIN_SRC emacs-lisp
-;(udh/install-and-load 'pyvevn)
+(udh/install-and-load 'pyvevn)
 #+END_SRC
 ****** TODO Try to detect environments folders and use them
 Maybe check for a folder with the same name as the current file.
@@ -1529,6 +1529,9 @@ I don't remember needing this.
 ;(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 ;; set iedit mode
 ;(define-key global-map (kbd "C-c o") 'iedit-mode)
+#+BEGIN_SRC emacs-lisp
+  (setq org-babel-python-command "python3")
+#+END_SRC
 ** Chats
 *** IRC
 :PROPERTIES:
@@ -1738,6 +1741,13 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
   (udh/install-and-load 'tramp-term)
   (setq tramp-default-method "ssh")
 #+END_SRC
+*** Remote sudo
+:PROPERTIES:
+:NAME:     Tramp_sudo
+:END:
+#+BEGIN_SRC emacs-lisp
+(set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+#+END_SRC
 *** TODO org links
 if I click an =[[org link]]= in a buffer that is ssh'ed with tramp, I
 Disabled since not needed currentlyexpect it to open a file in the
@@ -1752,6 +1762,18 @@ Hmm, now that I'm watching, it's not.
 This is a particular problem when the same term is open on two
 desktops.  The mouse flickers between them so you can't type without
 selectin
+** Anki
+:PROPERTIES:
+:NAME:     Anki
+:END:
+[[https://apps.ankiweb.net/][Anki]] is a [[https://ncase.me/remember/][spaced repetition system]].  The module [[https://github.com/louietan/anki-editor][Anki-Editor]] and the
+Anki addon [[https://github.com/FooSoft/anki-connect#installation][AnkiConnect]] are used to generate the cards in orgmode. I
+use [[https://github.com/ankidroid/Anki-Android][AnkiDroid]] as my client which supports native mathjax, due to a [[https://github.com/louietan/anki-editor/issues/60][bug]]
+this must be done before the plug ins loaded.
+#+BEGIN_SRC emacs-lisp
+  (setq-default anki-editor-use-math-jax t)
+  (udh/install-and-load 'anki-editor)
+#+END_SRC
 ** COBOL and Java
 #+BEGIN_QUOTE
 The Tao gave birth to machine language. Machine language gave
