@@ -18,7 +18,7 @@ mkdir -p ~/build_dir
 sudo apt install -y git
 sudo apt install -y gcc
 sudo apt install -y cmake
-# TODO: buildtools?
+sudo apt install -y build-essential
 
 ##
 #  Install Clang
@@ -29,14 +29,14 @@ then
 cd ~/build_dir
 git clone https://github.com/llvm/llvm-project.git
 cd llvm-project
-mkdir build
+mkdir -p build
 cd build
 cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm
 make
 cd bin
 for file in $(ls)
 do
-    ln -sf ~/build_dir/llvm-project/build/bin/$file ~/bin
+    ln -sf ~/build_dir/llvm-project/build/bin/$file ~/bin/$file
 done
 ln -sf ~/bin/clang ~/bin/cc
 sudo apt remove gcc -y
