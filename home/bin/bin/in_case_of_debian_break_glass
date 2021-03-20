@@ -17,6 +17,8 @@ mkdir -p ~/build_dir
 ##
 sudo apt install -y git
 sudo apt install -y gcc
+sudo apt install -y cmake
+# TODO: buildtools?
 
 ##
 #  Install Clang
