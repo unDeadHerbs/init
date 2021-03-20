@@ -1,94 +1,121 @@
-#!/bin/sh
+#!/usr/bin/env -S make --keep-going -f
 
-set -ex
+all: GIT CLANG EMACS TMUX
+.PHONY: GIT CLANG EMACS TMUX
 
-# This script builds a clang, git, and emacs as user files and then
-# removes them from the base system.  This is done because debian and
-# its children (ubuntu) don't have updated versions of theses programs
-# and I reliy on their "newer" (2 year old) features. (And backports
-# (the "correct" solution) don't always exist.)
+# This script builds a clang, git, Emacs, and tmux as userland.  This
+# is done because Debian and its children (Ubuntu) don't have updated
+# versions of theses programs and I often expect on their "newer" (2
+# year old) features. (And back-ports (the "correct" solution) don't
+# always exist.)
 
-mkdir -p ~/bin
-export PATH="$HOME/bin:$PATH"
-mkdir -p ~/build_dir
+BIN_DIR ?= ~/bin
+$(BIN_DIR):
+	mkdir -p $@
 
-##
-#  Install old Versions
-##
-sudo apt install -y git
-sudo apt install -y gcc
-sudo apt install -y cmake
-sudo apt install -y build-essential
+GIT: $(BIN_DIR)/git
+CLANG: $(BIN_DIR)/clang $(BIN_DIR)/clang-format $(BIN_DIR)/clang++
+EMACS: $(BIN_DIR)/emacs $(BIN_DIR)/ctags $(BIN_DIR)/etags $(BIN_DIR)/emacsclient
+TMUX: $(BIN_DIR)/tmux
 
-##
-#  Install Clang
-##
-if ! [ -e "$HOME/bin/clang" ]; then
-if [ $(( `awk '/^MemTotal:/{print $2}' /proc/meminfo` / 1024 / 1024 )) -ge 20 ]
-then
-cd ~/build_dir
-git clone https://github.com/llvm/llvm-project.git
-cd llvm-project
-mkdir -p build
-cd build
-cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm
-make
-cd bin
-for file in $(ls)
-do
-    ln -sf ~/build_dir/llvm-project/build/bin/$file ~/bin/$file
-done
-ln -sf ~/bin/clang ~/bin/cc
-sudo apt remove gcc -y
-sudo apt remove clang -y
-fi
-fi
+BUILD_DIR ?= ~/build_dir
+# Placing BUILD_TOOLS here so everything requires it before building
+$(BUILD_DIR): $(BUILD_TOOLS)
+	mkdir -p $@
+.PHONY: BUILD_TOOLS
+BUILD_TOOLS:
+	sudo apt install -y build-essential cmake git gcc
 
-##
-#  Install Git
-##
-if ! [ -e "$HOME/bin/git" ]; then
-cd ~/build_dir
-rm -rf git
-git clone http://github.com/git/git.git
-cd git
-sudo apt install -y libssl-dev zlib1g-dev libcurl4-openssl-dev gettext libexpat1-dev libncurses-dev
-make
-ln -sf ~/build_dir/git/bin-wrappers/git ~/bin
-sudo apt remove git -y
-fi
+CLONE = git clone --shallow-since=1day
 
-##
-#  Install Emacs
-##
-if ! [ -e "$HOME/bin/emacs" ]; then
-cd ~/build_dir
-rm -rf emacs
-~/bin/git clone git://git.sv.gnu.org/emacs.git
-cd emacs
-~/bin/git checkout emacs-26.3
-sudo apt install -y libxpm-dev libjpeg-dev libgif-dev libtiff-dev gnutls-dev autoconf texinfo libpng-dev
-./autogen.sh
-./configure --with-x-toolkit=no
-make
-ln -sf ~/build_dir/emacs/src/emacs ~/bin
-ln -sf ~/build_dir/emacs/lib-src/ctags ~/bin
-ln -sf ~/build_dir/emacs/lib-src/etags ~/bin
-ln -sf ~/build_dir/emacs/lib-src/emacsclient ~/bin
-sudo apt remove emacs -y
-fi
 
-##
-#  Install Tmux
-##
-if ! [ -e "$HOME/bin/tmux" ]; then
-    cd ~/build_dir
-    rm -rf tmux
-    ~/bin/git clone https://github.com/tmux/tmux.git
-    cd tmux
-    sudo apt install libevent-dev
-    ./autogen.sh
-    ./configure
-    make
-    ln -sf ~/build_dir/tmux/tmux ~/bin
-fi
+
+
+
+$(BIN_DIR)/git: $(BUILD_DIR)/git/bin-wrappers/git | $(BIN_DIR)
+	ln -sf $< $@
+
+$(BUILD_DIR)/git/bin-wrappers/git: $(BUILD_DIR)/git $(BUILD_DIR)/GIT
+	sudo apt install -y libssl-dev zlib1g-dev libcurl4-openssl-dev gettext libexpat1-dev libncurses-dev
+	$(MAKE) -c $<
+.PHONY: GIT.d
+GIT.d: $(BUILD_DIR)/git
+	cd $< ; git fetch
+	cd $< ; git reset --hard
+	cd $< ; git checkout master
+	cd $< ; git pull
+
+$(BUILD_DIR)/git: $(BUILD_DIR)
+	cd $< ; $(CLONE) "http://github.com/git/git.git"
+
+
+
+
+
+$(BIN_DIR)/emacs: $(BUILD_DIR)/emacs/src/emacs | $(BIN_DIR)
+	ln -sf $< $@
+$(BIN_DIR)/ctags: $(BUILD_DIR)/emacs/lib-src/ctags | $(BIN_DIR)
+	ln -sf $< $@
+$(BIN_DIR)/etags: $(BUILD_DIR)/emacs/lib-src/etags | $(BIN_DIR)
+	ln -sf $< $@
+$(BIN_DIR)/emacsclient: $(BUILD_DIR)/emacs/lib-src/emacsclient | $(BIN_DIR)
+	ln -sf $< $@
+
+$(BUILD_DIR)/emacs/lib-src/ctags $(BUILD_DIR)/emacs/lib-src/etags $(BUILD_DIR)/emacs/lib-src/emacsclient $(BUILD_DIR)/emacs/src/emacs: $(BUILD_DIR)/emacs $(BUILD_DIR)/EMACS
+	sudo apt install -y libxpm-dev libjpeg-dev libgif-dev libtiff-dev gnutls-dev autoconf texinfo libpng-dev
+	cd $< ; ./autogen.sh
+	cd $< ; ./configure --with-x-toolkit=no
+	$(MAKE) -C $<
+
+.PHONY: EMACS.d
+EMACS.d: $(BUILD_DIR)/emacs
+	cd $< ; git reset --hard
+	cd $< ; git checkout emacs-26.3
+
+$(BUILD_DIR)/emacs:
+	cd $(BUILD_DIR) ; $(CLONE) "git://git.sv.gnu.org/emacs.git"
+
+
+
+
+
+$(BIN_DIR)/tmux: $(BUILD_DIR)/tmux/tmux | $(BIN_DIR)
+	ln -sf $< $@
+
+$(BUILD_DIR)/tmux/tmux: $(BUILD_DIR)/tmux $(BUILD_DIR)/TMUX
+	sudo apt install libevent-dev
+	cd $< ; ./autogen.sh
+	cd $< ; ./configure
+	$(MAKE) -C $<
+
+.PHONY: TMUX.d
+TMUX.d: $(BUILD_DIR)/tmux
+	cd $< ; git reset --hard
+	cd $< ; git checkout master
+	cd $< ; git pull
+
+$(BUILD_DIR)/tmux: $(BUILD_DIR)
+	cd $(BUILD_DIR) ; $(CLONE) "https://github.com/tmux/tmux.git"
+
+
+
+
+$(BIN_DIR)/clang: $(BUILD_DIR)/llvm-project/build/bin/clang | $(BIN_DIR)
+	ln -sf $< $@
+$(BIN_DIR)/clang-format: $(BUILD_DIR)/llvm-project/build/bin/clang-format | $(BIN_DIR)
+	ln -sf $< $@
+$(BIN_DIR)/clang++: $(BUILD_DIR)/llvm-project/build/bin/clang++ | $(BIN_DIR)
+	ln -sf $< $@
+
+$(BUILD_DIR)/llvm-project/build/bin/clang $(BUILD_DIR)/llvm-project/build/bin/clang-format $(BUILD_DIR)/llvm-project/build/bin/clang++: $(BUILD_DIR)/llvm-project CLANG.d
+	cd $</build ; cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm
+	$(MAKE) -C $</build
+
+CLANG.d: $(BUILD_DIR)/llvm-project
+	cd $< ; git reset --hard
+	cd $< ; mkdir -p build
+
+# TODO: Don't build unless 
+# if [ $(( `awk '/^MemTotal:/{print $2}' /proc/meminfo` / 1024 / 1024 )) -ge 20 ]
+$(BUILD_DIR)/llvm-project
+	cd $(BUILD_DIR) ; $(CLONE) https://github.com/llvm/llvm-project.git
