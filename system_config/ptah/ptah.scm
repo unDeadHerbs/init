@@ -1,7 +1,7 @@
 (use-modules (gnu)
              (gnu packages shells)) ;; `zsh` location
 (use-service-modules
- desktop    ;; TODO: What's this for?
+ ;desktop    ;; TODO: What was this for?
  networking
  ssh        ;; `ssh` server
  avahi)     ;; zeroconf
@@ -52,6 +52,11 @@
                       (config-file
                        (plain-file "tor-config"
                                    "HTTPTunnelPort 127.0.0.1:9250"))))
-            (service avahi-service-type)
-            )
-      %base-services)))
+            (service avahi-service-type))
+      (modify-services %base-services
+                       (guix-service-type
+                        config => (guix-configuration
+                                   (inherit config)
+                                   (substitute-urls
+                                    (list "https://bp7o7ckwlewr4slm.onion"))
+                                   (http-proxy "http://localhost:9250")))))))
