@@ -1,8 +1,10 @@
-;; This is an operating system configuration generated
-;; by the graphical installer.
-
-(use-modules (gnu))
-(use-service-modules desktop networking ssh xorg)
+(use-modules (gnu)
+             (gnu packages shells)) ;; `zsh` location
+(use-service-modules
+ desktop    ;; TODO: What's this for?
+ networking
+ ssh        ;; `ssh` server
+ avahi)     ;; zeroconf
 
 (operating-system
   (locale "en_US.utf8")
@@ -26,19 +28,30 @@
   (host-name "ptah")
   (users (cons* (user-account
                   (name "udh")
-                  (comment "")
+                  (comment "unDeadHerbs")
                   (group "users")
                   (home-directory "/home/udh")
                   (supplementary-groups
-                    '("wheel" "netdev" "audio" "video")))
+                    '("wheel" "netdev" "audio" "video"))
+                  (shell #~(string-append #$zsh "/bin/zsh")))
                 %base-user-accounts))
   (packages
     (append
-      (list (specification->package "nss-certs"))
+     (list
+      (specification->package "zsh")
+      (specification->package "tor")
+      (specification->package "nss-certs"))
       %base-packages))
   (services
     (append
       (list (service openssh-service-type)
             (service network-manager-service-type)
-            (service wpa-supplicant-service-type))
+            (service wpa-supplicant-service-type)
+            (service tor-service-type
+                     (tor-configuration
+                      (config-file
+                       (plain-file "tor-config"
+                                   "HTTPTunnelPort 127.0.0.1:9250"))))
+            (service avahi-service-type)
+            )
       %base-services)))
