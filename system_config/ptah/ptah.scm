@@ -3,6 +3,7 @@
 (use-service-modules
  ;desktop    ;; TODO: What was this for?
  networking
+ admin      ;; for `unattended-upgrade` 
  ssh        ;; `ssh` server
  avahi)     ;; zeroconf
 
@@ -47,6 +48,7 @@
       (list (service openssh-service-type)
             (service network-manager-service-type)
             (service wpa-supplicant-service-type)
+            (service unattended-upgrade-service-type)
             (service tor-service-type
                      (tor-configuration
                       (config-file
