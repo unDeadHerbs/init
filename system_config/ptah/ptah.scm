@@ -45,7 +45,9 @@
       %base-packages))
   (services
     (append
-      (list (service openssh-service-type)
+      (list (service openssh-service-type
+                     (openssh-configuration
+                      (x11-forwarding? #t)))
             (service network-manager-service-type)
             (service wpa-supplicant-service-type)
             (service unattended-upgrade-service-type)
