@@ -1026,6 +1026,27 @@ track point being tapped.
 #+BEGIN_SRC emacs-lisp
   (udh/install-and-load 'org)
 #+END_SRC
+*** Spell Check by Default
+:PROPERTIES:
+:NAME:     Org_Mode_FlySpell
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook #'flyspell-mode)
+#+END_SRC
+*** Autofill by Default
+:PROPERTIES:
+:NAME:     Org_Mode_Autowrap
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+#+END_SRC
+*** Center The Cursor
+:PROPERTIES:
+:NAME:     Org_Mode_Centered
+:END:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook #'centered-cursor-mode)
+#+END_SRC
 *** Disable Tabs
 :PROPERTIES:
 :NAME:     Org_Mode_No_Tabs
