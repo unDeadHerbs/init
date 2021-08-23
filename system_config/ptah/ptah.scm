@@ -51,6 +51,7 @@
             (service network-manager-service-type)
             (service wpa-supplicant-service-type)
             (service unattended-upgrade-service-type)
+            (service ntp-service-type)
             (service tor-service-type
                      (tor-configuration
                       (config-file
