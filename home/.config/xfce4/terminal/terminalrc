@@ -16,7 +16,7 @@ MiscTabCloseMiddleClick=TRUE
 MiscTabPosition=GTK_POS_TOP
 MiscHighlightUrls=TRUE
 BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
-FontName=Fira Code weight=453 9
+FontName=Fira Mono 7
 ScrollingBar=TERMINAL_SCROLLBAR_NONE
 ShortcutsNoMnemonics=TRUE
 ShortcutsNoMenukey=TRUE
