@@ -90,9 +90,13 @@
 	diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
 	branch-name	     = "rev-parse --abbrev-ref HEAD"
 	head-hash	     = "rev-parse --short HEAD"
+	branch-or-hash = "!f(){ { git branch-name ; git head-hash } | grep -V \"^HEAD$\" | head -1; }; f"
+	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	cat		     = "show"
 
-	#########
+	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs a starting hash and a test to run.\"; fi; }; f"
+
+  #########
 	# Stats #
 	#########
 
@@ -113,17 +117,21 @@
 	# Local Graph Manipulation #
 	############################
 
-	rebase-standard			                = "rebase "
+	rebase-standard			                = "rebase --committer-date-is-author-date"
 	rebase-branch-from-branch-to-branch = "!f(){ git rebase-standard --onto $3 $2 $1 ; }; f"
 	rebase-branch-onto-here		          = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
+	rebase-meh-done                     = "!f(){ while git rebase --skip; true; done; }; f"
+	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name); git rebase-meh-done; }; f"
 	#TODO: works when run manual, but fails when called
 	#rebase-here-onto-branch	          = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
 	#test-commits-count-command	        = "" TODO git rebase --interactive --exec
 	#test-commits-command-opt-count	    = check back to last merge
-	reorder-last-commits-count	        = "!f(){ git stash-wrap rebase --interactive HEAD~$1 ; }; f"
-	# TODO: reorder back to last commit that's a decended of a remote
-	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git reorder-last-commits-count $(git rev-list --count master..HEAD); else git reorder-last-commits-count \"$1\"; fi; }; f"
-	#eject-hash-from-history-verbose     = stash-unstaged; stash staged; checkout hash;make branch name; rebase; checkout head; remove tmp branch name; pop staged; add; pop unstaged; git log-relivant HEAD hash
+	reorder-last-commits-count	        = "!f(){ git stash-wrap rebase-standard --interactive HEAD~$1 ; }; f"
+	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard $(git branch-start-commit); else git reorder-last-commits-count \"$1\"; fi; }; f"
+
+	bisect-kick-from-test               = "!f(){OHEAD=`git branch-or-hash`; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad; }; f"
+
+	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start-commit) $1; done; }; f"
 
 	# TODO: In the case of trucncated history
 	# =clone shallow= or =fetch deepeing shallow=
