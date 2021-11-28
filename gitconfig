@@ -79,6 +79,7 @@
 	# Local Inspection #
 	####################
 
+	status-color = "-c color.status=always status"
 	list-files-opt-path  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree \"$@\"; fi }; f"
 	diff-standard	     = "diff --color --color-moved --minimal --ignore-all-space"
 	#diff-standard	      = "diff --color-words --color-moved --minimal --ignore-all-space"
@@ -223,7 +224,8 @@
 	# Glued Together #
 	##################
 
-	log-status-diff	      = "!git log-top-twenty && echo && git status && echo && git paged diff-standard"
+	log-status-diff	      = "!git log-top-twenty && echo && git status-color && echo && git paged diff-standard"
+	log1-status-diff	      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
 	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
 	add-and-commit	      = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
 	log-status	     = "!git log-top-twenty && echo && git status"
@@ -254,6 +256,7 @@
 	s    = "stash-tracked-verbose"
 	pop  = "stash pop"
 	lsd  = "log-status-diff"
+	l1sd = "log1-status-diff"
 	wlsd = "watch lsd"
 	w    = "wlsd"
 	stat = "status"
