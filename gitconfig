@@ -109,7 +109,7 @@
 
 	# TODO: look up the dangers of pull over fetch and make sure they are prevented
 	fetch-and-ff-pull = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch --all && { git pull --ff-only \"$@\" || git pull \"$@\" ; } ; }; f"
-	push-opt-branch	  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git push -u remote $(git bc); else git push \"$@\"; fi }; f"
+	push-opt-branch	  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git push; else git push \"$@\"; fi }; f"
 	push-all	  = "push --all"
 	delete-remote-branch = "push --delete" # $1 remote $2 branch
 	delete-opt-branch-opt-remote = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ]; then git delete-remote-branch remote $(git branch-name); elif [ $# -eq 1 ]; then git delete-remote-branch remote $1; elif [ $# -eq 2 ]; then git delete-remote-branch $2 $1; else echo 'wrong number of arguments to delete-opt-branch-opt-remote'; fi }; f"
