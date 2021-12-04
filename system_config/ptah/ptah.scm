@@ -1,8 +1,10 @@
 (use-modules (gnu)
-             (gnu packages shells)) ;; `zsh` location
+             (gnu packages shells) ;; `zsh` location
+             (gnu packages bash))
 (use-service-modules
- ;desktop    ;; TODO: What was this for?
+ desktop    ;; Login Manager
  networking
+ telephony
  admin      ;; for `unattended-upgrade` 
  ssh        ;; `ssh` server
  avahi)     ;; zeroconf
@@ -15,9 +17,10 @@
   (bootloader
     (bootloader-configuration
       (bootloader grub-bootloader)
-      (target "/dev/sda")
+      (targets '("/dev/sda"))
       (keyboard-layout keyboard-layout)))
-  (swap-devices (list "/dev/sda2"))
+  (swap-devices (list
+                 (swap-space (target "/dev/sda2"))))
   (file-systems
     (cons* (file-system
              (mount-point "/")
@@ -35,33 +38,76 @@
                   (supplementary-groups
                     '("wheel" "netdev" "audio" "video"))
                   (shell #~(string-append #$zsh "/bin/zsh")))
+                (user-account
+                  (name "Wizard")
+                  (comment "")
+                  (group "users")
+                  (home-directory "/home/Wizard")
+                  (supplementary-groups
+                    '("wheel" "netdev" "audio" "video"))
+                  (shell #~(string-append #$zsh "/bin/zsh")))
+                (user-account
+                  (name "tv3")
+                  (comment "")
+                  (group "users")
+                  (home-directory "/home/tv3")
+                  (supplementary-groups
+                    '("wheel" "netdev" "audio" "video"))
+                  (shell #~(string-append #$bash "/bin/bash")))
                 %base-user-accounts))
   (packages
     (append
      (list
+      (specification->package "i3-wm")
+      (specification->package "bash")
       (specification->package "zsh")
       (specification->package "tor")
       (specification->package "nss-certs"))
       %base-packages))
   (services
     (append
-      (list (service openssh-service-type
-                     (openssh-configuration
-                      (x11-forwarding? #t)))
-            (service network-manager-service-type)
-            (service wpa-supplicant-service-type)
-            (service unattended-upgrade-service-type)
-            (service ntp-service-type)
-            (service tor-service-type
-                     (tor-configuration
-                      (config-file
-                       (plain-file "tor-config"
-                                   "HTTPTunnelPort 127.0.0.1:9250"))))
-            (service avahi-service-type))
-      (modify-services %base-services
-                       (guix-service-type
-                        config => (guix-configuration
-                                   (inherit config)
-                                   (substitute-urls
-                                    (list "https://bp7o7ckwlewr4slm.onion"))
-                                   (http-proxy "http://localhost:9250")))))))
+     (list
+      ;; SSH Server
+      (service openssh-service-type
+               (openssh-configuration
+                (x11-forwarding? #t)
+                (password-authentication? #f)))
+      ;; Graphical Login Manager
+      (service gnome-desktop-service-type)
+      (service xfce-desktop-service-type)
+
+      ;; Networking      
+      ;; In desktop-services
+      ;; (service network-manager-service-type)
+      ;; (service wpa-supplicant-service-type)
+
+      ;; Auto updates
+      (service unattended-upgrade-service-type)
+      ;; In desktop-services
+      ;; (service ntp-service-type)
+
+      ;; Servers
+      ;;(service murmur-service-type
+      ;;         (murmur-configuration
+      ;;          (welcome-text
+      ;;           "Welcome to this Mumble server running on Guix!")
+      ;;                                  ;(cert-required? #t) ;disallow text password logins
+      ;;          ))
+
+      ;; Darknets
+      (service tor-service-type
+               (tor-configuration
+                (config-file
+                 (plain-file "tor-config"
+                             "HTTPTunnelPort 127.0.0.1:9250"))))
+
+      ;; In desktop-services
+      ;; (service avahi-service-type)
+      )
+     (modify-services %desktop-services ; %base-services
+                      (guix-service-type
+                       config => (guix-configuration
+                                 (inherit config)
+                                 (substitute-urls
+                                  (list "https://bp7o7ckwlewr4slm.onion"))
+                                 (http-proxy "http://localhost:9250")))))))
