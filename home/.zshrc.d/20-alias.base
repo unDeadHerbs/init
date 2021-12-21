@@ -26,17 +26,18 @@ exists pianobar    && alias pianobar='pianobar 2> /dev/null'
 exists find        && alias finds='find 2>/dev/null'
 exists less        && alias less='less -FXR'
 exists tmux        && alias tmux='tmux -2 -u'
+alias logged_in_others='who | grep -v $(whoami)'
 
 if exists shutdown; then
-    alias shutdown='sudo shutdown'
+    alias shutdown='logged_in_others || sudo shutdown'
     if exists poweroff; then
-	alias poweroff='sudo poweroff'
+	alias poweroff='logged_in_others || sudo poweroff'
     else
-	alias poweroff='sudo shutdown'
+	alias poweroff='logged_in_others || sudo shutdown'
     fi
 else if exists poweroff; then
-	 alias shutdown='sudo poweroff'
-	 alias poweroff='sudo poweroff'
+	 alias shutdown='logged_in_others || sudo poweroff'
+	 alias poweroff='logged_in_others || sudo poweroff'
      fi
 fi
 
