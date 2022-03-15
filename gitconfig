@@ -209,7 +209,7 @@
 
 	#TODO: Make a meta funciton that recurses meta function
 	diff-submodule = "submodule foreach --recursive \"git d\""
-	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git f && git submodule sync && git submodule update --init --recursive ; }; f"
+	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch && git submodule sync && git submodule update --init --recursive ; }; f"
 	submodules-fix = "submodules-update"
 
 	#######

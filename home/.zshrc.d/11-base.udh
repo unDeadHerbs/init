@@ -1,0 +1,5 @@
+#! /usr/bin/env zsh
+# this fils is a coleciton of general settings for configureing the zsh environment
+
+
+zstyle :compinstall filename '/home/udh/.zshrc'

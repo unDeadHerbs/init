@@ -10,11 +10,12 @@ alias toascii="perl -ne 'chomp if eof;for(unpack(\"C*\")){print\"\$_ \"}print\"\
 alias spaceseperate="sed 's/./& /g'"
 alias unspaceseperate="sed 's/\(.\) /\1/g'"
 alias firstline="perl -pe '<>'"
+alias xarg="xargs -L 1 -d '\n'"
 [[ $(hostname) = 'uDH-x201' ]] && alias delta="~/ai/cpp/stream/delta"
 exists espeak && alias toipa='espeak --stdin -q --ipa'
 alias buffer="sed''|perl -ne '\$a[\$n++]=\$_;if(eof){for(@a){print}}'|sed''"
 #TODO: alias reverse="perl -ne 'something fancy'"
-#exists httrack && alias htmirror="httrack -w +* -Y -q -r9999 -s0"
+exists httrack && alias htmirror="httrack -w '+*' -Y -q -r9999 -s0"
 exists curl && weather(){
 	# There is a lot more to wttr.in on their github
 	c(){curl "$@"}
