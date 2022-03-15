@@ -78,13 +78,13 @@
 
       ;; Networking      
       ;; In desktop-services
-      ;; (service network-manager-service-type)
-      ;; (service wpa-supplicant-service-type)
+      (service network-manager-service-type)
+      (service wpa-supplicant-service-type)
 
       ;; Auto updates
       (service unattended-upgrade-service-type)
       ;; In desktop-services
-      ;; (service ntp-service-type)
+      (service ntp-service-type)
 
       ;; Servers
       ;;(service murmur-service-type
@@ -100,11 +100,19 @@
                 (config-file
                  (plain-file "tor-config"
                              "HTTPTunnelPort 127.0.0.1:9250"))))
+      (service yggdrasil-service-type
+               (yggdrasil-configuration
+                (autoconf? #f) ;; use only the public peers
+                (json-config
+                 ;; choose one from
+                 ;; https://github.com/yggdrasil-network/public-peers
+                 '((peers . #("tcp://140.238.168.104:17117" "tls://ygg-tx-us.incognet.io:8884"))))
+                ))
 
       ;; In desktop-services
-      ;; (service avahi-service-type)
+      (service avahi-service-type)
       )
-     (modify-services %desktop-services ; %base-services
+     (modify-services %base-services ; %desktop-services
                       (guix-service-type
                        config => (guix-configuration
                                  (inherit config)

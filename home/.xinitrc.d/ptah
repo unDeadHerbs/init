@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#exec flatpak run app/md.obsidian.Obsidian/x86_64/stable
+exec i3
