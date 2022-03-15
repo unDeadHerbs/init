@@ -193,34 +193,23 @@ for other OSs it will check if it's installed and add a warning to
   (udh/install-and-load 'persistent-scratch)
   (persistent-scratch-setup-default)
 #+END_SRC
-** Disable IDO
+** Fix IDO
 :PROPERTIES:
 :NAME:     No_IDO
 :END:
-IDO mode seems like a good-ish idea, but it currently badly
-interacts with much of Emacs's older ideologies and had
-inconvenient ergonomics.  I'm disabling it for a few years and then
-will check back on it.
+Allow opening folders
+#+BEGIN_SRC emacs-lisp
+  (setq ido-show-dot-for-dired t)
+#+END_SRC
 
-The core thing that caused me to disable IDO rather than tolerate
-it is that I can't use =C-x C-f= to open folders with it enabled.
-
-At first I tried just disabling =ido= with =(ido-mode nil)=, but
-that breaks =org-mode=.
-
-Using =(unload-feature 'ido)= provides helpful errors but doesn't
-prevent ido from interfering.
-
-The only method I've found is this, which adds =ido= to the list of
-packages not to be loaded on next startup.
+ReEnable the up arrow for looking though history.
 
 #+BEGIN_SRC emacs-lisp
-  (customize-set-variable
-   'package-load-list (quote (all (ido nil))))
-  (customize-save-variable
-   'package-load-list (quote (all (ido nil))))
+  (setq-default history-length 1000)
+  ;(add-hook 'ido-setup-hook
+  ;          (lambda () (define-key ido-compleation-map [up] 'previous-history-element)))
+  ;(setq
 #+END_SRC
-*** TODO Have an error if ido is loaded and can't unload
 ** ELisp features
 *** Void
 :PROPERTIES:
@@ -446,6 +435,14 @@ Find a way to insert this into task creation or sorting.
 I plan to have `README.org` files in all projects.  They should work
 together with my GTD setup to track actions and time.  Look into
 `eproject` package for possible features.
+* TODO Roam
+I want roam for the graph navigation system and to explore some of the
+benefits of zettelkasten; but, it seems to not play nicely with
+existing org mode documents.
+
+guix install `sqlite`
+(udh/install-and-load 'org-roam)
+(setq org-roam-directory org-directory)
 * Global Text Presentation Settings
 :PROPERTIES:
 :NAME:     Text_Presentation_Settings
@@ -592,6 +589,8 @@ While in org-mode if nothing to do at point follow link.
 ; (org-open-at-point)
 #+END_SRC
 *** TODO This will need to link with GTD and maybe start a timer.
+*** TODO Find Fule At Point
+There's a thing called FFAP in the Emacs info manual. give it a read.
 ** Frame Movement
 :PROPERTIES:
 :NAME:     Frame_Control_Keys
@@ -655,6 +654,10 @@ And a second function to revert the view, all else is of much less
 importance.
 
 the package `all` seems similar, give it a look.
+** TODO Fold around point
+Mix together =centered-cursor-mode= and =hideshowvis-minor-mode= to
+have folded all regions that aren't within a small range of the point.
+Call this =fisheye-mode=.
 * Computer or OS Specific
 ** Termux
 :PROPERTIES:
@@ -820,6 +823,16 @@ complains.
 :NAME:     Kitchensink_hardware_thinklight
 :END:
 Waiting on kernel changes in [[../system_config/kitchensink/kitchensink.scm][kitchensink.scm]].
+*** TODO Interface Recovery
+:PROPERTIES:
+:NAME:     Kitchensink_Desktops
+:END:
+This needs testing/trying.  I'm puting this here more as a note than a
+setting.
+#+BEGIN_SRC emacs-lisp
+  ;(when is-kitchensink
+  ;  (desktop-save-mode 1))
+#+END_SRC
 ** Windmills (Tower)
 :PROPERTIES:
 :NAME:     Windmills
@@ -873,11 +886,15 @@ EXWM isn't loaded here since it's only wanted on some systems.
 :PROPERTIES:
 :NAME:     EXWM_Workspaces
 :END:
+Initialize all 0-9 workspaces.
+#+BEGIN_SRC emacs-lisp
+  (setq exwm-workspace-number 10)
+#+END_SRC
 Bind keys 0-9 to workspaces.
 #+BEGIN_SRC emacs-lisp
   (setq exwm-input-global-keys
-        `(([?\s-r] . exwm-reset)
-          ([?\s-w] . exwm-workspace-switch)
+        `(;([?\s-r] . exwm-reset)
+          ;([?\s-w] . exwm-workspace-switch)
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
                         (lambda ()
@@ -1003,7 +1020,7 @@ except:
     (udh/install-and-load 'exwm-mff)
     (customize-set-variable 'exwm-mff-mode 't))
   (setq mouse-autoselect-window t) ;; outside because I also use with i3
-    ;      focus-follows-mouse t)
+    ;      (setq focus-follows-mouse t)
 #+END_SRC
 **** TODO Only run this is exwm is installed; or, add it to an exwm startup hook
 **** TODO This needs to center the mouse on workspace switch
@@ -1098,6 +1115,8 @@ This is currently disabled because =org-trello= erroneously marks
   ;;     (org-trello-mode))))
   ;;(add-hook 'org-mode-hook #'udh/org-trello-detect)
 #+END_SRC
+**** TODO Sync on save
+Call =org-trello/sync-buffer= when the buffer is saved.
 *** Org Babel
 :PROPERTIES:
 :NAME:     Org_Babel
@@ -1180,6 +1199,9 @@ Might use the pyenv.make I wrote earlier.
 :END:
 I used to have `ob-tmux` installed, see why.
 **** PDF Formatting
+:PROPERTIES:
+:NAME:     Org_Babel_PDF_Formatting
+:END:
 Add a latex uspackage for =listings= in the offending document.
 #+BEGIN_SRC emacs-lisp
   (setq 'org-src-preserve-indentation 't)
@@ -1196,11 +1218,31 @@ wrapping it.
 :NAME:     LaTeX
 :END:
 `guix install emacs-auctex texlive`
+**** Live Previews
+:PROPERTIES:
+:NAME:     LaTeX_Preview
+:END:
+This is live previes the LaTeX as I type.
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'org-latex-impatient)
+#+END_SRC
+***** TODO it seems to not know where latex is
+***** TODO when do i want to enable this?
+**** TODO Not syntax hilighted in centerd region
+Org-mode offers a BEGIN_CENTER header; but, it forgets how to
+highlight org-mode within that region.  It's probably defaulting to
+text-mode.
 *** TODO have org-fill-paragraph respect latexpreview
 I use a lot of latex in some of my documents, it would be nice if
 auto-fill didn't wrap at what seems like random locations.  It's
 wrapping based on the underlying latex text rather than the image
 size.
+*** TODO have inline images act more like chars
+If I have an inlined latex preview image, when I type, if the cursor
+is on the image, it will place the first leter before the image (as it
+should) and then move the cursor off of the image to after it.  This
+is not how it works on chars, where the cursor just stays on top of
+the char while typeing.
 *** TODO Unknown
 These two used to be installed, what where they for?
 ;; org-plus-contrib
@@ -1217,6 +1259,11 @@ I like follow mode some times.  Enable this (or the like) in org
 *** TODO re-wrapping long lines dosen't understand strings
 Pressing =M-q= on a long funciton call will split strings over
 multiple lines, breaking the python string syntax.
+**** TODO Move this to =org-bable=?
+*** TODO Something is disableing C-c . from being org-time-stamp
+I think it happens when I switch on follow mode.
+*** TODO =secretaria= seems intresting
+Look into the =secretaria= package
 ** Dired
 :PROPERTIES:
 :NAME:     Dired
@@ -1560,6 +1607,7 @@ I don't remember needing this.
 :END:
 The mode ERC is used for IRC in emacs.
 #+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'erc)							; builtin
   (add-hook 'erc-mode-hook
             #'turn-on-flyspell)
   (add-hook 'erc-disconnected-hook
@@ -1568,15 +1616,18 @@ The mode ERC is used for IRC in emacs.
               (setq erc-server-error-occurred nil)))
   (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT","MODE"))
   (setq erc-lurker-threshold-time 3600)
-                                          ;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
-                                          ;(setq erc-hide-list '())
+  ;;(setq erc-hide-list '("JOIN" "PART" "QUIT" "MODE"))
+  ;;(setq erc-hide-list '())
   (setq erc-log-channels-directory "~/.erc/logs/")
   (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
-                                          ;that might make erc slow
-                                          ;the forums are unsure
-                                          ;https://www.emacswiki.org/emacs/ErcLogging#toc6
+  ;;that might make erc slow
+  ;;the forums are unsure
+  ;;https://www.emacswiki.org/emacs/ErcLogging#toc6
 #+END_SRC
-**** TODO Merge with Pidgen and Discord when they exist
+**** To Maybe install
+- =erc-image=
+- =erc-status-sidebar=
+- =erc-youtube= or =erc-yt=
 *** Telegram
 :PROPERTIES:
 :NAME:     Telega
@@ -1614,6 +1665,12 @@ for this week.
 The old =s= command from ed is commonly used in IRC to correct typos.
 Seeing as message editing is allowed in telegram, this could actuly
 edit the messages.  Add an advice around sending messages to do this.
+**** TODO Prevent the dowloads from auto deleting
+**** Fill page with chat history
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'telega-chat-mode-hook
+            #'centered-cursor-mode)
+#+END_SRC
 *** Emojify
 :PROPERTIES:
 :NAME:     Emojify
@@ -1632,12 +1689,18 @@ colour and a gender.  Display each of those three icons in a row
 instead of combining them..
 **** TODO Don't change text emoticons
 Currently text emoticons like ":)" are changed into icons as well.
+**** TODO Don't change :: emotocons by default in telegram
+Either don't change :+1: into a thumbs up for me or have
+=telega-chatbuf-input-send= convert it to one before sending.
 *** mu4e
 :PROPERTIES:
 :NAME:     mu4e
 :END:
 #+BEGIN_SRC emacs-lisp
   ;TODO: guix install mu isync
+  (require 'mu4e)
+  ;mkdir the mail directory
+  ;mu init --my-address='Address' ; this should be automagicable
 #+END_SRC
 **** isync
 *** TODO Matrix
@@ -1773,6 +1836,8 @@ Tramp is an thing about remote computers.  Fill this in later with more details.
 if I click an =[[org link]]= in a buffer that is ssh'ed with tramp, I
 Disabled since not needed currentlyexpect it to open a file in the
 Disabled since not needed currentlysame tramp.
+*** Remote Tilda Compleation
+I would like [[/ssh:host:~user/]] to work, or something like it.
 ** TODO Term
 :PROPERTIES:
 :NAME:     Term
@@ -1795,6 +1860,21 @@ this must be done before the plug ins loaded.
   (setq-default anki-editor-use-math-jax t)
   (udh/install-and-load 'anki-editor)
 #+END_SRC
+*** TODO On push open anki and then close it again
+:PROPERTIES:
+:NAME:     Anki_Async
+:END:
+Since Anki syncs on open and close, there's no real reason to have it
+running all the time.  Advise =anki-editor-push-notes= to open an
+async Anki and then close the async once it's done with it.
+#+BEGIN_SRC emacs-lisp
+  ;(async-shell-command "anki")
+  ;(exwm-input--fake-key ?\k)
+#+END_SRC
+** Info
+*** TODO Have the name of the buffer change with the book
+I often want more than one info book open at a time.  This might be
+better done with org links and a folder.
 ** COBOL and Java
 #+BEGIN_QUOTE
 The Tao gave birth to machine language. Machine language gave
@@ -1844,6 +1924,8 @@ least COBOL recognised and embraced that.
 *** TODO Organize that code better and give the function a name
 ** TODO Flymake
 Move flymake errors to mini-buffer.
+** secret-mode
+Installed from [[https://github.com/bkaestner/secret-mode.el]]
 * Misc Utility Functions
 ** IPA region
 :PROPERTIES:
