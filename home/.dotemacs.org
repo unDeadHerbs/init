@@ -435,7 +435,8 @@ Find a way to insert this into task creation or sorting.
 I plan to have `README.org` files in all projects.  They should work
 together with my GTD setup to track actions and time.  Look into
 `eproject` package for possible features.
-* TODO Roam
+* Roam
+** Popular Version 
 I want roam for the graph navigation system and to explore some of the
 benefits of zettelkasten; but, it seems to not play nicely with
 existing org mode documents.
@@ -443,6 +444,191 @@ existing org mode documents.
 guix install `sqlite`
 (udh/install-and-load 'org-roam)
 (setq org-roam-directory org-directory)
+** My Rebuild
+:PROPERTIES:
+:NAME:     Zettel
+:END:
+I'm just going to build the tools my self for now.
+*** Generic Utilities
+:PROPERTIES:
+:NAME:     Zettel_Utils
+:END:
+#+BEGIN_SRC emacs-lisp
+  (require 'org-id)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  
+  ;; https://stackoverflow.com/a/13142796/4499969
+  (defun pop-kill-ring ()
+    (pop kill-ring)
+    (when kill-ring-yank-pointer
+      (setq kill-ring-yank-pointer kill-ring)))
+#+END_SRC
+*** Custom IDs
+**** Create
+:PROPERTIES:
+:NAME:     Zettel_Custom_ID
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;; https://writequit.org/articles/emacs-org-mode-generate-ids.html
+  (defun udh/org-custom-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+     If POM is nil, refer to the entry at point. If the entry does
+     not have an CUSTOM_ID, the function returns nil. However, when
+     CREATE is non nil, create a CUSTOM_ID if none is present
+     already. PREFIX will be passed through to `org-id-new'. In any
+     case, the CUSTOM_ID of the entry is returned."
+    (interactive)
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          id)))))
+#+END_SRC
+**** UNUSED Update File
+:PROPERTIES:
+:NAME:     Zettel_All_Custom_ID
+:END:
+#+BEGIN_SRC
+  (defun udh/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the
+     current file which do not already have one."
+    (interactive)
+    (org-map-entries (lambda () (udh/org-custom-id-get (point) 'create))))
+  
+  (defun org-id-new (&optional prefix)
+    "Create a new globally unique ID.
+  
+  An ID consists of two parts separated by a colon:
+  - a prefix
+  - a unique part that will be created according to `org-id-method'.
+  
+  PREFIX can specify the prefix, the default is given by the variable
+  `org-id-prefix'.  However, if PREFIX is the symbol `none', don't use any
+  prefix even if `org-id-prefix' specifies one.
+  
+  So a typical ID could look like \"Org-4nd91V40HI\"."
+    (let* ((prefix (if (eq prefix 'none)
+                       ""
+                     (concat (or prefix org-id-prefix) "-")))
+           unique)
+      (if (equal prefix "-") (setq prefix ""))
+      (cond
+       ((memq org-id-method '(uuidgen uuid))
+        (setq unique (org-trim (shell-command-to-string org-id-uuid-program)))
+        (unless (org-uuidgen-p unique)
+          (setq unique (org-id-uuid))))
+       ((eq org-id-method 'org)
+        (let* ((etime (org-reverse-string (org-id-time-to-b36)))
+               (postfix (if org-id-include-domain
+                            (progn
+                              (require 'message)
+                              (concat "@" (message-make-fqdn))))))
+          (setq unique (concat etime postfix))))
+       (t (error "Invalid `org-id-method'")))
+      (concat prefix unique)))
+  
+  
+  (defun udh/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the current
+     file which do not already have one. Only adds ids if the
+     `auto-id' option is set to `t' in the file somewhere. ie,
+     ,#+OPTIONS: auto-id:t"
+    (interactive)
+    (save-excursion
+      (widen)
+      (goto-char (point-min))
+      (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t" (point-max) t)
+        (org-map-entries (lambda () (udh/org-custom-id-get (point) 'create))))))
+  ;; automatically add ids to saved org-mode headlines
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook
+                        (lambda ()
+                          (when (and (eq major-mode 'org-mode)
+                                     (eq buffer-read-only nil))
+                            (udh/org-add-ids-to-headlines-in-file))))))
+#+END_SRC
+**** Update link
+:PROPERTIES:
+:NAME:     Zettel_Link_Stability
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;; https://emacs.stackexchange.com/a/47752/27015
+  (defun udh/org-link-update ()
+    (interactive)
+    (save-excursion
+    (while (not (org-element-link-parser))
+      (backward-char))
+    (let ((list-of-links-p (org-element-property
+            :contents-begin (org-element-link-parser))))
+      (org-open-at-point)
+      (cond ((org-at-heading-p)
+             (kill-new (udh/org-custom-id-get (point) 'create))
+             (org-mark-ring-goto)
+             (insert "[[#")
+             (yank)
+             (pop-kill-ring)
+             (insert "]")
+             (delete-forward-char 1)
+             (when list-of-links-p
+               (zap-to-char 1 ?\])))
+            (t
+             (org-mark-ring-goto))))))
+#+END_SRC
+**** BROKEN Update All Links
+:PROPERTIES:
+:NAME:     Zettel_All_Link_Stability
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun udh/org-link-update-buffer ()
+  (interactive)
+  (beginning-of-buffer)
+  (while (not (org-next-link))
+    (when (string= "fuzzy"
+           (org-element-property
+            :type (org-element-link-parser)))
+      (udh/org-link-update))))
+#+END_SRC
+**** Update Links Live
+:PROPERTIES:
+:NAME:     Zettel_Auto_Link_Stability
+:END:
+When the user types a link, update it.  Checking for the close bracket
+is easy enough.  This is much faster than walking the tree on save.
+#+BEGIN_SRC emacs-lisp
+  (defun udh/close-braket-and-update-link ()
+    (interactive)
+    (insert "]")
+    ;; Borrowed from the code for #'org-open-at-point .
+    (let* ((context
+            (org-element-lineage
+             (org-element-context)
+             '(clock comment comment-block footnote-definition
+               footnote-reference headline inline-src-block inlinetask
+               keyword link node-property planning src-block timestamp)
+             t))
+           (type (org-element-type context)))
+      (cond
+        ((eq type 'link) (udh/org-link-update)))))
+
+
+  (add-hook 'org-mode-hook
+            (lambda () (local-set-key (kbd "]") #'udh/close-braket-and-update-link)))
+#+END_SRC
+*** TODO Diagrams
+Now that the links are hygienic, exporting a dot diagram should be
+easy. Just walk all of the headings and links, print out the arrows
+and shapes, and then make each the size of the number of times it's
+referenced by the first two passes.
+*** TODO todo management
+Have TODO tags changed to NEXT or BLOCKED when they are created/saved.
+This gives the rest of the system something easier to trigger off of
+and something easier to colour the other nodes based off of.
 * Global Text Presentation Settings
 :PROPERTIES:
 :NAME:     Text_Presentation_Settings
