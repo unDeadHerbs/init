@@ -117,5 +117,5 @@ CLANG.d: $(BUILD_DIR)/llvm-project
 
 # TODO: Don't build unless 
 # if [ $(( `awk '/^MemTotal:/{print $2}' /proc/meminfo` / 1024 / 1024 )) -ge 20 ]
-$(BUILD_DIR)/llvm-project
+$(BUILD_DIR)/llvm-project:
 	cd $(BUILD_DIR) ; $(CLONE) https://github.com/llvm/llvm-project.git

@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 source ~/.zshrc.d/01-local
+exists emacs       && alias emacs='emacs -nw '
+exists emacsclient && alias emacsclient='emacsclient -a "" -tc '
 alias nano='echo use e for editing file '
 exists ls          && alias ls="ls --color=auto --ignore='*~'"
 exists exa         && alias exa="exa --color=auto --ignore-glob='*~'"

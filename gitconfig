@@ -34,7 +34,9 @@
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | less -FXR; }; f"
 	# TODO: make sure that staged and unstagedness is kept
 	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
-	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
+	#stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
+	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged && git \"$@\" && git stash pop; }; f"
+
 	watch = "!watch -c git"
 	diff-rep = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
 	# TODO: make this into an "all"
@@ -59,7 +61,7 @@
 	log-with-stashes         = "!git log-standard $(git internal-list-stash-refs)"
 	log-unreachable		       = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
 	log-current              = "log -1 --numstat --show-signature"
-	#log-parent-commit-opt-commit = ""
+	log-branch         = "!git log-standard HEAD refs/remotes/origin/HEAD"
 	#project-over-view  = "!git log-with-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}'"
 	project-over-view  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}(.{8} [(]|.*(Merge|Pull) branch)/ && !/^[^(]* (Merge|Pull) branch '\\''(master|beta|develop|next|release)/ || !/[0-9a-f]{7}/; END{print}'"
 	project-over-view-no-merge  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}.{8} [(]/ || !/[0-9a-f]{7}/; END{print}'"
@@ -91,9 +93,16 @@
 	diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
 	branch-name	     = "rev-parse --abbrev-ref HEAD"
 	head-hash	     = "rev-parse --short HEAD"
-	branch-or-hash = "!f(){ { git branch-name ; git head-hash } | grep -V \"^HEAD$\" | head -1; }; f"
+	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
 	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	cat		     = "show"
+
+	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
+	# this use of that one of the tests is much faster will mean a faster bisect, even if more commits are checked.
+	# Rather than just the last time, take the hyperbolic average (parallel resistors)
+
+	# TODO: Have this take the common ancestor so that I can just specify "master"
+	# bisect-here-from-test = take hash or ref - take test script
 
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs a starting hash and a test to run.\"; fi; }; f"
 
@@ -121,19 +130,20 @@
 	rebase-standard			                = "rebase --committer-date-is-author-date"
 	rebase-branch-from-branch-to-branch = "!f(){ git rebase-standard --onto $3 $2 $1 ; }; f"
 	rebase-branch-onto-here		          = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
-	rebase-meh-done                     = "!f(){ while git rebase --skip; true; done; }; f"
-	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name); git rebase-meh-done; }; f"
+	# TODO: take an opional HEAD replacement
+	# TODO: this dumps the rebase help doc when it's done
+	# TODO: give the old hash of the kicked out commit
+	rebase-skip-hard                    = "!f(){ while git rebase --skip | grep \"CONFLICT\" >> /dev/null && echo \"rebase kicked one out\"; do true; done 2>&1 | egrep -v \"^fatal: No rebase in progress?\"; true; }; f"
+	# TODO: Give the killsed hash so that it can be found if needed
+	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name) ; git rebase-skip-hard; }; f"
 	#TODO: works when run manual, but fails when called
 	#rebase-here-onto-branch	          = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
 	#test-commits-count-command	        = "" TODO git rebase --interactive --exec
 	#test-commits-command-opt-count	    = check back to last merge
 	reorder-last-commits-count	        = "!f(){ git stash-wrap rebase-standard --interactive HEAD~$1 ; }; f"
-	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard $(git branch-start-commit); else git reorder-last-commits-count \"$1\"; fi; }; f"
-
-	bisect-kick-from-test               = "!f(){OHEAD=`git branch-or-hash`; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad; }; f"
-
+	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard --interactive $(git branch-start-commit); else git reorder-last-commits-count \"$1\"; fi; }; f"
+	bisect-kick-from-test               = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
 	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start-commit) $1; done; }; f"
-
 	# TODO: In the case of trucncated history
 	# =clone shallow= or =fetch deepeing shallow=
 	# - one commit
@@ -162,6 +172,18 @@
 	add-verbose-opt-list	       = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
 	add-interactive-opt-list     = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-interactive --all ; else git add-interactive \"$@\"; fi }; f"
 	amend-with-staged	           = "commit-standard --amend --reuse-message=HEAD"
+	#amend-hash-with-staged         = "stash-unstaged-wrap _amend-hash-with-staged"
+
+	# _amend-hash-with-staged =
+	# keep branch name
+	# stash
+	# checkout hash
+	# pop
+	# add
+	# amend-with-staged
+	# rebase branch-name to here from hash
+	# checkout branch-name
+
 	#TODO: Fix this, probably with commit-tree
 	#amend-with-staged-keep-date	= "!f(){ git amend-with-staged --date=\"`git show -s --format=%ci`\"; }; f"
 	amend-with-staged-opt-message  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard --amend --reuse-message=HEAD; else git commit-standard --amend -m \"$@\"; fi }; f"
@@ -172,7 +194,12 @@
 
 	commit-standard		     = "commit"
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
-	commit-branch-time     = "commit-standard -m \"`git branch-name` `date`\""
+	commit-branch-time           = "commit-standard -m \"`git branch-name` `date`\""
+  add-commit-branch-time       = "!f(){ git add-verbose --all ; git commit-branch-time; }; f"
+
+  add-interactive-commit-branch-time = "!git add-interactive; git commit-branch-time"
+	rep-add-interactive-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git add-interactive-commit-branch-time; done;"
+	#seperate-commit-branch-time = "!git status --porcelain --ignore-submodules|grep \"^ M \"|sed 's,^ M ,,' | while read fname; do git add $fname && git commit-branch-time; done;"
 
 	#########################
 	# Not Head Manipulation #
@@ -180,6 +207,13 @@
 
 	#amend-staged-to-hash-verbose-unsafe = "git do-at-hash "$1" ammend-with-staged-keep-date; rebase all but hash onto new commit; move back to head; pop unstaged; git log-relivant HEAD hash"
 	#amend-staged-to-hash-verbose	     = "stash-unstaged-wrap amend-staged-to-hash-verbose-unsafe"
+
+  #bisect-rebase test_name from_hash to_hash test_cmd
+	# bisect a test between two commits
+	# - when the failur is found
+	#   - leave a tag so it can be refound
+	#   - rebase all after on to the one before it
+	#   - restart bisect-rebase on the new head
 
 
 	################
@@ -228,8 +262,8 @@
 	log1-status-diff	      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
 	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
 	add-and-commit	      = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
-	log-status	     = "!git log-top-twenty && echo && git status"
-	log-oops	     = "paged log-unreachable --all"
+	log-status            = "!git log-top-twenty && echo && git status"
+	log-oops              = "paged log-unreachable --all"
 
 	#
 	##
@@ -239,41 +273,47 @@
 	##
 	#
 
-	rd   = "diff-rep"
-	chk  = "checkout-or-create"
+	a    = "add-verbose-opt-list"
 	ac   = "add-and-commit"
+	act  = "add-commit-branch-time"
+	ai   = "add-interactive-opt-list"
+	aict = "add-interactive-commit-branch-time"
+	amd  = "add-and-amend-message"
+	amdh = "amend-hash-with-staged"
+	asm  = "amend-with-staged-opt-message"
+	b    = "branch"
+	cbt  = "commit-branch-time"
+	chk  = "checkout-or-create"
+	cm   = "commit-with-optional-message"
+	cmbt = "commit-branch-time"
 	d    = "paged diff-opt-commit"
 	d1   = "paged diff-last-commit"
-	b    = "branch"
+	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
-	cm   = "commit-with-optional-message"
-	cbt  = "commit-branch-time"
-	a    = "add-verbose-opt-list"
-	ai   = "add-interactive-opt-list"
-	asm  = "amend-with-staged-opt-message"
+	l    = "paged log-full"
+	l1   = "log-current"
+	l1sd = "log1-status-diff"
+	lb   = "log-branch"
+	ll   = "paged log-long-form"
+	lr   = "log-recent"
+	ls   = "list-files-opt-path"
+	lsd  = "log-status-diff"
+	lt   = "log-top-twenty"
+	lts  = "log-status"
+	ltt  = "log-top-fourty"
 	p    = "push-opt-branch"
 	pa   = "push-all"
-	s    = "stash-tracked-verbose"
 	pop  = "stash pop"
-	lsd  = "log-status-diff"
-	l1sd = "log1-status-diff"
-	wlsd = "watch lsd"
-	w    = "wlsd"
-	stat = "status"
-	l    = "paged log-full"
-	ll   = "paged log-long-form"
-	l1   = "log-current"
-	lt   = "log-top-twenty"
-	ltt  = "log-top-fourty"
-	lr   = "log-recent"
-	lts  = "log-status"
 	pov  = "paged project-over-view"
-	amd  = "add-and-amend-message"
 	r    = "reset-opt-file-or-commit"
 	r1   = "reset-up-one"
+	raict= "rep-add-interactive-commit-branch-time"
+	rd   = "diff-rep"
 	rh   = "reset-hard"
-	ls   = "list-files-opt-path"
-	drm  = "delete-opt-branch-opt-remote"
+	s    = "stash-tracked-verbose"
+	stat = "status"
+	w    = "wlsd"
+	wlsd = "watch lsd"
 
 	raict= "rd both ai cbt"
 
@@ -281,7 +321,7 @@
 	# Unsorted #
 	############
 
-	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt))\""
+	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
 	mn     = "merge --no-edit"
 	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
 	bc     = "rev-parse --abbrev-ref HEAD"

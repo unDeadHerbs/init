@@ -1,0 +1,6 @@
+#! /usr/bin/env zsh
+
+source ~/.zshrc.d/01-local
+
+source ~/.zshrc.d/02-guix.base
+alias guix_start='sudo service guix-daemon start'

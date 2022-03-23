@@ -1034,6 +1034,21 @@ setting.
   (when is-windmills
       (custom-set-faces '(default ((t (:height 98))))))
 #+END_SRC
+** PC0229718
+:PROPERTIES:
+:NAME:     WorkLaptop
+:END:
+#+BEGIN_SRC emacs-lisp
+  (setq is-work (string= "PC0229718" (system-name)))
+#+END_SRC
+*** Decrease emacs default font size
+:PROPERTIES:
+:NAME:     WorkLaptop_font_sizex
+:END:
+#+BEGIN_SRC emacs-lisp
+  (when is-work
+      (custom-set-faces '(default ((t (:height 80))))))
+#+END_SRC
 * Major Mode Settings
 ** TODO Calendar
 :PROPERTIES:
@@ -1955,6 +1970,27 @@ Also update the wiki when you fix this.
 #+BEGIN_SRC emacs-lisp
 (udh/install-and-load 'j-mode)
 #+END_SRC
+** Octave
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'octave-mode)
+#+END_SRC
+*** Matlab
+#+BEGIN_SRC emacs-lisp
+  (udh/install-and-load 'matlab-mode)
+  (add-to-list
+   'auto-mode-alist
+   '("\\.m$" . matlab-mode))
+  (setq matlab-indent-function t)
+  (setq matlab-shell-command "matlab.exe")
+#+END_SRC
+Forgive the =exe= tag, this is for my work computer's WSL environment.
+Use =matlab.exe -batch "1+1"= to run scripts on the shell.
+**** Auto fix whitespace
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'matlab-mode-hook 'whitespace-mode)
+  ;(add-hook 'matlab-mode-hook 'whitespace-cleanup)
+  ;(add-hook 'matlab-mode-hook 'indent-buffer)
+#+END_SRC
 ** Pascal
 :PROPERTIES:
 :NAME:     Pascal
@@ -2144,6 +2180,14 @@ Emacs, I can.
           (insert outputStr) )) ) )
 #+END_SRC
 *** TODO guix install espeak
+** Indent Buffer
+The function =indent-region= is useful, but not great in scripts.
+#+BEGIN_SRC emacs-lisp
+  (defun indent-buffer ()
+    "Indent the currently visited buffer."
+    (interactive)
+    (indent-region (point-min) (point-max)))
+#+END_SRC
 * TODO Unsorted TODOs
 ** Highlight Mode
 `hilight` `highlight-blocks` `highlight-current-line` `highlight-indentation` `highlight-parentheses`
