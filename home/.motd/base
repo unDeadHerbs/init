@@ -1,3 +1,8 @@
+if [[ -e /etc/motd ]]
+then
+		cat /etc/motd
+fi
+
 if exists cowfortune > /dev/null
 then
     cowfortune

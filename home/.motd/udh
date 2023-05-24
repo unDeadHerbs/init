@@ -1,6 +1,9 @@
 #! /usr/bin/env zsh
 
-if type anyfetch >/dev/null ; then
+if [[ -e /etc/motd ]]
+then
+		cat /etc/motd
+else if type anyfetch >/dev/null ; then
     anyfetch
 else
     if type figlet > /dev/null
@@ -13,6 +16,7 @@ else
         curl "artii.herokuapp.com/make?text="$USER"%20@%20"$HOST""
         echo
     fi
+		 fi
 fi
 
 if type weather >/dev/null && type paste >/dev/null; then

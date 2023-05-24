@@ -3,17 +3,13 @@
 source ~/.zshrc.d/02-guix.base
 if exists guix; then
     _guix_install_noreplace \
-				git emacs htop \
-				nss nss-certs openssl openssh \
-				netcat \
+				git \
+				nss nss-certs openssl openssh	netcat \
 				coreutils diffutils man-pages \
-				font-fira-code font-fira-mono font-fira-sans \
-				font-gnu-unifont libxfont \
-				links dmenu feh i3-wm i3status xinit \
-				xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
-				xfce4-terminal xorg-server synergy picom \
-				scrot moreutils cpufrequtils binutils usbutils \
-				sh-z sicp inetutils xpdf
+				links \
+				moreutils cpufrequtils binutils progress usbutils \
+			  inetutils 
+				# xfce4-terminal xorg-server synergy picom scrot xpdf
 fi
 
 exists xinit && xinit(){

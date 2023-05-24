@@ -1,0 +1,5 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+
+# Send the C-g key to Emacs if it's gotten stuck.
+alias ctrlG="pkill -USR2 emacs"

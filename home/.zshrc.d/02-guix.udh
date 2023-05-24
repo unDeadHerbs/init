@@ -4,51 +4,15 @@ source ~/.zshrc.d/01-local
 
 source ~/.zshrc.d/02-guix.base
 if exists guix; then
-    guix_installed(){
-	if [ $# -eq 0 ]; then
-	    guix package -I|cut -f 1
-	else
-	    guix package -I|cut -f 1|grep $1 > /dev/null
-	fi
-    }
-    _guix_install_noreplace(){
-	if [ $# -eq 1 ]; then
-	    guix_installed $1 || guix install $1
-	else
-	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
-	    for pack in "$@"; do
-		echo $pack
-	    done|grep -Ev "^$installed\$"|xargs -r guix install
-	fi
-    }
     _guix_install_noreplace \
-	tmux git emacs feh make htop \
-	ed sl cowsay youtube-dl vim \
-	aspell aspell-dict-en \
-	neofetch curl wget mc clang unzip \
-	figlet zsh-autosuggestions ghc-pandoc
-    neofetch distro|grep "guix">/dev/null &&
-	_guix_install_noreplace \
-	    nss nss-certs openssl openssh \
-	    netcat \
-	    coreutils diffutils man-pages
-    [ "$(hostname)" = "kitchensink" ] && \
-	_guix_install_noreplace \
-	    font-fira-code font-fira-mono font-fira-sans \
-	    font-gnu-unifont libxfont \
-	    links dmenu feh i3-wm i3status xinit \
-	    xf86-input-libinput xf86-video-fbdev xf86-video-nouveau \
-	    xfce4-terminal xorg-server synergy picom\
-	    scrot moreutils cpufrequtils binutils progress usbutils \
-	    sh-z sicp ghc-pandoc inetutils xpdf icecat
+				tmux i3status git emacs feh make htop \
+				ed sl cowsay youtube-dl vim \
+				aspell aspell-dict-en \
+				neofetch curl wget mc clang unzip \
+				figlet zsh-autosuggestions \
+				sicp progress parallel
+		# ghc-pandoc
+		# sh-z
     # To look at: lean minikanren
     #TODO: make a reminder for guix package -u
 fi
-source ~/.zshrc.d/02-guix.base
-
-exists xinit && xinit(){
-	# TODO: check for if an X11 server is running
-	DIR=$HOME/.guix-profile
-	vtname=vt`tty|sed 's,[^0-9],,g'`
-	$DIR/bin/xinit -- $DIR/bin/Xorg :0 $vtname -keeptty -configdir $DIR/share/X11/xorg.conf.d -modulepath $DIR/lib/xorg/modules
-    }
