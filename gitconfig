@@ -47,9 +47,21 @@
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
 	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\" && git stash; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
 
+	#
+	##
+	#########################
+	### First Order Command #
+	#########################
+	##
+	#
+
 	############################
 	# General Graph Inspection #
 	############################
+
+	#
+	## General Log Views
+	#
 
 	log-standard	           = "log --graph --oneline --decorate --full-history --date-order --color"
 	log-full	               = "log-standard --all"
@@ -254,9 +266,13 @@
 	svn-push  = "svn dcommit"
 	svn-clone = "svn clone"
 
-	##################
-	# Glued Together #
-	##################
+	#
+	##
+	####################
+	### Glued Together #
+	####################
+	##
+	#
 
 	log-status-diff	      = "!git log-top-twenty && echo && git status-color && echo && git paged diff-standard"
 	log1-status-diff	      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
