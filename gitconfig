@@ -122,6 +122,7 @@
 	head-hash	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
 	cat		     = "show"
+	grep-blame--pat-opt-file = "!f(){ git grep -n $1 $2 | while IFS=: read file line match; do git blame -f -L $line,$line $file; done }; f"
 
 	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
 	# this use of that one of the tests is much faster will mean a faster bisect, even if more commits are checked.
@@ -325,6 +326,7 @@
 	dc   = "diff-cached"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
+	greb = "grep-blame--pat-opt-file"
 	l    = "paged log-full"
 	l1   = "log-current"
 	l1sd = "log1-status-diff"
