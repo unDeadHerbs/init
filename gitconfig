@@ -73,17 +73,31 @@
 	log-with-stashes         = "!git log-standard $(git internal-list-stash-refs)"
 	log-unreachable		       = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
 	log-current              = "log -1 --numstat --show-signature"
-	log-branch         = "!git log-standard HEAD refs/remotes/origin/HEAD"
+
+	#
+	## Individual Commits
+	#
+
+	ref-from-branch	   = "rev-parse --short"
+	common-ancestors      = "merge-base --octopus"
+	branch-start       = "common-ancestors HEAD origin/HEAD"
+	hash-short-from-hash  = "log -1 --format=\"%h\""
+	internal-less-prior-hashs     = "!f(){ echo \"$@\"|tr ' ' '\n'|sed 's,.*,^&^,'|xargs; }; f"
+
+	head-hashes-from-list = "!f(){ git merge-base --independent \"$@\"|git pipe-in hash-short-from-hash; }; f"
+	#head-hashes-from-list = "!f(){ git log --format="%h" "$@" $(git internal-less-prior-hashs "$@");}; f"
+
+	#
+	## Fancy Log Views
+	#
+
+	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/HEAD"
+	log-branch-max-twenty = "log-branch -20"
+
 	#project-over-view  = "!git log-with-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}'"
 	project-over-view  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}(.{8} [(]|.*(Merge|Pull) branch)/ && !/^[^(]* (Merge|Pull) branch '\\''(master|beta|develop|next|release)/ || !/[0-9a-f]{7}/; END{print}'"
 	project-over-view-no-merge  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}.{8} [(]/ || !/[0-9a-f]{7}/; END{print}'"
-	ref-from-branch	   = "rev-parse --short"
 
-	hash-short-from-hash  = "log -1 --format=\"%h\""
-	internal-less-prior-hashs     = "!f(){ echo \"$@\"|tr ' ' '\n'|sed 's,.*,^&^,'|xargs; }; f"
-	common-ancestors      = "merge-base --octopus"
-	head-hashes-from-list = "!f(){ git merge-base --independent \"$@\"|git pipe-in hash-short-from-hash; }; f"
-	#head-hashes-from-list = "!f(){ git log --format="%h" "$@" $(git internal-less-prior-hashs "$@");}; f"
 	log-relivant-hash-list = "!f(){ git log-standard \"$@\" $(git common-ancestors \"$@\"|git pipe-in hash-short-from-hash|git pipe-in internal-less-prior-hashs); }; f"
 	# TODO: if on master, look back to remote/master
 	log-relivant-here-master-opt-hash-list = "log-relivant-hash-list master HEAD"
@@ -103,10 +117,10 @@
 	diff-opt-commit	     = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
 	# TODO this should find if `HEAD` or `master` is closer and then use that instead
 	diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
+	diff-cached = 'diff --cached'
 	branch-name	     = "rev-parse --abbrev-ref HEAD"
 	head-hash	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
-	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	cat		     = "show"
 
 	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
@@ -117,6 +131,7 @@
 	# bisect-here-from-test = take hash or ref - take test script
 
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs a starting hash and a test to run.\"; fi; }; f"
+	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
 
   #########
 	# Stats #
@@ -153,9 +168,9 @@
 	#test-commits-count-command	        = "" TODO git rebase --interactive --exec
 	#test-commits-command-opt-count	    = check back to last merge
 	reorder-last-commits-count	        = "!f(){ git stash-wrap rebase-standard --interactive HEAD~$1 ; }; f"
-	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard --interactive $(git branch-start-commit); else git reorder-last-commits-count \"$1\"; fi; }; f"
+	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard --interactive $(git branch-start); else git reorder-last-commits-count \"$1\"; fi; }; f"
 	bisect-kick-from-test               = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
-	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start-commit) $1; done; }; f"
+	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start) $1; done; }; f"
 	# TODO: In the case of trucncated history
 	# =clone shallow= or =fetch deepeing shallow=
 	# - one commit
@@ -227,6 +242,9 @@
 	#   - rebase all after on to the one before it
 	#   - restart bisect-rebase on the new head
 
+  # git rebase -i HEAD~5 ; change the last "pick" line to "edit"; do changes ; git rebase --continue
+	# This will allow for updating a past commit with new content
+
 
 	################
 	# Stash Things #
@@ -274,7 +292,7 @@
 	##
 	#
 
-	log-status-diff	      = "!git log-top-twenty && echo && git status-color && echo && git paged diff-standard"
+	log-status-diff	      = "!git log-branch-max-twenty && echo && git status-color && echo && git paged diff-standard"
 	log1-status-diff	      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
 	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
 	add-and-commit	      = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
@@ -304,6 +322,7 @@
 	cmbt = "commit-branch-time"
 	d    = "paged diff-opt-commit"
 	d1   = "paged diff-last-commit"
+	dc   = "diff-cached"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
 	l    = "paged log-full"
