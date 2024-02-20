@@ -132,10 +132,11 @@
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs a starting hash and a test to run.\"; fi; }; f"
 	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
 
-  #########
+	#########
 	# Stats #
 	#########
 
+	fdups = "!git ls-tree -r HEAD | cut -c 13- | sort | uniq -D -w 40"
 	count-lines = "!git ls|cut -f 2 -|sed 's/[] ()'\\''\\\\[&;]/\\\\&/g'|sed 's/.*/cat &|wc -l \\&\\& echo \"+0\"/'|sh|xargs|sed 's/ //g'|bc"
 
 	#######################
