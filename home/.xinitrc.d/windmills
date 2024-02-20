@@ -4,10 +4,8 @@
 # Position screens
 ##
 
-sleep   1 && xrandr --output DP-1 --rotate left --left-of DVI-I-1 &
-sleep   1 && xrandr --output DVI-I-1 --rotate left &
-sleep   2 && xrandr --output DP-1 --rotate left --left-of DVI-I-1 &
-sleep   2 && xrandr --output DVI-I-1 --rotate left --right-of DP-1 &
+sleep   1 && xrandr --output DP-0 --rotate left
+sleep   2 && xrandr --output DP-0 --rotate left
 
 ##
 # Start Transparency
@@ -26,9 +24,9 @@ sleep   3 && i3-msg 'workspace   1' &
 # Programs
 ##
 
-sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e="tmux attach"' &
-
+sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e "tmux attach"' &
 #sleep  10 && xscreensaver &
+sleep  10 && i3-msg 'workspace 0; exec xfce4-terminal -e "barriers --disable-crypto -f"' &
 #sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
 
 #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &

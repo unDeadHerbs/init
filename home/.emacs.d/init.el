@@ -36,3 +36,4 @@
 ; '(erc-modules
 ;   '(autojoin button completion dcc fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track))
 ; '(linum-relative-current-symbol "")
+(put 'upcase-region 'disabled nil)

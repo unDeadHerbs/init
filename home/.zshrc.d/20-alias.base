@@ -18,7 +18,6 @@ exists ed          && alias ed='ed -p "*"'
 exists sl          && alias sl='sl -l'
 exists sshfs       && alias sshfs="sshfs -C -o reconnect"
 exists mc          && alias mc="mc -a"
-exists youtube-dl  && alias youtube-dl='youtube-dl -i -c'
 exists autossh     && alias autossh='autossh -M 0'
 exists pianobar    && alias pianobar='pianobar 2> /dev/null'
 exists find        && alias finds='find 2>/dev/null'

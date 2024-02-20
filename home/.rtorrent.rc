@@ -23,14 +23,14 @@ upload_rate = 0
 
 # Default directory to save the downloaded torrents.
 #directory = ./
-directory = /mnt/6/tor/tors
+directory = /mnt/rad/tor/tors
 
 # Default session directory. Make sure you don't run multiple instance
 # of rtorrent using the same session directory. Perhaps using a
 # relative path?
 #session = ./session
-session = /mnt/6/tor/downloads_active/
-session.path.set = /mnt/6/tor/downloads_active/
+session = /mnt/rad/tor/downloads_active/
+session.path.set = /mnt/rad/tor/downloads_active/
 
 # Watch a directory for new torrents, and stop those that have been
 # deleted.

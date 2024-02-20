@@ -8,7 +8,10 @@ if [ -d "$HOME/bin" ]; then
     do
 	    PATH="$file:$PATH"
     done
+fi
 
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 [[ $(os) = "gentoo" ]] && export EIX_LIMIT=0
