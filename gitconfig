@@ -2,8 +2,6 @@
 	defaultBranch = master
 [advice]
 	detachedHead = false
-[apply]
-	whitespace = fix
 [color]
 	ui = auto
 [merge]
