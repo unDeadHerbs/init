@@ -44,8 +44,9 @@
     enable = true;
     xrandrHeads = [
       {
-        output = "HDMI-0";
         monitorConfig = "Option \"Rotate\" \"left\"";
+        output = "HDMI-0";
+        primary = true;
       }
     ];
     xkb = {
