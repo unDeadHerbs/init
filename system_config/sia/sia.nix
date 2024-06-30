@@ -4,6 +4,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   # Bootloader.
@@ -94,6 +95,12 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      # Add additional package names here
+      "google-chrome"
+    ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.udh = {
     isNormalUser = true;
@@ -104,6 +111,7 @@
       bat
       emacs
       git
+      google-chrome
       xfce.xfce4-terminal
       tmux
       feh
