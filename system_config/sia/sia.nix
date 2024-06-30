@@ -95,6 +95,7 @@
     description = "udh";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      alejandra
       bat
       emacs
       git
@@ -125,6 +126,8 @@
       scrot
       #moreutils cpufrequtils binutils progress usbutils
       #sh-z sicp ghc-pandoc inetutils xpdf icecat
+      wdiff
+      libnotify
     ];
   };
 
