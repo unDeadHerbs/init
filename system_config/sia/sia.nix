@@ -157,7 +157,7 @@
       # `after=`) before starting
       Type = "simple";
       User = "udh";
-      ExecStart = ''${pkgs.barrier}/bin/barrierc --restart --disable-crypto 192.168.0.15'';
+      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.15'';
       ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
     };
   };
