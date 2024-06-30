@@ -1,15 +1,16 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = ["ntfs"];
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -41,17 +42,19 @@
   # X11
   services.xserver = {
     enable = true;
-    xrandrHeads = [ {
-       output = "HDMI-0";
-       monitorConfig = "Option \"Rotate\" \"left\"";
-    }];
+    xrandrHeads = [
+      {
+        output = "HDMI-0";
+        monitorConfig = "Option \"Rotate\" \"left\"";
+      }
+    ];
     xkb = {
       layout = "us";
       variant = "";
     };
     displayManager = {
       defaultSession = "none+i3";
-      lightdm ={ 
+      lightdm = {
         enable = true;
         autoLogin.enable = true;
         autoLogin.user = "udh";
@@ -93,9 +96,10 @@
   users.users.udh = {
     isNormalUser = true;
     description = "udh";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
       alejandra
+      barrier
       bat
       emacs
       git
