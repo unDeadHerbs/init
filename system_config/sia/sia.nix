@@ -38,18 +38,34 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the XFCE Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  # X11
+  services.xserver = {
+    enable = true;
+    xrandrHeads = [ {
+       output = "HDMI-0";
+       monitorConfig = "Option \"Rotate\" \"left\"";
+    }];
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+    displayManager = {
+      defaultSession = "none+i3";
+      lightdm ={ 
+        enable = true;
+        autoLogin.enable = true;
+        autoLogin.user = "udh";
+      };
+    };
+    windowManager = {
+      i3.enable = true;
+    };
   };
+
+  fonts.packages = with pkgs; [
+    fira
+    fira-code
+  ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -79,7 +95,36 @@
     description = "udh";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      bat
       emacs
+      git
+      xfce.xfce4-terminal
+      tmux
+      feh
+      gnumake
+      ed
+      sl
+      cowsay
+      youtube-dl
+      aspell
+      neofetch
+      curl
+      mc
+      clang
+      unzip
+      figlet
+      zsh-autosuggestions
+      pandoc
+      netcat
+      #links
+      lynx
+      dmenu
+      i3status
+      #synergy
+      #picom
+      scrot
+      #moreutils cpufrequtils binutils progress usbutils
+      #sh-z sicp ghc-pandoc inetutils xpdf icecat
     ];
   };
 
@@ -89,7 +134,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git
     htop
     wget
     vim
