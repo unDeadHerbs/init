@@ -101,7 +101,6 @@
     extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
       alejandra
-      barrier
       bat
       emacs
       git
@@ -137,12 +136,31 @@
     ];
   };
 
+  # Enable Barrier
+  systemd.services.barrierc = {
+    # this is the "node" in the systemd dependency graph that will run the service
+    wantedBy = ["graphical.target"];
+    # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
+    after = ["network.target"];
+    description = "Start the brarrier client for uDH.";
+    serviceConfig = {
+      # see systemd man pages for more information on the various options for "Type": "notify"
+      # specifies that this is a service that waits for notification from its predecessor (declared in
+      # `after=`) before starting
+      Type = "simple";
+      User = "udh";
+      ExecStart = ''${pkgs.barrier}/bin/barrierc --restart --disable-crypto 192.168.0.15'';
+      ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
+    };
+  };
+
   # Install firefox.
   programs.firefox.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    barrier
     htop
     wget
     vim
