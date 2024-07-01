@@ -108,44 +108,41 @@
     description = "udh";
     extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
+      #moreutils cpufrequtils binutils usbutils
+      #sh-z sicp inetutils xpdf
       alejandra
-      bat
-      emacs
-      git
-      google-chrome
-      xfce.xfce4-terminal
-      tmux
-      feh
-      gnumake
-      ed
-      sl
-      cowsay
-      youtube-dl
       aspell
-      neofetch
-      curl
-      mc
+      bat
       clang
-      unzip
-      figlet
-      zsh-autosuggestions
-      pandoc
-      netcat
-      #links
-      lynx
+      cowsay
+      curl
       dmenu
+      ed
+      emacs
+      feh
+      figlet
+      git
+      gnumake
+      google-chrome
       i3status
-      #synergy
-      #picom
-      scrot
-      #moreutils cpufrequtils binutils progress usbutils
-      #sh-z sicp ghc-pandoc inetutils xpdf icecat
-      wdiff
       libnotify
+      links2
+      lynx
+      mc
+      neofetch
+      netcat
+      pandoc
+      progress
+      scrot
+      sl
+      tmux
+      unzip
+      wdiff
+      xfce.xfce4-terminal
+      youtube-dl
+      zsh-autosuggestions
     ];
   };
-
-  services.fractalart.enable = true;
 
   # Enable Barrier
   systemd.services.barrierc = {
