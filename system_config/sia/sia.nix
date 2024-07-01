@@ -57,11 +57,9 @@
     };
     displayManager = {
       defaultSession = "none+i3";
-      lightdm = {
-        enable = true;
-        autoLogin.enable = true;
-        autoLogin.user = "udh";
-      };
+      lightdm.enable = true;
+      autoLogin.enable = true;
+      autoLogin.user = "udh";
     };
     windowManager = {
       i3.enable = true;
