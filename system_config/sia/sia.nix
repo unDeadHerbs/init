@@ -163,6 +163,7 @@
       ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
     };
   };
+  services.emacs.enable = true;
 
   # Install firefox.
   programs.firefox.enable = true;
