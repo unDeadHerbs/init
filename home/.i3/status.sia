@@ -1,0 +1,10 @@
+
+ethernet eno1 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+
+order += "ethernet eno1"
+order += "load"
+order += "tztime local"
