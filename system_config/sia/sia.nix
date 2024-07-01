@@ -145,6 +145,8 @@
     ];
   };
 
+  services.fractalart.enable = true;
+
   # Enable Barrier
   systemd.services.barrierc = {
     # this is the "node" in the systemd dependency graph that will run the service
