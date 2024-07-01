@@ -67,6 +67,7 @@
       i3.enable = true;
     };
   };
+  services.picom.enable = true; # for transparency
 
   fonts.packages = with pkgs; [
     fira
