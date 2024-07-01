@@ -56,14 +56,16 @@
       variant = "";
     };
     displayManager = {
-      defaultSession = "none+i3";
       lightdm.enable = true;
-      autoLogin.enable = true;
-      autoLogin.user = "udh";
     };
     windowManager = {
       i3.enable = true;
     };
+  };
+  services.displayManager = {
+    defaultSession = "none+i3";
+    autoLogin.enable = true;
+    autoLogin.user = "udh";
   };
   services.picom.enable = true; # for transparency
 
