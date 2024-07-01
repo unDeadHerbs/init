@@ -2,9 +2,9 @@
 
 if echo $EDITOR|grep emacs
 then
-		if ! ps -ef|grep emacs|grep "server-start"
+		if ! ps -ef|grep -E "^$USER"|grep "emacs --daemon"
 		then
-				emacs --eval "(if (not (server-running-p)) (server-start))" --daemon &
+				emacs --daemon --eval "(if (not (server-running-p)) (server-start))" &
 		fi
 		alias emacs='emacsclient'
 		export EDITOR='emacsclient -a "" -tc'
