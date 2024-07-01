@@ -23,9 +23,10 @@ alejandra . & > /dev/null \
 git diff -U0 '*.nix'
 
 echo "NixOS Rebuilding..."
+mkdir -p ~/tmp
 
 # Rebuild, log last trace back, output only errors
-sudo nixos-rebuild switch &> nixos-switch.log || ( cat nixos-switch.log | grep --color error && popd && exit 1 )
+sudo nixos-rebuild switch &> ~/tmp/nixos-switch.log || ( cat ~/tmp/nixos-switch.log | grep -Ei --color "error|failed" && popd && exit 1 )
 
 # Commit on success
 current=$(nixos-rebuild list-generations | grep current)
@@ -33,4 +34,4 @@ git add '*.nix'
 git commit -m "$current"
 
 popd
-notify-send-e "NixOS Rebuilt OK!" --icon=software-update-available
+notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
