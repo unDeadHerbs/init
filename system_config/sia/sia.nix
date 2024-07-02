@@ -21,7 +21,11 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  services.avahi.enable = true;
+  services.avahi = {
+    enable = true;
+    publish.enable = true;
+    publish.workstation = true;
+  };
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
