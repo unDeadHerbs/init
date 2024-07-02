@@ -25,6 +25,7 @@
     enable = true;
     publish.enable = true;
     publish.workstation = true;
+    publish.userServices = true;
   };
 
   # Set your time zone.
