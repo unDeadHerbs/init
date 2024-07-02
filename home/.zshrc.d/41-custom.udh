@@ -88,37 +88,80 @@ U(){
 				delay=$((2*delay))
 		done
 }
-exists avahi-browse && hosts_list(){
-	if [ "$1" = "--names" ]; then {
-	    avahi-browse -alt|cut -d' ' -f 4|sed 's,.*,&.local,'
-	    grep "^[Hh]ost" $HOME/.ssh/config|sed 's,^[Hh]ost ,,'
-	    }|sort -u|grep -v $HOST|xargs
-	else if [ "$1" = "-L" ]; then
-		 NEO_OPTS='--color_blocks off'
-	     else
-		 NEO_OPTS='--off --color_blocks off'
-	     fi
-	     exists neofetch && neofetch `echo $NEO_OPTS` || hostname | figlet
-			 # TODO: why the `echo`?
-	     hosts=(`hosts_list --names`)
-	     # The ()s make it into an array for ~for~.
-	     hnames=()
-	     for host in $hosts; do
-		 hname=$(ssh -q $host -tt "hostname && whoami"|xargs)
-		 if [[ "$hname" != "" ]];then # if not blank
-		     #declare -p hname
-		     #TODO: printf "%s as %s\n" "$hname" "$host"
-		     if for i in "${hnames[@]}"; do echo $i
-			done|grep "$hname" >\dev\null; then # if not in seen hostnames
-		     else
-			 hnames+=("$hname") # add to seen names and
-			 timeout 2 ssh -q $host -tt "neofetch $NEO_OPTS 2>/dev/null || hostname | figlet"|egrep "[a-zA-Z]"
-			 # The ~egrep~ suppresses blank lines.
-		     fi
-		 fi
-	     done
-	fi
-    }
+
+better_neofetch(){
+		{
+				type hyfetch > /dev/null 2>&1 && hyfetch
+		} || {
+				type fastfetch > /dev/null 2>&1 && fastfetch
+		} || {
+				type neofetch > /dev/null 2>&1 && neofetch --color_blocks off
+		} || {
+				{ whoami ; echo on ; hostname } \
+						| xargs \
+						| {
+						{
+								type figlet > /dev/null 2>&1 && figlet -w1000
+						} || {
+								type toilet > /dev/null 2>&1 && toilet -w1000
+						} || {
+								/usr/bin/env cat
+						}		
+				}
+				type uname > /dev/null 2>&1 && uname -a
+		}
+}
+
+command_to_string(){
+		which $1 | tr '\n\t' '; ' | sed 's/;/ ; /g' | sed 's/{ ;/{/g' | sed "s/$1 ()//" 
+}
+
+hosts_list(){
+		# TODO: unique without buffering/sorting, the generation order is better
+		# TODO: perform each ssh in parallel and then print the results without interleaving
+		# TODO: check for duplicates, resolve to IP and then choose first of (config, avahi, ip)
+
+		display_cmd=$(command_to_string better_neofetch)
+		bash -c $display_cmd
+		
+		# first generate a list of possible hosts
+		# second request from each of them
+		{
+				# List hosts in order of expecting them to exist
+				# look at the local services
+				exists avahi-browse && {
+						avahi-browse -altr \
+								| grep hostname \
+								| sed 's/ *hostname = [[]\(.*\)[]]/\1/' \
+								| sort -u; }
+				# look though the ssh config files
+				#[ -e $HOME/.ssh/config ] && {
+				#		grep "^[Hh]ost" $HOME/.ssh/config \
+				#				| sed 's,^[Hh]ost ,,' \
+				#				| grep -v github \
+				#				| grep -v "[*]"
+				#}
+				# ping scan local networks
+				exists nmap && {
+						ifconfig \
+								| grep broadcast \
+								| sed 's,.*broadcast \(.*\),\1,' \
+								| grep -v '^172.30' \
+								| sed 's,255,*,g' \
+								| xargs -l nmap -sn \
+								| grep 'Nmap scan report for' \
+								| sed 's,Nmap scan report for ,,' \
+								| grep -Ev "[.]0[.]1$"
+				}
+				# TODO: search the whole network blindly when ssh is in parallel
+		} \
+		| sort -u \
+		| while read host; do
+				{
+						true | timeout 60 ssh -q "$host" -t "bash -c \"$display_cmd\"" ;
+				} && echo "Found Host: $host\n" || echo "Failed Host: $host"
+		done
+}
 
 function sleep_until {
     # sleep_until "7:00 tomorrow"
