@@ -136,7 +136,7 @@
       links2
       lynx
       mc
-      neofetch
+      hyfetch
       netcat
       pandoc
       progress
