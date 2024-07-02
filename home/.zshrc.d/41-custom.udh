@@ -148,7 +148,7 @@ hosts_list(){
 								| sed 's,.*broadcast \(.*\),\1,' \
 								| grep -v '^172.30' \
 								| sed 's,255,*,g' \
-								| xargs -l nmap -sn \
+								| xargs -l nmap -p 22 --open \
 								| grep 'Nmap scan report for' \
 								| sed 's,Nmap scan report for ,,' \
 								| grep -Ev "[.]0[.]1$"
