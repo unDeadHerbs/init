@@ -227,12 +227,12 @@ uname -a|grep "\(Ubuntu\|Debian\)" &&
 	location=`realpath $(whence -p "$@")` 2> /dev/null
 	if [ "$?" = "0" ]; then
 	    dpkg -s `dpkg -S $location|cut -d: -f1`|
-		egrep "^((Package|Version|Installed-Size|Homepage|Description): .*)$"
+		grep -E "^((Package|Version|Installed-Size|Homepage|Description): .*)$"
 	else
 	    if exists apt-file; then
 		packages=`apt-file search -x "bin.*\b$@$"|cut -d: -f1|xargs`
 		apt show $(echo $packages) 2>/dev/null |
-		    egrep "^((Package|Version|Installed-Size|Homepage|Description): .*)$" |
+		    grep -E "^((Package|Version|Installed-Size|Homepage|Description): .*)$" |
 		    perl -pe 'chomp if eof'
 	    else
 		dpkg-query -S "$@"|grep "/$@$"
