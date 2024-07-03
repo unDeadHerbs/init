@@ -1,8 +1,6 @@
 #! /usr/bin/env zsh
 
 if [ -e "$HOME/.config/guix" ]; then
-    echo "Loading Guix path"
-
     # https://trofi.github.io/posts/197-guix-on-gentoo-howto.html
     PATH="${HOME}/.guix-profile/bin:${HOME}/.guix-profile/sbin${PATH:+:}$PATH"
     # gnutls certs
@@ -19,6 +17,4 @@ if [ -e "$HOME/.config/guix" ]; then
     # let's see if this fixes the SSL errors
     GUIX_PROFILE=$HOME/.guix-profile
     source $GUIX_PROFILE/etc/profile
-else
-    echo "No Guix found"
 fi
