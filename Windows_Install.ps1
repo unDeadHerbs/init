@@ -14,9 +14,8 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Start-Process powershell.exe "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" -NoNewWindow -Wait
 
 # Install Utilities
-# choco install -y xming cmder git msys2
 # Wraped to protect current shell
-Start-Process powershell.exe "choco install -y xming cmder git msys2" -NoNewWindow -Wait
+Start-Process powershell.exe "choco install -y vcxsrv cmder git msys2" -NoNewWindow -Wait
 
 # Import cmder config
 # ConEmu.xml
