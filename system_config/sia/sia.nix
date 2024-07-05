@@ -133,6 +133,7 @@
       gnumake
       google-chrome
       i3status
+      imagemagick
       libnotify
       links2
       lynx
