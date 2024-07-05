@@ -11,6 +11,7 @@
 	default = current
 	followTags = true
 	recurseSubmodules = on-demand
+	recurse-submodules = on-demand
 [rerere]
 	autoupdate = true
 	enabled = true
@@ -28,7 +29,8 @@
 
 	debug = "!GIT_TRACE=1 git"
 	# TODO: add GIT_PREFIX to this
-	pipe-in = "!xargs -L 1 git"
+	pipe-each = "!xargs -L 1 git"
+	piped = "!xargs git"
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | less -FXR; }; f"
 	# TODO: make sure that staged and unstagedness is kept
 	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
@@ -43,84 +45,71 @@
 	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; } f"
 
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
-	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\" && git stash; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
+
+	blame--file-line-to-hash = "!f(){ git blame -pfL $2,$2 $1|head -1|awk '{print $1}'; }; f"
+
+	# Meta
+	require-test = "!git config alias.test|grep . > /dev/null || echo \"Alias git test to something\" && exit 1"
+	bisect-require-good = "!git for-each-ref \"refs/bisect/good-*\"|grep . > /dev/null || echo \"Set git bisect good\" && exit 1"
 
 	#
 	##
-	#########################
-	### First Order Command #
-	#########################
+	#####################
+	### Normal Commands #
+	#####################
 	##
 	#
 
-	############################
-	# General Graph Inspection #
-	############################
+	######################
+	# General Inspection #
+	######################
 
-	#
-	## General Log Views
-	#
+	log-standard       = "log --graph --oneline --decorate --full-history --date-order --color"
+	log-full           = "!git paged log-standard --all"
+	log-long-form      = "!git paged log-standard --all -5 --numstat --show-signature"
+	log-top-twenty     = "!git paged log-standard --all -20"
+	log-top-fourty     = "!git paged log-standard --all -40"
+	log-recent         = "!git paged log-standard --all -40 --since=1.weeks"
+	log-stashes        = "!git log-standard $(git reflog show --format="%h" stash)"
+	log-lost           = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
+	log-parent-commit-opt-commit = ""
+	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}' | less -FXR"
+	ref-from-branch    = "rev-parse --short"
 
-	log-standard	           = "log --graph --oneline --decorate --full-history --date-order --color"
-	log-full	               = "log-standard --all"
-	log-long-form	           = "log-standard --all -5 --numstat --show-signature"
-	log-top-twenty	         = "log-standard --all -20"
-	log-top-fourty	         = "log-standard --all -40"
-	log-recent	             = "log-standard --all -40 --since=1.weeks"
-	internal-list-stash-refs = "!git refreflog show --format=\"%h\" stash 2>/dev/null"
-	log-with-stashes         = "!git log-standard $(git internal-list-stash-refs)"
-	log-unreachable		       = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
-	log-current              = "log -1 --numstat --show-signature"
-
-	#
-	## Individual Commits
-	#
-
-	ref-from-branch	   = "rev-parse --short"
-	common-ancestors      = "merge-base --octopus"
-	branch-start       = "common-ancestors HEAD origin/HEAD"
 	hash-short-from-hash  = "log -1 --format=\"%h\""
-	internal-less-prior-hashs     = "!f(){ echo \"$@\"|tr ' ' '\n'|sed 's,.*,^&^,'|xargs; }; f"
-
-	head-hashes-from-list = "!f(){ git merge-base --independent \"$@\"|git pipe-in hash-short-from-hash; }; f"
-	#head-hashes-from-list = "!f(){ git log --format="%h" "$@" $(git internal-less-prior-hashs "$@");}; f"
-
-	#
-	## Fancy Log Views
-	#
-
-	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/HEAD"
-	log-branch-max-twenty = "log-branch -20"
-
-	#project-over-view  = "!git log-with-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}'"
-	project-over-view  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}(.{8} [(]|.*(Merge|Pull) branch)/ && !/^[^(]* (Merge|Pull) branch '\\''(master|beta|develop|next|release)/ || !/[0-9a-f]{7}/; END{print}'"
-	project-over-view-no-merge  = "!git log-with-stashes --all | awk '/[0-9a-f]{7}.{8} [(]/ || !/[0-9a-f]{7}/; END{print}'"
-
-	log-relivant-hash-list = "!f(){ git log-standard \"$@\" $(git common-ancestors \"$@\"|git pipe-in hash-short-from-hash|git pipe-in internal-less-prior-hashs); }; f"
-	# TODO: if on master, look back to remote/master
+	less-prior-hashs      = "!f(){ echo \"$@\"|tr ' ' '\n'|sed 's,.*,^&^,'|xargs; }; f"
+	common-ancestors      = "merge-base --octopus"
+	head-hashes-from-list = "!f(){ git merge-base --independent \"$@\"|git pipe-each hash-short-from-hash; }; f"
+	#head-hashes-from-list = "!f(){ git log --format=\"%h\" \"$@\" $(git less-prior-hashs \"$@\");}; f"
+	log-relivant-hash-list = "!f(){ git log-standard \"$@\" $(git common-ancestors \"$@\"|git pipe-each hash-short-from-hash|git pipe-each less-prior-hashs); }; f"
 	log-relivant-here-master-opt-hash-list = "log-relivant-hash-list master HEAD"
 	log-relivant = "log-relivant-here-master-opt-hash-list"
 
+	branch-head-authors = "for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' --sort=-committerdate"
+	branch-heads-by = "!git branch-head-authors|grep -i "
+
+	branch-start = "merge-base HEAD origin/develop"
+	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/develop"
 	####################
 	# Local Inspection #
 	####################
 
-	status-color = "-c color.status=always status"
 	list-files-opt-path  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git ls-tree -r HEAD; else git ls-tree \"$@\"; fi }; f"
-	diff-standard	     = "diff --color --color-moved --minimal --ignore-all-space"
-	#diff-standard	      = "diff --color-words --color-moved --minimal --ignore-all-space"
-	#diff-standard	      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if which wdiff >> /dev/null; then git diff --no-color \"$@\" | wdiff -d -n -w $'\\033[30;41m' -x $'\\033[0m' -y $'\\033[30;42m' -z $'\\033[0m'; else git diff --color \"$@\"; fi; }; f"
-	diff-last-commit = "diff-standard HEAD^ HEAD"
-	diff-staged	     = "diff-standard --staged"
-	diff-opt-commit	     = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
+	diff-standard        = "diff --color --color-moved --minimal --ignore-all-space"
+	#diff-standard        = "diff --color-words --color-moved --minimal --ignore-all-space"
+	#diff-standard        = "!f(){ cd \"${GIT_PREFIX:-.}\" && if which wdiff >> /dev/null; then git diff --no-color \"$@\" | wdiff -d -n -w $'\\033[30;41m' -x $'\\033[0m' -y $'\\033[30;42m' -z $'\\033[0m'; else git diff --color \"$@\"; fi; }; f"
+	diff-staged          = "diff-standard --staged"
+	diff-opt-commit      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
 	# TODO this should find if `HEAD` or `master` is closer and then use that instead
-	diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
-	diff-cached = 'diff --cached'
-	branch-name	     = "rev-parse --abbrev-ref HEAD"
-	head-hash	     = "rev-parse --short HEAD"
+	#diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
+	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start)~1..HEAD \"$@\"; }; f"
+	branch-name          = "rev-parse --abbrev-ref HEAD"
+	head-hash 	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
-	cat		     = "show"
-	grep-blame--pat-opt-file = "!f(){ git grep -n $1 $2 | while IFS=: read file line match; do git blame -f -L $line,$line $file; done }; f"
+	cat                  = "show"
+	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
+	# TODO: This grep should be porcelain
+	blame-grep--pat-opt-file = "!f() { git grep -n \"$1\" $2 | while IFS=: read i j k; do git blame -f -L $j,$j $i; done }; f"
 
 	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
 	# this use of that one of the tests is much faster will mean a faster bisect, even if more commits are checked.
@@ -128,8 +117,7 @@
 
 	# TODO: Have this take the common ancestor so that I can just specify "master"
 	# bisect-here-from-test = take hash or ref - take test script
-
-	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs a starting hash and a test to run.\"; fi; }; f"
+	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs hash and test\"; fi; }; f"
 	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
 
 	#########
@@ -145,18 +133,18 @@
 
 	# TODO: look up the dangers of pull over fetch and make sure they are prevented
 	fetch-and-ff-pull = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch --all && { git pull --ff-only \"$@\" || git pull \"$@\" ; } ; }; f"
-	push-opt-branch	  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git push; else git push \"$@\"; fi }; f"
-	push-all	  = "push --all"
+	push-opt-branch   = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git push -u origin $(git branch-name); else git push \"$@\"; fi }; f"
+	push-all          = "push --all"
 	delete-remote-branch = "push --delete" # $1 remote $2 branch
-	delete-opt-branch-opt-remote = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ]; then git delete-remote-branch remote $(git branch-name); elif [ $# -eq 1 ]; then git delete-remote-branch remote $1; elif [ $# -eq 2 ]; then git delete-remote-branch $2 $1; else echo 'wrong number of arguments to delete-opt-branch-opt-remote'; fi }; f"
+	delete-opt-branch-opt-remote = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ]; then git delete-remote-branch origin $(git branch-name); elif [ $# -eq 1 ]; then git delete-remote-branch origin $1; elif [ $# -eq 2 ]; then git delete-remote-branch $2 $1; else echo 'wrong number of arguments to delete-opt-branch-opt-remote'; fi }; f"
 
 	############################
 	# Local Graph Manipulation #
 	############################
 
-	rebase-standard			                = "rebase --committer-date-is-author-date"
+	rebase-standard                     = "rebase --committer-date-is-author-date"
 	rebase-branch-from-branch-to-branch = "!f(){ git rebase-standard --onto $3 $2 $1 ; }; f"
-	rebase-branch-onto-here		          = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
+	rebase-branch-onto-here             = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
 	# TODO: take an opional HEAD replacement
 	# TODO: this dumps the rebase help doc when it's done
 	# TODO: give the old hash of the kicked out commit
@@ -164,12 +152,14 @@
 	# TODO: Give the killsed hash so that it can be found if needed
 	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name) ; git rebase-skip-hard; }; f"
 	#TODO: works when run manual, but fails when called
-	#rebase-here-onto-branch	          = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
-	#test-commits-count-command	        = "" TODO git rebase --interactive --exec
-	#test-commits-command-opt-count	    = check back to last merge
-	reorder-last-commits-count	        = "!f(){ git stash-wrap rebase-standard --interactive HEAD~$1 ; }; f"
-	reorder-last-commits-opt-count	    = "!f(){ if [ $# -eq 0 ]; then git rebase-standard --interactive $(git branch-start); else git reorder-last-commits-count \"$1\"; fi; }; f"
-	bisect-kick-from-test               = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
+	#rebase-here-onto-branch            = "!f(){ git rebase-branch-from-branch-to-branch $(git branch-name) $1 $1 ; }; f"
+	#test-commits-count-command         = "" TODO git rebase --interactive --exec
+	#test-commits-command-opt-count     = check back to last merge
+	reorder-last-commits-count          = "!f(){ git stash-wrap rebase-standard --interactive HEAD~$1 ; }; f"
+	reorder-last-commits-opt-count      = "!f(){ if [ $# -eq 0 ]; then git reorder-last-commits-count $(git rev-list --count master..HEAD); else git reorder-last-commits-count \"$1\"; fi; }; f"
+
+	bisect-kick-from-test = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
+
 	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start) $1; done; }; f"
 	# TODO: In the case of trucncated history
 	# =clone shallow= or =fetch deepeing shallow=
@@ -187,20 +177,19 @@
 	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout \"$@\" || git checkout -b \"$@\" ; } && git fetch-and-ff-pull ; }; f"
 
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
-	reset-up-one		 = "reset HEAD^"
-	reset-hard		 = "!git r && git clean -d -f"
+	reset-up-one             = "reset HEAD^"
+	reset-hard               = "!git r && git clean -d -f"
 
 	#############################
 	# Local Commit Manipulation #
 	#############################
 
-	add-verbose		               = "add -v"
-	add-interactive		           = "add-verbose --patch"
-	add-verbose-opt-list	       = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
-	add-interactive-opt-list     = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-interactive --all ; else git add-interactive \"$@\"; fi }; f"
-	amend-with-staged	           = "commit-standard --amend --reuse-message=HEAD"
+	add-verbose                    = "add -v"
+	add-interactive                = "add-verbose --patch"
+	add-verbose-opt-list           = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
+	add-interactive-opt-list       = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-interactive --all ; else git add-interactive \"$@\"; fi }; f"
+	amend-with-staged              = "commit-standard --amend --reuse-message=HEAD"
 	#amend-hash-with-staged         = "stash-unstaged-wrap _amend-hash-with-staged"
-
 	# _amend-hash-with-staged =
 	# keep branch name
 	# stash
@@ -212,28 +201,30 @@
 	# checkout branch-name
 
 	#TODO: Fix this, probably with commit-tree
-	#amend-with-staged-keep-date	= "!f(){ git amend-with-staged --date=\"`git show -s --format=%ci`\"; }; f"
+	#amend-with-staged-keep-date    = "!f(){ git amend-with-staged --date=\"`git show -s --format=%ci`\"; }; f"
 	amend-with-staged-opt-message  = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard --amend --reuse-message=HEAD; else git commit-standard --amend -m \"$@\"; fi }; f"
-	add-to-last-commit	       = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"$@\" && git amend-with-staged ; }; f"
+	add-to-last-commit             = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"$@\" && git amend-with-staged ; }; f"
+	unstage-all                    = "reset -q"
+	unstage                        = "reset --"
 
-  unstage-all		       = "reset -q"
-	unstage              = "reset --"
-
-	commit-standard		     = "commit"
+	commit-standard              = "commit"
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
-	commit-branch-time           = "commit-standard -m \"`git branch-name` `date`\""
+	commit-branch-time           = "!f(){ git commit -m \"`git branch-name` `date`\"; }; f"
+
   add-commit-branch-time       = "!f(){ git add-verbose --all ; git commit-branch-time; }; f"
+	small-add = "!printf 's\ns\ny\nq' | git add-interactive"
 
   add-interactive-commit-branch-time = "!git add-interactive; git commit-branch-time"
+	small-add-commit-branch-time =  "!git small-add; git commit-branch-time"
 	rep-add-interactive-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git add-interactive-commit-branch-time; done;"
-	#seperate-commit-branch-time = "!git status --porcelain --ignore-submodules|grep \"^ M \"|sed 's,^ M ,,' | while read fname; do git add $fname && git commit-branch-time; done;"
+	rep-small-add-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git small-add-commit-branch-time; done;"
 
 	#########################
 	# Not Head Manipulation #
 	#########################
 
 	#amend-staged-to-hash-verbose-unsafe = "git do-at-hash "$1" ammend-with-staged-keep-date; rebase all but hash onto new commit; move back to head; pop unstaged; git log-relivant HEAD hash"
-	#amend-staged-to-hash-verbose	     = "stash-unstaged-wrap amend-staged-to-hash-verbose-unsafe"
+	#amend-staged-to-hash-verbose        = "stash-unstaged-wrap amend-staged-to-hash-verbose-unsafe"
 
   #bisect-rebase test_name from_hash to_hash test_cmd
 	# bisect a test between two commits
@@ -242,7 +233,7 @@
 	#   - rebase all after on to the one before it
 	#   - restart bisect-rebase on the new head
 
-  # git rebase -i HEAD~5 ; change the last "pick" line to "edit"; do changes ; git rebase --continue
+	# git rebase -i HEAD~5 ; change the last "pick" line to "edit"; do changes ; git rebase --continue
 	# This will allow for updating a past commit with new content
 
 
@@ -269,11 +260,10 @@
 	##############
 	# Submodules #
 	##############
-	# These deserve to be much higher.
 
-	#TODO: Make a meta funciton that recurses meta function
+	#TODO: make a recurse macro for arbitary commands
 	diff-submodule = "submodule foreach --recursive \"git d\""
-	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch && git submodule sync && git submodule update --init --recursive ; }; f"
+	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch-and-ff-pull ; git submodule sync ; git submodule update --init --recursive ; }; f"
 	submodules-fix = "submodules-update"
 
 	#######
@@ -284,20 +274,18 @@
 	svn-push  = "svn dcommit"
 	svn-clone = "svn clone"
 
-	#
-	##
-	####################
-	### Glued Together #
-	####################
-	##
-	#
+	##################
+	# Glued Together #
+	##################
 
-	log-status-diff	      = "!git log-branch-max-twenty && echo && git status-color && echo && git paged diff-standard"
-	log1-status-diff	      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
+	log-status-diff       = "!git log-branch -20 && echo && git status && echo && git paged diff-standard"
+	log1-status-diff              = "!git log-current && echo && git status-color && echo && git paged diff-standard"
+
 	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
-	add-and-commit	      = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
+	add-and-commit        = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
 	log-status            = "!git log-top-twenty && echo && git status"
-	log-oops              = "paged log-unreachable --all"
+	log-oops              = "paged log-lost --all"
+	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
 
 	#
 	##
@@ -313,54 +301,38 @@
 	ai   = "add-interactive-opt-list"
 	aict = "add-interactive-commit-branch-time"
 	amd  = "add-and-amend-message"
-	amdh = "amend-hash-with-staged"
 	asm  = "amend-with-staged-opt-message"
 	b    = "branch"
-	cbt  = "commit-branch-time"
+	bn   = "branch-name"
 	chk  = "checkout-or-create"
 	cm   = "commit-with-optional-message"
 	cmbt = "commit-branch-time"
-	d    = "paged diff-opt-commit"
-	d1   = "paged diff-last-commit"
-	dc   = "diff-cached"
+	d    = "diff-opt-commit"
+	db   = "diff-changes-on-branch"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
-	greb = "grep-blame--pat-opt-file"
-	l    = "paged log-full"
-	l1   = "log-current"
+	greb = "blame-grep--pat-opt-file"
+	l    = "log-full"
+	l1   = "log -1 --numstat --show-signature"
 	l1sd = "log1-status-diff"
 	lb   = "log-branch"
-	ll   = "paged log-long-form"
+	ll   = "log-long-form"
 	lr   = "log-recent"
 	ls   = "list-files-opt-path"
 	lsd  = "log-status-diff"
 	lt   = "log-top-twenty"
 	lts  = "log-status"
 	ltt  = "log-top-fourty"
+	mn   = "merge --no-edit"
 	p    = "push-opt-branch"
 	pa   = "push-all"
 	pop  = "stash pop"
-	pov  = "paged project-over-view"
+	pov  = "project-over-view"
 	r    = "reset-opt-file-or-commit"
 	r1   = "reset-up-one"
 	raict= "rep-add-interactive-commit-branch-time"
 	rbo  = "rebase-standard origin/HEAD"
-	rd   = "diff-rep"
 	rh   = "reset-hard"
+	rsact= "rep-small-add-commit-branch-time"
 	s    = "stash-tracked-verbose"
 	stat = "status"
-	#w    = "wlsd"
-	#wlsd = "watch lsd"
-
-	raict= "rd both ai cbt"
-
-	############
-	# Unsorted #
-	############
-
-	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
-	mn     = "merge --no-edit"
-	#bc    = "!git branch | grep \* | cut -d ' ' -f2"
-	bc     = "rev-parse --abbrev-ref HEAD"
-	#hist  = "!git paged log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --color"
-
