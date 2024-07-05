@@ -1,3 +1,6 @@
 home/.i3/config
 logs/*
 home/.emacs.d/elpa
+home/.emacs.d/.persistent-scratch
+home/.emacs.d/eln-cache/
+home/.emacs.d/transient/
