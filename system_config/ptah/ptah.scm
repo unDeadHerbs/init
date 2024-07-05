@@ -127,6 +127,10 @@
       ;;         (libvirt-configuration
       ;;          (unix-sock-group "libvirt")
       ;;          (tls-port "16555")))
+
+      ;; Docker for V
+      ;;(service docker-service-type)
+
       )
      ;%desktop-services)))
      (modify-services %base-services ;
