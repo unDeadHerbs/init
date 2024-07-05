@@ -7,6 +7,7 @@
  telephony
  admin      ;; for `unattended-upgrade` 
  ssh        ;; `ssh` server
+ ;; virtualization ;; cross-dev
  avahi)     ;; zeroconf
 
 (operating-system
@@ -39,6 +40,14 @@
                     '("wheel" "netdev" "audio" "video"))
                   (shell #~(string-append #$zsh "/bin/zsh")))
                 (user-account
+                  (name "Vika")
+                  (comment "")
+                  (group "users")
+                  (home-directory "/home/vika")
+                  (supplementary-groups
+                    '("wheel" "netdev" "audio" "video"))
+                  (shell #~(string-append #$zsh "/bin/zsh")))
+                (user-account
                   (name "Wizard")
                   (comment "")
                   (group "users")
@@ -62,7 +71,8 @@
       (specification->package "bash")
       (specification->package "zsh")
       (specification->package "tor")
-      (specification->package "nss-certs"))
+                                        ;(specification->package "nss-certs")
+      )
       %base-packages))
   (services
     (append
@@ -73,8 +83,8 @@
                 (x11-forwarding? #t)
                 (password-authentication? #f)))
       ;; Graphical Login Manager
-      (service gnome-desktop-service-type)
-      (service xfce-desktop-service-type)
+      ;(service gnome-desktop-service-type)
+      ;(service xfce-desktop-service-type)
 
       ;; Networking      
       ;; In desktop-services
@@ -111,8 +121,15 @@
 
       ;; In desktop-services
       (service avahi-service-type)
+
+      ;; Cross dev Compiler
+      ;;(service libvirt-service-type
+      ;;         (libvirt-configuration
+      ;;          (unix-sock-group "libvirt")
+      ;;          (tls-port "16555")))
       )
-     (modify-services %base-services ; %desktop-services
+     ;%desktop-services)))
+     (modify-services %base-services ;
                       (guix-service-type
                        config => (guix-configuration
                                  (inherit config)
