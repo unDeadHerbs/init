@@ -344,12 +344,13 @@
 	r    = "reset-opt-file-or-commit"
 	r1   = "reset-up-one"
 	raict= "rep-add-interactive-commit-branch-time"
+	rbo  = "rebase-standard origin/HEAD"
 	rd   = "diff-rep"
 	rh   = "reset-hard"
 	s    = "stash-tracked-verbose"
 	stat = "status"
-	w    = "wlsd"
-	wlsd = "watch lsd"
+	#w    = "wlsd"
+	#wlsd = "watch lsd"
 
 	raict= "rd both ai cbt"
 
