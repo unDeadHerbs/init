@@ -32,6 +32,14 @@ else
     toInstall="$toInstall zsh"
 fi
 
+if uname -a | grep -i NixOS > /dev/null
+then
+    if [ -e "$DIR/bg/$(hostname).jpg" ]
+    then
+        ln -sf "$DIR/bg/$(hostname).jpg" ~/.background-image
+    fi
+fi
+
 if ! [ -z "$toInstall" ]
 then
     echo "Install$toInstall"
