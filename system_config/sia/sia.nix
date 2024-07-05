@@ -12,6 +12,7 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
   boot.supportedFilesystems = ["ntfs"];
+  boot.loader.grub.splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
