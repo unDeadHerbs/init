@@ -151,6 +151,9 @@
     ];
   };
 
+  # Allow xfce4-terminal to have a settings file.
+  programs.xfconf.enable = true;
+
   # Enable Barrier
   systemd.services.barrierc = {
     # this is the "node" in the systemd dependency graph that will run the service
