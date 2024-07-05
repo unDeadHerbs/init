@@ -248,3 +248,20 @@ uname -a|grep "\(Ubuntu\|Debian\)" &&
 
 exists sox && alias noise_wash="play -n synth brownnoise synth pinknoise mix synth sine amod 0.3 10"
 exists play && alias whitenoise="play -n synth whitenoise"
+
+[ "$(hostname)" = "windmills" ] && {
+		init_sync(){
+				pushd ~/init
+				git f
+				git p
+				popd
+				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f; g p; popd ; done		
+		}
+		init_stat(){
+				pushd ~/init
+				git stat
+				popd
+				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g stat; popd ; done		
+		}
+		
+}
