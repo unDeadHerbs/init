@@ -22,5 +22,6 @@ then
 else
 		exists less && alias cat='less -FXR'
 fi
+exists zoxide && eval "$(zoxide init zsh --cmd cd)"
 exists cvlc && alias cvlc='cvlc --key-quit q'
 exists mpv && alias v="mpv --force-window"

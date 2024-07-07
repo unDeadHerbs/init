@@ -3,13 +3,16 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+				c-electric-slash
 				indent-for-tab-command
 				kill-region
 				org-end-of-line
+				org-kill-line
 				org-self-insert-command
 				org-yank
 				))
 
 (setq mc/cmds-to-run-once
       '(
+				ask-before-closing
 				))

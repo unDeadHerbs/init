@@ -1,0 +1,29 @@
+
+wireless wlp1s0 {
+        format_up = "%quality @ %essid (%ip)"
+        format_down = "W"
+}
+
+battery 0 {
+        format = "%status %percentage %remaining"
+	integer_battery_capacity = true
+}
+
+
+ethernet end0 {
+        format_up = "%ip @ %speed"
+        format_down = "E"
+}
+
+
+#order += "battery 0"
+#order += "ipv6"
+#order += "disk /dev/sdb1"
+#order += "disk /mnt/flash"
+order += "disk /"
+#order += "run_watch DHCP"
+#order += "run_watch VPN"
+order += "wireless wlp1s0"
+order += "ethernet end0"
+order += "load"
+order += "tztime local"

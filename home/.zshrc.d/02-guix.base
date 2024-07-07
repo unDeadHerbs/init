@@ -8,7 +8,7 @@ if [ -e "$HOME/.config/guix" ]; then
     SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
     GIT_SSL_CAINFO="$SSL_CERT_FILE"
     # libc locales
-    GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
+    export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 
     # From guix update message
     PATH="$HOME/.config/guix/current/bin${PATH:+:}$PATH"
