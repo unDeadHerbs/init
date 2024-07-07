@@ -256,12 +256,12 @@ exists play && alias whitenoise="play -n synth whitenoise"
 [ "$(hostname)" = "windmills" ] && {
 		init_sync(){
 				# Double pass to ensure all directions
-				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f; g p; popd ; done		
+				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f || return; g p || return; popd ; done		
 				pushd ~/init
-				git f
-				git p
+				git f || return
+				git p || return
 				popd
-				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f; g p; popd ; done		
+				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f || return; g p || return; popd ; done		
 		}
 		init_stat(){
 				pushd ~/init
