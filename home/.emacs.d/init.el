@@ -11,19 +11,25 @@
 ;;
 ;; TODO: This line was scavenged from `customize`, see if it can be
 ;; moved to .dotemacs.org.
-(set 'package-load-list '(all (ido nil)))
+;(set 'package-load-list '(all (ido nil)))
 
 (require 'package)
-(require 'cl-lib)
+(require 'use-package)
+(use-package org :pin gnu)
 (unless (package-installed-p 'org-dotemacs)
   (progn
     (package-initialize)
     (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-			     ("melpa" . "http://melpa.org/packages/") ; milkyPostman's repo
-			     ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
+			     ("melpa" . "http://melpa.org/packages/"))) ; milkyPostman's repo
+			     ; ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
     (package-refresh-contents)
     (package-install 'org-dotemacs)
-    (kill-buffer "*Compile-Log*")))
+    (kill-buffer "*Compile-Log*")
+    (let ((sig-state package-check-signature))
+      (setq package-check-signature '())
+      (package-install 'gnu-elpa-keyring-update)
+      (setq package-check-signature sig-state))))
+(require 'org)
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
 

@@ -59,6 +59,7 @@ Since I want all settings to be in this file, I'm disabling
 Install and manage all of the packages I use.
 #+BEGIN_SRC emacs-lisp
   (require 'package)
+  (require 'use-package)
 #+END_SRC
 *** Package Repositories
 :PROPERTIES:
@@ -66,9 +67,9 @@ Install and manage all of the packages I use.
 :END:
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/") ; milkyPostman's repo
-                           ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
-  (package-initialize)
+                           ("melpa" . "https://melpa.org/packages/"))) ; milkyPostman's repo
+                           ; ("org" . "https://orgmode.org/elpa/"))) ; Org-mode's repository
+  ;(package-initialize) ; allready called in my init.el
   (when (not package-archive-contents)
     (package-refresh-contents))
 #+END_SRC
@@ -122,6 +123,19 @@ functions to query what is installed and install things.  This should
 probably be only one function.  The Guix one will just install it, but
 for other OSs it will check if it's installed and add a warning to
 [*scratch*] if it's not.
+*** GNU Keyring
+:PROPERTIES:
+:NAME:     Packages_GNU_KeyRing
+:END:
+
+Update Emacs's GPG keyring for GNU ELPA.
+https://elpa.gnu.org/packages/gnu-elpa-keyring-update.html
+
+#+BEGIN_SRC emacs-lisp
+  ;; (setq package-check-signature '())
+  (udh/install-and-load 'gnu-elpa-keyring-update)
+  ;; (setq package-check-signature t)
+#+END_SRC
 ** Interface Defaults
 :PROPERTIES:
 :NAME:     Interface_defaults
