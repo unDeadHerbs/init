@@ -90,6 +90,8 @@ U(){
 }
 
 # A version of neofetch that always works.
+# - options are checked in order of usefulness of output
+# - The fact that a version was installed is also useful information 
 anyfetch(){
 		{
 				type hyfetch > /dev/null 2>&1 && hyfetch
@@ -98,8 +100,18 @@ anyfetch(){
 		} || {
 				type fastfetch > /dev/null 2>&1 && fastfetch
 		} || {
-				# TODO: check if /etc/motd exists and has an image
+				# Check if the system motd has a logo in it
+				[ -e "/etc/motd" ] && grep "█" /etc/motd > /dev/null && /usr/bin/env cat /etc/motd
+		} || {
 				type neofetch > /dev/null 2>&1 && neofetch --color_blocks off
+		} || {
+				type screenfetch  > /dev/null 2>&1 && screenfetch
+		} || {
+				type pfetch  > /dev/null 2>&1 && pfetch
+		} || {
+				type nerdfetch  > /dev/null 2>&1 && nerdfetch
+		} || {
+				type afetch  > /dev/null 2>&1 && afetch
 		} || {
 				{ whoami ; echo on ; hostname } \
 						| xargs \
