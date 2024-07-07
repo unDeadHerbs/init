@@ -11,7 +11,6 @@
 	default = current
 	followTags = true
 	recurseSubmodules = on-demand
-	recurse-submodules = on-demand
 [rerere]
 	autoupdate = true
 	enabled = true
@@ -88,8 +87,8 @@
 	branch-head-authors = "for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' --sort=-committerdate"
 	branch-heads-by = "!git branch-head-authors|grep -i "
 
-	branch-start = "merge-base HEAD origin/develop"
-	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/develop"
+	branch-start = "merge-base HEAD origin/HEAD"
+	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/HEAD"
 	####################
 	# Local Inspection #
 	####################
@@ -109,6 +108,7 @@
 	cat                  = "show"
 	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	# TODO: This grep should be porcelain
+	# TODO: make a wrapper that sorts the results by hash and then shows the log for them if there only a few (so that many matches with a few logs can be viewed)
 	blame-grep--pat-opt-file = "!f() { git grep -n \"$1\" $2 | while IFS=: read i j k; do git blame -f -L $j,$j $i; done }; f"
 
 	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
@@ -307,7 +307,8 @@
 	chk  = "checkout-or-create"
 	cm   = "commit-with-optional-message"
 	cmbt = "commit-branch-time"
-	d    = "diff-opt-commit"
+	d    = "paged diff-opt-commit"
+	dstash = "d HEAD refs/stash"
 	db   = "diff-changes-on-branch"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
