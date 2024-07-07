@@ -98,6 +98,7 @@ anyfetch(){
 		} || {
 				type fastfetch > /dev/null 2>&1 && fastfetch
 		} || {
+				# TODO: check if /etc/motd exists and has an image
 				type neofetch > /dev/null 2>&1 && neofetch --color_blocks off
 		} || {
 				{ whoami ; echo on ; hostname } \
