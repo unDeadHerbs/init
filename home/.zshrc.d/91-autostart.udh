@@ -12,6 +12,7 @@ fi
 
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux -2 -u new-session -d
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys 'cd ~/QS; while true; do sleepUntil 2 tomorrow; date; make; done' C-m
+[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys 'cd /mnt/rad/projects/reiko/telegram && cat ../telegram_secret | make' C-m
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux split-window -h
 #[[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "while true; do sleepUntil 2 tomorrow; date; gpo update 2>/dev/null; gpo download 2>/dev/null; done" C-m
 [[ $(hostname) = "windmills" ]] && [[ $(tty) = "/dev/tty2" ]] && tmux send-keys "while true; do sleepUntil 2 tomorrow; date; ./chron.make; done" C-m

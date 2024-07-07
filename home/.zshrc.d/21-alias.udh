@@ -16,6 +16,11 @@ fi
 exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
 exists git && exists emacs && alias magit="emacs --eval \"(magit-status)\""
 exists cmatrix && alias cmatrix='cmatrix -abu 2'
-exists less && alias cat='less -FXR'
+if exists bat ;
+then
+		alias cat='bat'
+else
+		exists less && alias cat='less -FXR'
+fi
 exists cvlc && alias cvlc='cvlc --key-quit q'
 exists mpv && alias v="mpv --force-window"

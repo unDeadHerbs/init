@@ -89,9 +89,12 @@ U(){
 		done
 }
 
-better_neofetch(){
+# A version of neofetch that always works.
+anyfetch(){
 		{
 				type hyfetch > /dev/null 2>&1 && hyfetch
+		} || {
+				type uwufetch > /dev/null 2>&1 && uwufetch
 		} || {
 				type fastfetch > /dev/null 2>&1 && fastfetch
 		} || {
@@ -116,12 +119,13 @@ command_to_string(){
 		which $1 | tr '\n\t' '; ' | sed 's/;/ ; /g' | sed 's/{ ;/{/g' | sed "s/$1 ()//" 
 }
 
-hosts_list(){
+# A version of neofetch that gets the "full" computer rather than just the local node.
+fullfetch(){
 		# TODO: unique without buffering/sorting, the generation order is better
 		# TODO: perform each ssh in parallel and then print the results without interleaving
 		# TODO: check for duplicates, resolve to IP and then choose first of (config, avahi, ip)
 
-		display_cmd=$(command_to_string better_neofetch)
+		display_cmd=$(command_to_string anyfetch)
 		bash -c $display_cmd
 		
 		# first generate a list of possible hosts
@@ -251,6 +255,8 @@ exists play && alias whitenoise="play -n synth whitenoise"
 
 [ "$(hostname)" = "windmills" ] && {
 		init_sync(){
+				# Double pass to ensure all directions
+				ls -d ~/network/*/home/*/init | while read ppp; do pushd "$ppp"; g f; g p; popd ; done		
 				pushd ~/init
 				git f
 				git p

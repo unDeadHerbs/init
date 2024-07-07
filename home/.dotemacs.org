@@ -44,7 +44,7 @@ than any the things I do with it.
 :END:
 
 Since I want all settings to be in this file, I'm disabling
-`Customizing`'s ability to save settings.
+`Customizing`'s ability to save settings, so that this is testable.
 
 #+BEGIN_SRC emacs-lisp
   (setq custom-file

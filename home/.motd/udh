@@ -1,7 +1,7 @@
 #! /usr/bin/env zsh
 
-if type better_neofetch >/dev/null ; then
-    better_neofetch
+if type anyfetch >/dev/null ; then
+    anyfetch
 else
     if type figlet > /dev/null
     then
