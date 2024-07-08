@@ -34,7 +34,7 @@ if exists guix; then
 	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
 	    for pack in "$@"; do
 		echo $pack
-	    done|egrep -v "^$installed\$"|xargs -r guix install
+	    done|grep -Ev "^$installed\$"|xargs -r guix install
 	fi
     }
 fi
