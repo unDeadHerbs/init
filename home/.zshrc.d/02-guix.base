@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+source ~/.zshrc.d/01-local
+
 if [ -e "$HOME/.config/guix" ]; then
     # https://trofi.github.io/posts/197-guix-on-gentoo-howto.html
     PATH="${HOME}/.guix-profile/bin:${HOME}/.guix-profile/sbin${PATH:+:}$PATH"
