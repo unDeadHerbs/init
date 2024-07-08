@@ -5,3 +5,4 @@ home/.emacs.d/.persistent-scratch
 home/.emacs.d/eln-cache/
 home/.emacs.d/transient/
 home/.emacs.d/srecode-map.el
+home/.local/share/zoxide/db.zo

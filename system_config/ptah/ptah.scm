@@ -13,20 +13,20 @@
 (operating-system
   (locale "en_US.utf8")
   (timezone "America/Chicago")
-  (keyboard-layout
-    (keyboard-layout "us" "altgr-intl"))
+  (keyboard-layout (keyboard-layout "us"))
   (bootloader
     (bootloader-configuration
       (bootloader grub-bootloader)
       (targets '("/dev/sda"))
       (keyboard-layout keyboard-layout)))
   (swap-devices (list
-                 (swap-space (target "/dev/sda2"))))
+                 (swap-space (target
+                              (uuid "768b26c8-f49b-4c1c-be5e-b849b5a945f0")))))
   (file-systems
     (cons* (file-system
              (mount-point "/")
              (device
-               (uuid "473117fc-4800-4683-b368-921610db5895"
+               (uuid "a3e2798d-f1da-43bc-a3ee-b49e7d4ba9c3"
                      'ext4))
              (type "ext4"))
            %base-file-systems))
@@ -39,39 +39,38 @@
                   (supplementary-groups
                     '("wheel" "netdev" "audio" "video"))
                   (shell #~(string-append #$zsh "/bin/zsh")))
-                (user-account
-                  (name "Vika")
-                  (comment "")
-                  (group "users")
-                  (home-directory "/home/vika")
-                  (supplementary-groups
-                    '("wheel" "netdev" "audio" "video"))
-                  (shell #~(string-append #$zsh "/bin/zsh")))
-                (user-account
-                  (name "Wizard")
-                  (comment "")
-                  (group "users")
-                  (home-directory "/home/Wizard")
-                  (supplementary-groups
-                    '("wheel" "netdev" "audio" "video"))
-                  (shell #~(string-append #$zsh "/bin/zsh")))
-                (user-account
-                  (name "tv3")
-                  (comment "")
-                  (group "users")
-                  (home-directory "/home/tv3")
-                  (supplementary-groups
-                    '("wheel" "netdev" "audio" "video"))
-                  (shell #~(string-append #$bash "/bin/bash")))
+               ; (user-account
+               ;   (name "Vika")
+               ;   (comment "")
+               ;   (group "users")
+               ;   (home-directory "/home/vika")
+               ;   (supplementary-groups
+               ;     '("wheel" "netdev" "audio" "video"))
+               ;   (shell #~(string-append #$zsh "/bin/zsh")))
+               ; (user-account
+               ;   (name "Wizard")
+               ;   (comment "")
+               ;   (group "users")
+               ;   (home-directory "/home/Wizard")
+               ;   (supplementary-groups
+               ;     '("wheel" "netdev" "audio" "video"))
+               ;   (shell #~(string-append #$zsh "/bin/zsh")))
+               ; (user-account
+               ;   (name "tv3")
+               ;   (comment "")
+               ;   (group "users")
+               ;   (home-directory "/home/tv3")
+               ;   (supplementary-groups
+               ;     '("wheel" "netdev" "audio" "video"))
+               ;   (shell #~(string-append #$bash "/bin/bash")))
                 %base-user-accounts))
   (packages
     (append
      (list
-      (specification->package "i3-wm")
+      ;(specification->package "i3-wm")
       (specification->package "bash")
       (specification->package "zsh")
-      (specification->package "tor")
-                                        ;(specification->package "nss-certs")
+      ;(specification->package "nss-certs")
       )
       %base-packages))
   (services
@@ -88,12 +87,11 @@
 
       ;; Networking      
       ;; In desktop-services
-      (service network-manager-service-type)
-      (service wpa-supplicant-service-type)
+      (service dhcp-client-service-type)
 
       ;; Auto updates
-      (service unattended-upgrade-service-type)
-      ;; In desktop-services
+      ;(service unattended-upgrade-service-type)
+
       (service ntp-service-type)
 
       ;; Servers
@@ -105,19 +103,15 @@
       ;;          ))
 
       ;; Darknets
-      (service tor-service-type
-               (tor-configuration
-                (config-file
-                 (plain-file "tor-config"
-                             "HTTPTunnelPort 127.0.0.1:9250"))))
-      (service yggdrasil-service-type
-               (yggdrasil-configuration
-                (autoconf? #f) ;; use only the public peers
-                (json-config
-                 ;; choose one from
-                 ;; https://github.com/yggdrasil-network/public-peers
-                 '((peers . #("tcp://140.238.168.104:17117" "tls://ygg-tx-us.incognet.io:8884"))))
-                ))
+      (service tor-service-type)
+      ;(service yggdrasil-service-type
+      ;         (yggdrasil-configuration
+      ;          (autoconf? #f) ;; use only the public peers
+      ;          (json-config
+      ;           ;; choose one from
+      ;           ;; https://github.com/yggdrasil-network/public-peers
+      ;           '((peers . #("tcp://140.238.168.104:17117" "tls://ygg-tx-us.incognet.io:8884"))))
+      ;          ))
 
       ;; In desktop-services
       (service avahi-service-type)
@@ -133,10 +127,13 @@
 
       )
      ;%desktop-services)))
-     (modify-services %base-services ;
-                      (guix-service-type
-                       config => (guix-configuration
-                                 (inherit config)
-                                 (substitute-urls
-                                  (list "https://bp7o7ckwlewr4slm.onion"))
-                                 (http-proxy "http://localhost:9250")))))))
+
+     %base-services
+     ;(modify-services %base-services ;
+     ;                 (guix-service-type
+     ;                  config => (guix-configuration
+     ;                            (inherit config)
+     ;                            (substitute-urls
+     ;                             (list "https://bp7o7ckwlewr4slm.onion"))
+     ;                            (http-proxy "http://localhost:9250"))))
+     )))
