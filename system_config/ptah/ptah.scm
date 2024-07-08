@@ -42,6 +42,7 @@
   (packages (cons*    
              (specification->package "bash")
              (specification->package "zsh")
+             (specification->package "i3-wm") ; fixes x-forwarding (probably any wm will do)
              %base-packages))
   (services (cons*
              ;; SSH Server
