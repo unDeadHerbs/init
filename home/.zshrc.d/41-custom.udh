@@ -132,7 +132,7 @@ command_to_string(){
 		which $1 | tr '\n\t' '; ' | sed 's/;/ ; /g' | sed 's/{ ;/{/g' | sed "s/$1 ()//" 
 }
 
-# A version of neofetch that gets the "full" computer rather than just the local node.
+# A version of neofetch that gets the "full computer system" rather than just the local node.
 fullfetch(){
 		# TODO: unique without buffering/sorting, the generation order is better
 		# TODO: perform each ssh in parallel and then print the results without interleaving

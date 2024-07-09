@@ -19,24 +19,24 @@ if [ -e "$HOME/.config/guix" ]; then
     # let's see if this fixes the SSL errors
     GUIX_PROFILE=$HOME/.guix-profile
     source $GUIX_PROFILE/etc/profile
-fi
-
-if type guix > /dev/null; then
-    guix_installed(){
-	if [ $# -eq 0 ]; then
-	    guix package -I|cut -f 1
-	else
-	    guix package -I|cut -f 1|grep $1 > /dev/null
-	fi
-    }
-    _guix_install_noreplace(){
-	if [ $# -eq 1 ]; then
-	    guix_installed $1 || guix install $1
-	else
-	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
-	    for pack in "$@"; do
-		echo $pack
-	    done|grep -Ev "^$installed\$"|xargs -r guix install
-	fi
-    }
+		
+    if type guix > /dev/null; then
+        guix_installed(){
+    	if [ $# -eq 0 ]; then
+    	    guix package -I|cut -f 1
+    	else
+    	    guix package -I|cut -f 1|grep $1 > /dev/null
+    	fi
+        }
+        _guix_install_noreplace(){
+    	if [ $# -eq 1 ]; then
+    	    guix_installed $1 || guix install $1
+    	else
+    	    installed=`guix_installed|xargs|sed -e 's, ,\|,g'|sed 's,.*,(&),'`
+    	    for pack in "$@"; do
+    		echo $pack
+    	    done|grep -Ev "^$installed\$"|xargs -r guix install
+    	fi
+        }
+    fi
 fi

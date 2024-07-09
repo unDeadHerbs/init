@@ -101,7 +101,7 @@
 	diff-opt-commit      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
 	# TODO this should find if `HEAD` or `master` is closer and then use that instead
 	#diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
-	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start)~1..HEAD \"$@\"; }; f"
+	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start)..HEAD \"$@\"; }; f"
 	branch-name          = "rev-parse --abbrev-ref HEAD"
 	head-hash 	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
