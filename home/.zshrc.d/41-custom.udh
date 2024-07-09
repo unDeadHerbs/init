@@ -168,7 +168,13 @@ fullfetch(){
 								| xargs -l nmap -p 22 --open \
 								| grep 'Nmap scan report for' \
 								| sed 's,Nmap scan report for ,,' \
-								| grep -Ev "[.]0[.]1$"
+								| grep -Ev "[.]0[.]1$" \
+								| while read adder; do {
+								# convert ips to local names if they are available, this prevents double listing
+								exists avahi-resolve &&
+										avahi-resolve --address "$adder" 2>/dev/null | awk '{print $2}' | grep .
+						} || echo "$adder";
+						done
 				}
 				# TODO: search the whole network blindly when ssh is in parallel
 		} \
