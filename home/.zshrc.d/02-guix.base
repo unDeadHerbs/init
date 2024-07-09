@@ -21,7 +21,7 @@ if [ -e "$HOME/.config/guix" ]; then
     source $GUIX_PROFILE/etc/profile
 fi
 
-if exists guix; then
+if type guix > /dev/null; then
     guix_installed(){
 	if [ $# -eq 0 ]; then
 	    guix package -I|cut -f 1
