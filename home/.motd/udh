@@ -18,12 +18,16 @@ else # if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 fi; fi; fi
 
 if type weather >/dev/null && type paste >/dev/null; then
+	if type cal > /dev/null; then
 	# TODO: check cal version instead?
-	if uname -a |grep -Ei "(ubuntu|debian)" > /dev/null; then
-		paste <(cal) <(weather)
+    if uname -a |grep -Ei "(ubuntu|debian)" > /dev/null; then
+				paste <(cal) <(weather)
+		else
+				paste <(cal --color=always) <(weather)
+		fi
 	else
-		paste <(cal --color=always) <(weather)
+			weather
 	fi
-else
+else if type cal > /dev/null; then
     cal -3
-fi
+fi; fi
