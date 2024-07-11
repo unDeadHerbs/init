@@ -1,5 +1,9 @@
 #! /usr/bin/env zsh
 
+if [[ -e /run/motd.dynamic ]]; then
+		/usr/bin/env cat /run/motd.dynamic
+fi
+
 if [[ -e /etc/motd ]]; then
 	/usr/bin/env cat /etc/motd
 else if type anyfetch >/dev/null ; then
