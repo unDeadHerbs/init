@@ -119,6 +119,7 @@
       #moreutils cpufrequtils binutils usbutils
       #sh-z sicp inetutils xpdf
       alejandra
+      alsa-utils
       aspell
       bat
       clang
@@ -148,7 +149,7 @@
       unzip
       wdiff
       xfce.xfce4-terminal
-      youtube-dl
+      #youtube-dl
       zsh-autosuggestions
     ];
   };
