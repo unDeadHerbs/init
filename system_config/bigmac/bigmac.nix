@@ -31,6 +31,7 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+  i18n.supportedLocales = ["all"];
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -52,10 +53,10 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
+    layout = "us,ru";
     xkbVariant = "";
   };
-  
+
   fonts.packages = with pkgs; [
     fira
     fira-code
@@ -85,11 +86,12 @@
 
   programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
-    users.users.vika = {
+  users.users.vika = {
     isNormalUser = true;
     description = "vika";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
+      mpv
     ];
   };
   users.users.udh = {
@@ -117,6 +119,7 @@
       links2
       lynx
       mc
+      mpv
       neofetch
       netcat
       pandoc
@@ -126,7 +129,6 @@
       unzip
       wdiff
       xfce.xfce4-terminal
-      youtube-dl
       zsh-autosuggestions
     ];
   };
@@ -134,7 +136,7 @@
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = "vika";
-  
+
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
@@ -185,6 +187,7 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
+    settings.PasswordAuthentication = false;
   };
 
   # Open ports in the firewall.
