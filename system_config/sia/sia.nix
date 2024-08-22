@@ -145,6 +145,7 @@
       progress
       scrot
       sl
+      sshfs
       tmux
       unzip
       wdiff
