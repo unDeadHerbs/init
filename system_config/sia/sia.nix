@@ -143,6 +143,7 @@
       netcat
       pandoc
       progress
+      rstudio
       scrot
       sl
       sshfs
