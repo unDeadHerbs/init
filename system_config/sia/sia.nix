@@ -128,6 +128,7 @@
       dmenu
       ed
       emacs
+      evince
       feh
       figlet
       git
