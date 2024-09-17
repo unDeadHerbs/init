@@ -314,6 +314,7 @@
 	db   = "diff-changes-on-branch"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
+	frbo = "both f rbo"
 	greb = "blame-grep--pat-opt-file"
 	l    = "log-full"
 	l1   = "log -1 --numstat --show-signature"
