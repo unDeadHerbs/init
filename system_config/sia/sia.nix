@@ -6,7 +6,9 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
+in {
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
@@ -144,7 +146,8 @@
       netcat
       pandoc
       progress
-      rstudio
+      unstable.R
+      unstable.rstudio
       scrot
       sl
       sshfs
