@@ -219,6 +219,12 @@
 	rep-add-interactive-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git add-interactive-commit-branch-time; done;"
 	rep-small-add-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git small-add-commit-branch-time; done;"
 
+	###########################
+	# Local Code Manipulation #
+	###########################
+
+	sed = "!f(){ git grep -l \"$1\" | xargs -l sed -e \"s,$1,$2,g\" -i ; }; f"
+
 	#########################
 	# Not Head Manipulation #
 	#########################
