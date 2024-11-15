@@ -224,7 +224,10 @@
 	# Local Code Manipulation #
 	###########################
 
-	sed = "!f(){ git grep -l \"$1\" | xargs -l sed -e \"s,$1,$2,g\" -i ; }; f"
+	list--ext = "!f(){ find | grep -E \"[.]$1$\" ; }; f"
+	sed--ext-pat-replace = "!f(){ git list--ext \"$1\" | xargs -r -I {} -- sed -e \"s@$2@$3@g\" -i \"{}\"; }; f"
+	sed--from-to = "!f(){ git grep -l \"$1\" | xargs -l -r sed -e \"s,$1,$2,g\" -i ; }; f"
+	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -e \"s,$1,g\" -i ; }; f"
 
 	#########################
 	# Not Head Manipulation #
