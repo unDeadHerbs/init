@@ -45,7 +45,7 @@
 
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
 
-	blame--file-line-to-hash = "!f(){ git blame -pfL $2,$2 $1|head -1|awk '{print $1}'; }; f"
+	blame--file-line-to-hash = "!f(){ git blame-standard -pfL $2,$2 $1|head -1|awk '{print $1}'; }; f"
 
 	# Meta
 	require-test = "!git config alias.test|grep . > /dev/null || echo \"Alias git test to something\" && exit 1"
@@ -109,7 +109,8 @@
 	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	# TODO: This grep should be porcelain
 	# TODO: make a wrapper that sorts the results by hash and then shows the log for them if there only a few (so that many matches with a few logs can be viewed)
-	blame-grep--pat-opt-file = "!f() { git grep -n \"$1\" $2 | while IFS=: read i j k; do git blame -f -L $j,$j $i; done }; f"
+	blame-standard = "blame -wCCC"
+	blame-grep--pat-opt-file = "!f() { git grep -n \"$1\" $2 | while IFS=: read i j k; do git blame-standard -f -L $j,$j $i; done }; f"
 
 	# TODO: bisect-time-smart = take the time of the last good and bad runs and use it to bias the binary decision proportionally
 	# this use of that one of the tests is much faster will mean a faster bisect, even if more commits are checked.
