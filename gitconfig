@@ -32,16 +32,19 @@
 	piped = "!xargs git"
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | less -FXR; }; f"
 	# TODO: make sure that staged and unstagedness is kept
-	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
+	# TODO: add a unique number to the stash name
+	# TODO: keep the return code from the inner call
+	stash-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash -m \"uDH_STASH_WRAP_STASH_UNIQUE_NAME\"; git \"$@\"; git stash apply stash^{/uDH_STASH_WRAP_STASH_UNIQUE_NAME} >/dev/null && git stash drop 0 ; }; f"
 	#stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged; git \"$@\"; [ \"$(git head-hash)\" = \"$(git ref-from-branch stash@{0}^)\" ] && git stash pop; }; f"
 	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged && git \"$@\" && git stash pop; }; f"
 
 	watch = "!watch -c git"
 	diff-rep = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
-	# TODO: make this into an "all"
-	both = "!f(){ git $1 && git $2; }; f"
+	# TODO: have `all` crash if any fail
+	all = "!f(){ while [ $# -ne 0 ] ; do git \"$1\" ; shift ; done ; }; f "
+	both = "!f(){ git \"$1\" && git \"$2\" ; }; f"
 
-	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; } f"
+	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; }; f"
 
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
 
@@ -220,6 +223,11 @@
 	rep-add-interactive-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git add-interactive-commit-branch-time; done;"
 	rep-small-add-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git small-add-commit-branch-time; done;"
 
+	# TODO: Precheck that `auto build` exists
+	build-check-head = "!f(){ git auto ; if ! git auto build ; then git all reset-up-one reset-hard ; fi; }; f"
+	small-commit-build-success = "!f(){ git all small-add commit-branch-time ; git stash-wrap build-check-head ; }; f"
+	rep-commit-build-success = "!f(){ while git diff | grep '.' >/dev/null ; do git small-commit-build-success ; done ; }; f"
+
 	###########################
 	# Local Code Manipulation #
 	###########################
@@ -228,6 +236,7 @@
 	sed--ext-pat-replace = "!f(){ git list--ext \"$1\" | xargs -r -I {} -- sed -e \"s@$2@$3@g\" -i \"{}\"; }; f"
 	sed--from-to = "!f(){ git grep -l \"$1\" | xargs -l -r sed -e \"s,$1,$2,g\" -i ; }; f"
 	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -e \"s,$1,g\" -i ; }; f"
+	sed--pat-rule = "!f(){ git grep -l  \"$1\" | xargs -l -r sed -e \"$2\" -i ; }; f"
 
 	#########################
 	# Not Head Manipulation #
@@ -258,6 +267,8 @@
 	#stash-ignored = "stash-wrap stash --all"
 	stash-tracked-verbose = "!git unstage-all && git add-verbose-opt-list && git stash-tracked"
 	stash-pop-and-stage = "!f(){ git stash pop; git add --all; }; f"
+	stash-not-first-small = "all small-add commit-branch-time stash-all reset-up-one"
+	pop-first-small = "all pop stash-not-first-small"
 
 	#
 	##
