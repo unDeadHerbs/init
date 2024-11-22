@@ -1,3 +1,5 @@
+[core]
+	safecrlf = false
 [init]
 	defaultBranch = master
 [advice]
@@ -39,14 +41,29 @@
 	stash-unstaged-wrap = "!f(){ cd \"${GIT_PREFIX:-.}\"; git stash-unstaged && git \"$@\" && git stash pop; }; f"
 
 	watch = "!watch -c git"
-	diff-rep = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
-	# TODO: have `all` crash if any fail
-	all = "!f(){ while [ $# -ne 0 ] ; do git \"$1\" ; shift ; done ; }; f "
-	both = "!f(){ git \"$1\" && git \"$2\" ; }; f"
+	rep--while-diff = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
+	rep-wd = "rep--while-diff"
+
+	# TODO
+	# check if there is a stash at the current commit
+	# this will need to be smart about where the stash is
+	# the stash might move while this is running
+	# Take the stash that is at HEAD when it start, save the name, and check for that on the loop?
+	#
+	# OR, I could break the change into 100 stashes and then use if there are any stashes at the old HEAD to decide?
+	# That's better for build systems, as the stashes can be applied seperatly
+	#
+	# Current, just looks for if there are any stashes, not very safe
+	rep--while-stash = "!f(){ while git stash list | grep '.' > /dev/null; do git \"$@\"; done; }; f"
+	rep-ws = "rep--while-stash"
+	
+	# TODO: have `fold` crash if any fail
+	fold = "!f(){ while [ $# -ne 0 ] ; do git \"$1\" ; shift ; done ; }; f "
 
 	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; }; f"
 
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
+	echo = "!echo"
 
 	blame--file-line-to-hash = "!f(){ git blame-standard -pfL $2,$2 $1|head -1|awk '{print $1}'; }; f"
 
@@ -124,6 +141,8 @@
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs hash and test\"; fi; }; f"
 	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
 
+	diff-stashed = "diff-standard HEAD refs/stash"
+
 	#########
 	# Stats #
 	#########
@@ -147,6 +166,7 @@
 	############################
 
 	rebase-standard                     = "rebase --committer-date-is-author-date"
+	rebase-origin = "rebase-standard origin/HEAD"
 	rebase-branch-from-branch-to-branch = "!f(){ git rebase-standard --onto $3 $2 $1 ; }; f"
 	rebase-branch-onto-here             = "!f(){ git rebase-branch-from-branch-to-branch $1 $(git branch-name) $(git branch-name) ; }; f"
 	# TODO: take an opional HEAD replacement
@@ -181,7 +201,7 @@
 	checkout-or-create = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout \"$@\" || git checkout -b \"$@\" ; } && git fetch-and-ff-pull ; }; f"
 
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
-	reset-up-one             = "reset HEAD^"
+	reset-up-one             = "reset HEAD^ --no-refresh"
 	reset-hard               = "!git r && git clean -d -f"
 
 	#############################
@@ -189,6 +209,7 @@
 	#############################
 
 	add-verbose                    = "add -v"
+	add-all                        = "add-verbose --all"
 	add-interactive                = "add-verbose --patch"
 	add-verbose-opt-list           = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-verbose --all ; else git add-verbose \"$@\"; fi }; f"
 	add-interactive-opt-list       = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git add-interactive --all ; else git add-interactive \"$@\"; fi }; f"
@@ -215,18 +236,15 @@
 	commit-with-optional-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git commit-standard ; else git commit-standard -m \"$@\"; fi }; f"
 	commit-branch-time           = "!f(){ git commit -m \"`git branch-name` `date`\"; }; f"
 
-  add-commit-branch-time       = "!f(){ git add-verbose --all ; git commit-branch-time; }; f"
-	small-add = "!printf 's\ns\ny\nq' | git add-interactive"
-
-  add-interactive-commit-branch-time = "!git add-interactive; git commit-branch-time"
-	small-add-commit-branch-time =  "!git small-add; git commit-branch-time"
-	rep-add-interactive-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git add-interactive-commit-branch-time; done;"
-	rep-small-add-commit-branch-time = "!while git diff | grep '.' >/dev/null ; do git small-add-commit-branch-time; done;"
+	small-add = "!printf 's\ns\ns\ny\nq' | git add-interactive"
 
 	# TODO: Precheck that `auto build` exists
-	build-check-head = "!f(){ git auto ; if ! git auto build ; then git all reset-up-one reset-hard ; fi; }; f"
-	small-commit-build-success = "!f(){ git all small-add commit-branch-time ; git stash-wrap build-check-head ; }; f"
-	rep-commit-build-success = "!f(){ while git diff | grep '.' >/dev/null ; do git small-commit-build-success ; done ; }; f"
+	build-eject-head = "!f(){ git auto DUMMY ; if ! git auto quick_build ; then git fold reset-up-one reset-hard ; fi; }; f"
+	# TODO: this currently unstashes all of the changes after each build, which breaks how build systems check for changes.
+	#small-build-commit-eject = "!f(){ git fold small-add commit-branch-time ; git stash-wrap build-eject-head ; }; f"
+	small-pop-build-commit-eject = "fold pop add-all commit-branch-time build-eject-head"
+	# TODO: unsafe until rep-ws works correctly
+	rep-pop-build-commit-eject = "rep-ws small-pop-build-commit-eject"
 
 	###########################
 	# Local Code Manipulation #
@@ -237,6 +255,7 @@
 	sed--from-to = "!f(){ git grep -l \"$1\" | xargs -l -r sed -e \"s,$1,$2,g\" -i ; }; f"
 	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -e \"s,$1,g\" -i ; }; f"
 	sed--pat-rule = "!f(){ git grep -l  \"$1\" | xargs -l -r sed -e \"$2\" -i ; }; f"
+	sed--pat-filter-rule = "!f(){ git grep -l  \"$1\" | grep -ivE \"$2\"  | xargs -l -r sed -e \"$3\" -i ; }; f"
 
 	#########################
 	# Not Head Manipulation #
@@ -262,13 +281,18 @@
 
 	stash-unstaged = "stash save --keep-index"
 	stash-tracked = "stash"
+	stash-staged = "stash --staged"
 	stash-all     = "stash --include-untracked"
 	#TODO: this won't work because stash-wrap will see the new stash
 	#stash-ignored = "stash-wrap stash --all"
 	stash-tracked-verbose = "!git unstage-all && git add-verbose-opt-list && git stash-tracked"
 	stash-pop-and-stage = "!f(){ git stash pop; git add --all; }; f"
-	stash-not-first-small = "all small-add commit-branch-time stash-all reset-up-one"
-	pop-first-small = "all pop stash-not-first-small"
+	stash-not-first-small = "fold small-add commit-branch-time stash-all reset-up-one"
+	# TODO: This modifies all files, instead make a working tree copy?
+	pop-first-small = "fold pop stash-not-first-small"
+	stash-one-small = "fold small-add stash-staged"
+	stash-all-as-small = "rep--while-diff stash-one-small"
+	#stash-list-at-commit = "!f(){ git stash list -\"$1\" ; }; f"
 
 	#
 	##
@@ -302,13 +326,15 @@
 	##################
 
 	log-status-diff       = "!git log-branch -20 && echo && git status && echo && git paged diff-standard"
-	log1-status-diff              = "!git log-current && echo && git status-color && echo && git paged diff-standard"
+	log1-status-diff      = "!git log-current && echo && git status-color && echo && git paged diff-standard"
 
 	add-and-amend-message = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -gt 1 ];then git add-verbose \"${@:1:$(($#-1))}\"; fi ; git amend-with-staged-opt-message \"${@:$#:$#}\" ; }; f"
 	add-and-commit        = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
-	log-status            = "!git log-top-twenty && echo && git status"
 	log-oops              = "paged log-lost --all"
 	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
+	i-rep-small-build-commit-eject = "fold stash-all-as-small rep-pop-build-commit-eject"
+	# check if it builds before, should probably fail if it didn't rather than just ejecting
+	rep-small-build-commit-eject = "fold build-eject-head i-rep-small-build-commit-eject"
 
 	#
 	##
@@ -320,9 +346,9 @@
 
 	a    = "add-verbose-opt-list"
 	ac   = "add-and-commit"
-	act  = "add-commit-branch-time"
+	act  = "fold add-all commit-branch-time"
 	ai   = "add-interactive-opt-list"
-	aict = "add-interactive-commit-branch-time"
+	aict = "fold add-interactive commit-branch-time"
 	amd  = "add-and-amend-message"
 	asm  = "amend-with-staged-opt-message"
 	b    = "branch"
@@ -331,11 +357,11 @@
 	cm   = "commit-with-optional-message"
 	cmbt = "commit-branch-time"
 	d    = "paged diff-opt-commit"
-	dstash = "d HEAD refs/stash"
+	dstash = "paged diff-stashed"
 	db   = "diff-changes-on-branch"
 	drm  = "delete-opt-branch-opt-remote"
 	f    = "fetch-and-ff-pull"
-	frbo = "both f rbo"
+	frbo = "fold fetch-and-ff-pull rebase-origin"
 	greb = "blame-grep--pat-opt-file"
 	l    = "log-full"
 	l1   = "log -1 --numstat --show-signature"
@@ -346,7 +372,7 @@
 	ls   = "list-files-opt-path"
 	lsd  = "log-status-diff"
 	lt   = "log-top-twenty"
-	lts  = "log-status"
+	lts  = "fold log-top-twenty echo status"
 	ltt  = "log-top-fourty"
 	mn   = "merge --no-edit"
 	p    = "push-opt-branch"
@@ -355,9 +381,9 @@
 	pov  = "project-over-view"
 	r    = "reset-opt-file-or-commit"
 	r1   = "reset-up-one"
-	raict= "rep-add-interactive-commit-branch-time"
-	rbo  = "rebase-standard origin/HEAD"
+	raict= "rep-wd fold add-interactive commit-branch-time"
+	rbo  = "rebase-origin"
 	rh   = "reset-hard"
-	rsact= "rep-small-add-commit-branch-time"
+	rsact= "rep-wd fold small-add commit-branch-time"
 	s    = "stash-tracked-verbose"
 	stat = "status"
