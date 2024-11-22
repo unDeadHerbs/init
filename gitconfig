@@ -334,6 +334,7 @@
 	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
 	i-rep-small-build-commit-eject = "fold stash-all-as-small rep-pop-build-commit-eject"
 	# check if it builds before, should probably fail if it didn't rather than just ejecting
+	# This results in being able to resume, and should be safe as long as other people make working commits
 	rep-small-build-commit-eject = "fold build-eject-head i-rep-small-build-commit-eject"
 
 	#
