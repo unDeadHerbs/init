@@ -29,17 +29,12 @@
       (setq package-check-signature '())
       (package-install 'gnu-elpa-keyring-update)
       (setq package-check-signature sig-state))))
+(require 'org-roam)
+(setq org-roam-directory "~/org/roam")
+(org-roam-db-sync)
+(org-roam-db-autosync-mode)
 (require 'org)
 (require 'org-dotemacs)
 (org-dotemacs-load-default)
 
-;(custom-set-variables
-; '(ansi-color-faces-vector
-;   [default default default italic underline success warning error])
-; '(ansi-color-names-vector
-;   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
-; '(custom-enabled-themes '(wheatgrass))
-; '(erc-modules
-;   '(autojoin button completion dcc fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track))
-; '(linum-relative-current-symbol "")
 (put 'upcase-region 'disabled nil)

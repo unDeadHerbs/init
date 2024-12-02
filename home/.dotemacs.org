@@ -303,17 +303,20 @@ file because I couldn't get lists to work in the below code.
   ;;(setq org-directory "~/org")
   ;;(setq org-agenda-files (list "todo.org" "inbox.org"))
   ;;the files seem to default to ~/org/* and customizing it breaks something
+  (setq org-agenda-files '("~/org" "~/org/roam"))
 #+END_SRC
 ** Capture to Inbox
 :PROPERTIES:
 :NAME:     GTD_Capture
 :END:
+Review this now that we have roam!
+
 Rather than delegating on capture (like in GTD), I categorise tasks
 and notes on their review.
 #+BEGIN_SRC emacs-lisp
   (setq org-capture-templates
         `(("i" "Inbox" entry  (file "inbox.org")
-           ,(concat "* TODO %(sdate) - %?"))))
+           ,(concat "* TODO %?\n:PROPERTIES:\n:CREATION_DATE: %(udh/sdate)\n:END:"))))
 
   (defun org-capture-inbox ()
     (interactive)
@@ -395,8 +398,8 @@ the calendar view.
 :PROPERTIES:
 :NAME:     GTD_agenda_week_length
 :END:
-Show 9 days starting with yesterday; that is, yesterday and the
-coming week.
+Show 9 days starting with yesterday; that is, yesterday, today, and
+the coming week.
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-start-day "-1d")
   (setq org-agenda-span 9)
@@ -454,18 +457,149 @@ I plan to have `README.org` files in all projects.  They should work
 together with my GTD setup to track actions and time.  Look into
 `eproject` package for possible features.
 * Roam
-** Popular Version 
-I want roam for the graph navigation system and to explore some of the
-benefits of zettelkasten; but, it seems to not play nicely with
-existing org mode documents.
+** Major Package
+:PROPERTIES:
+:NAME:     org-roam
+:ID:       dd261234-af0c-4bec-9e01-58afa97a7a3c
+:END:
+While I feel that making an external database is a silly move and that
+a better hashmap should have been added to emacs to solve this problem
+for everybody, this is still a better solution than fully
+reimpliemnting the features myself.
 
-guix install `sqlite`
-(udh/install-and-load 'org-roam)
-(setq org-roam-directory org-directory)
+Org-roam needs starting before org-mode.  So some of these lines are
+commented out and moved to [[~/.emacs.d/init.el]].
+https://org-roam.discourse.group/t/org-roam-buffer-do-not-refresh-automaticly/2873
+
+
+#+BEGIN_SRC emacs-lisp
+;(udh/install-and-load 'org-roam)
+;(setq org-roam-directory "~/org/roam");org-directory)
+#+END_SRC
+*** Startup
+:PROPERTIES:
+:NAME:     org-roam-startup
+:END:
+
+#+BEGIN_SRC emacs-lisp
+;(org-roam-db-sync)
+;(org-roam-db-autosync-mode)
+#+END_SRC
+*** Keybindings
+:PROPERTIES:
+:NAME:     org-roam-keybinds
+:ID:       2ec0440a-4250-42ff-9bc7-30e1fd430503
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+#+END_SRC
+*** Automatically add added notes to added notes
+:PROPERTIES:
+:NAME:     org-roam-auto-add-added
+:END:
+By default newly added notes aren't added to the note cache, so the
+database is permanently out of sync.
+#+BEGIN_SRC emacs-lisp
+(org-roam-db-autosync-enable)
+#+END_SRC
+*** Capture Template
+:PROPERTIES:
+:NAME:     org-roam-capture-template
+:END:
+#+BEGIN_SRC emacs-lisp
+;(setq org-roam-capture-templates
+;'(("d" "default" plain "%?" :target
+;	(file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n:CREATION_DATE: %(udh/sdate)\n:END:\n#+FILETAGS: :UPDATE:\n#+title: ${title}
+;")
+;	:unnarrowed t)))
+(setq org-roam-capture-templates
+'(("d" "default" plain "%?" :target
+	(file+head "%<%Y%m%d%H%M%S>-${slug}.org" "* ${title} :UPDATE:\n:PROPERTIES:\n:CREATION_DATE: %(udh/sdate)\n:END:\n")
+	:unnarrowed t)))
+#+END_SRC
+*** Single Line Backlinks
+:PROPERTIES:
+:NAME:     org-roam-single-line-backlinks
+:END:
+I only want to show the line that references the link, not the whole section.
+
+#+BEGIN_SRC emacs-lisp
+(defun udh/org-roam-preview ()
+  "Return the preview content at point.
+
+This function returns the all contents under the current
+headline, up to the next headline."
+  (let ((beg (save-excursion
+               (beginning-of-line)
+               (point)))
+        (end (save-excursion
+               (org-end-of-line)
+               (point))))
+    (string-trim (buffer-substring-no-properties beg end))))
+(setq org-roam-preview-function #'udh/org-roam-preview)
+#+END_SRC
+**** TODO I'd prefer the current "thing"
+- for list entries, the item in the list and maybe the parent chain
+- for a paragraph, take a few lines above and below, capturing at
+  least the whole sentince.
+- This currently doesn't find the end of the link before calculating
+  the end of the line, so it might not even capture the whole link.
+*** TODO org roam refile as file
+It's useful to be able to export an existing header as a new card.
+
+#+BEGIN_SRC emacs-lisp
+(defun udh/org-roam-heading-to-node ()
+  "Convert current subtree at point to a node file.  Tag with UPDATE."
+	;; This is a minor rewrite of org-roam-extract-subtree for my preferences
+	;; Namely, have a top level heading rather than a file name and give it a tag.
+  (interactive)
+  (save-excursion
+    (org-back-to-heading-or-point-min t)
+    (when (bobp) (user-error "Already a top-level node"))
+    (org-id-get-create)
+    (save-buffer)
+    (org-roam-db-update-file)
+    (let* ((template-info nil)
+           (node (org-roam-node-at-point))
+           (template (org-roam-format-template
+                      (string-trim (org-capture-fill-template org-roam-extract-new-file-path))
+                      (lambda (key default-val)
+                        (let ((fn (intern key))
+                              (node-fn (intern (concat "org-roam-node-" key)))
+                              (ksym (intern (concat ":" key))))
+                          (cond
+                           ((fboundp fn)
+                            (funcall fn node))
+                           ((fboundp node-fn)
+                            (funcall node-fn node))
+                           (t (let ((r (read-from-minibuffer (format "%s: " key) default-val)))
+                                (plist-put template-info ksym r)
+                                r)))))))
+           (file-path
+            (expand-file-name
+             (read-file-name "Extract node to: "
+                             (file-name-as-directory org-roam-directory) template nil template)
+             org-roam-directory)))
+      (when (file-exists-p file-path)
+        (user-error "%s exists. Aborting" file-path))
+      (org-cut-subtree)
+      (save-buffer)
+      (with-current-buffer (find-file-noselect file-path)
+        (org-paste-subtree)
+        (while (> (org-current-level) 1) (org-promote-subtree))
+				(beginning-of-buffer)
+				(org-toggle-tag "UPDATE" 'on)
+        (save-buffer)))))
+#+END_SRC
 ** My Rebuild
 :PROPERTIES:
 :NAME:     Zettel
 :END:
+This is largely outdated as =org-roam= is now mature enough for usage.
+
 I'm just going to build the tools my self for now.
 *** Generic Utilities
 :PROPERTIES:
@@ -597,20 +731,67 @@ I'm just going to build the tools my self for now.
                (zap-to-char 1 ?\])))
             (t
              (org-mark-ring-goto))))))
+
+(defun udh/org-link-update-id ()
+    (interactive)
+    (save-excursion
+    (while (not (org-element-link-parser))
+      (backward-char))
+    (let ((context (org-element-context))
+					(list-of-links-p (org-element-property
+            :contents-begin (org-element-link-parser))))
+			(cond ((and (eq (car context) 'link)
+							 (eq (caadr context) :type)
+							 (string= (cadadr context) "id"))
+						 't
+						 ;; if its already an id link, skip this
+						 ;; There is probably (patterned) a better way to check the link type.
+						 )
+						((and (eq (car context) 'link)
+							 (eq (caadr context) :type)
+							 (or 
+								(string= (cadadr context) "http")
+								(string= (cadadr context) "https")
+								(string= (cadadr context) "doi")
+							  (string= (cadadr context) "file")))
+						 't
+						 ;; Web links can't be updated this way
+						 )
+						(t
+						 (org-open-at-point)
+						 (cond ((org-at-heading-p)
+										(kill-new (org-id-get (point) t))
+										(org-mark-ring-goto)
+										(insert "[[id:")
+										(yank)
+										(pop-kill-ring)
+										(insert "]")
+										(delete-forward-char 1)
+										(when list-of-links-p
+											(zap-to-char 1 ?\])))
+									 (t
+										(org-mark-ring-goto))))))))
 #+END_SRC
+
+#+RESULTS:
+: udh/org-link-update-id
+
+***** WORKING Don't open external links
+CLOSED: [2024-05-06 Mon 17:37]
+The =org-open-at-point= opens the browser if the link is external.
 **** BROKEN Update All Links
 :PROPERTIES:
 :NAME:     Zettel_All_Link_Stability
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun udh/org-link-update-buffer ()
-  (interactive)
-  (beginning-of-buffer)
-  (while (not (org-next-link))
-    (when (string= "fuzzy"
-           (org-element-property
-            :type (org-element-link-parser)))
-      (udh/org-link-update))))
+                (interactive)
+                (beginning-of-buffer)
+                (while (org-next-link)
+                  ;;(when (string= "fuzzy"
+                  ;;	   (org-element-property
+                  ;;	    :type (org-element-link-parser)))
+                                (udh/org-link-update-id))))
 #+END_SRC
 **** Update Links Live
 :PROPERTIES:
@@ -779,6 +960,65 @@ often unhelpful and extra work to maintain.
 #+BEGIN_SRC emacs-lisp
 (udh/install-and-load 'bind-key)
 #+END_SRC
+** Interactive Compleation Buffers
+:PROPERTIES:
+:NAME:     dynamic-completion
+:END:
+I'm happy to say that the mess that was IDO has been largely replaced,
+several times.  The feature is now stable enough that it's useable.
+
+The latest version, called =ivy= has been subsumed into a package
+called =counsel=.
+
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'counsel)
+(ivy-mode)
+#+END_SRC
+*** DISABLED Disable in find file
+:PROPERTIES:
+:NAME:     dynamic-completion-not-file-open
+:END:
+The file finder is much easier when it is consistent with a terminal,
+so this is better disabled.
+
+https://emacs.stackexchange.com/questions/58631/how-to-open-a-file-without-using-ivy
+
+Disabled: The tab compleation in regular find file doesn't allow for
+fuzzy matching or cycling.  Trying =ivy= for a while and seeing if
+it's anoying.
+#+BEGIN_SRC emacs-lisp
+;(defun gjg/find-file-no-ivy ()
+;  (interactive)
+;  (let ((ivy-state ivy-mode))
+;    (ivy-mode -1)
+;    (call-interactively 'find-file)
+;    (ivy-mode ivy-state)))
+;
+;(global-set-key (kbd "C-x C-f") 'gjg/find-file-no-ivy)
+#+END_SRC
+*** Disable in M-x
+:PROPERTIES:
+:NAME:     dynamic-completion-not-execute-command
+:END:
+I almost never want to search for a command; but, I regularly use the
+history.  Disabling ivy for purpose.  This may be better acomplished
+if I can have access to history with the up arrow but also allow
+search when typing.  The two interaction modes are pretty exclusive,
+so this should be achievable.
+
+#+BEGIN_SRC emacs-lisp
+(defun udh/execute-command-no-ivy ()
+  (interactive)
+  (let ((ivy-state ivy-mode))
+    (ivy-mode -1)
+    (call-interactively 'execute-extended-command)
+    (ivy-mode ivy-state)))
+
+(global-set-key (kbd "M-x") 'udh/execute-command-no-ivy)
+#+END_SRC
+*** TODO Allow for non-Compleation
+Currently =C-M-j= calls =ivy-immediate-done=, map that to
+=C-<return>=.
 ** TODO Navigation With C-c C-c
 :PROPERTIES:
 :NAME:     Follow_Links
@@ -1260,7 +1500,17 @@ track point being tapped.
 :NAME:     Org_Mode_Settings
 :END:
 #+BEGIN_SRC emacs-lisp
-  (udh/install-and-load 'org)
+  ;(udh/install-and-load 'org)
+  (use-package org
+		:pin gnu)
+  (require 'org)
+#+END_SRC
+*** Open Links in Same Window
+:PROPERTIES:
+:NAME:     Org_Mode_Same_Window
+:END:
+#+BEGIN_SRC emacs-lisp
+(setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 #+END_SRC
 *** Spell Check by Default
 :PROPERTIES:
