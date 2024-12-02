@@ -1,0 +1,5 @@
+#! /usr/bin/env zsh
+#alias _rstudio=rstudio
+# TODO:   libssl.so.3: cannot open shared object file: No such file or directory
+# openssl.dev
+rstudio(){ nix-shell -p zlib cmake fontconfig curl.dev --run "rstudio $@" }
