@@ -203,7 +203,8 @@
 
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
 	reset-up-one             = "reset HEAD^ --no-refresh"
-	reset-hard               = "!git r && git clean -d -f"
+	clean-standard           = "clean -d -f"
+	reset-hard               = "fold reset-opt-file-or-commit clean-standard"
 
 	#############################
 	# Local Commit Manipulation #
