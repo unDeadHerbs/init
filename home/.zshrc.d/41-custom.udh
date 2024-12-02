@@ -222,28 +222,28 @@ exists exa && l_test(){
 	fi	
     }
 
-uname -r | grep "gentoo" &&
-    package_from(){
-	location=`realpath $(whence -p "$@")` 2> /dev/null
-	if [ "$?" = "0" ]; then
-	    if exists eix; then
-		equery -q b $location | eix -'|*'
-	    else
-		equery b $location
-	    fi
-	else
-	    if exists e-file; then
-		if e-file "$@"|grep "No matches found." >/dev/null; then
-		    which "$@"
-		else
-		    e-file "$@"
-		fi
-	    else
-		which "$@"
-	    fi
-	fi
-	# comm -12 <(equery d packagename|sort|sed 's/[-][0-9.]*\([-]r[0-9]\+\|\)$//') /var/lib/portage/world
-    }
+#uname -r | grep "gentoo" &&
+#    package_from(){
+#	location=`realpath $(whence -p "$@")` 2> /dev/null
+#	if [ "$?" = "0" ]; then
+#	    if exists eix; then
+#		equery -q b $location | eix -'|*'
+#	    else
+#		equery b $location
+#	    fi
+#	else
+#	    if exists e-file; then
+#		if e-file "$@"|grep -E "(nothing|No matches) found." >/dev/null; then
+#		    which "$@"
+#		else
+#		    e-file "$@"
+#		fi
+#	    else
+#		which "$@"
+#	    fi
+#	fi
+#	# comm -12 <(equery d packagename|sort|sed 's/[-][0-9.]*\([-]r[0-9]\+\|\)$//') /var/lib/portage/world
+#    }
 
 uname -a|grep "\(Ubuntu\|Debian\)" &&
     package_from(){
