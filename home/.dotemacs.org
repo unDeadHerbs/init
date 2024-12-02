@@ -52,6 +52,21 @@ Since I want all settings to be in this file, I'm disabling
             (expand-file-name "custom.el" server-socket-dir)
           (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
 #+END_SRC
+*** Allow Local Values
+:PROPERTIES:
+:NAME:     Safe_Local_Variables
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(safe-local-variable-values
+	 '((eval org-update-statistics-cookies 't)
+		 (eval local-set-key
+					 (kbd "]")
+					 #'udh/close-braket-and-update-link)
+		 (indent-tabs-mode quote nil)
+		 (eval org-show-todo-tree 'nil))))
+#+END_SRC
 ** Setup Packages
 :PROPERTIES:
 :NAME:     Package
@@ -883,7 +898,7 @@ Spelling is hard, enable spell checking everywhere I can.
 *** TODO org-mode and magit-commit aren't working
 Looking into the run hooks, it claims that text-mode-hook should
 be run, org might just be clearing the minor mode away.
-** Undo Tree Everywhere
+** BROKEN Undo Tree Everywhere
 :PROPERTIES:
 :NAME:     Undo_Tree_Everwhere
 :END:
@@ -1599,7 +1614,8 @@ Call =org-trello/sync-buffer= when the buffer is saved.
      (lisp . t)
      (scheme . t)
      (python . t)
-     (plantuml . t)))
+     (plantuml . t)
+     (R . t)))
 #+END_SRC
 **** TODO Sort - other languages
 :PROPERTIES:
@@ -1673,7 +1689,7 @@ I used to have `ob-tmux` installed, see why.
 :END:
 Add a latex uspackage for =listings= in the offending document.
 #+BEGIN_SRC emacs-lisp
-  (setq 'org-src-preserve-indentation 't)
+  (customize-set-variable 'org-src-preserve-indentation 't)
   (add-to-list 'org-latex-packages-alist '("" "listingsutf8"))
 #+END_SRC
 *** TODO Move C-c C-t to C-c t to match Org-Agenda
@@ -1713,8 +1729,7 @@ should) and then move the cursor off of the image to after it.  This
 is not how it works on chars, where the cursor just stays on top of
 the char while typeing.
 *** TODO Unknown
-These two used to be installed, what where they for?
-;; org-plus-contrib
+This used to be installed, what is it for?
 ;; org-preview-html
 *** TODO When I global cycle the visibility to none, center the cursor
 I often switch to the overview and then need to scroll up to see
@@ -1733,6 +1748,14 @@ multiple lines, breaking the python string syntax.
 I think it happens when I switch on follow mode.
 *** TODO =secretaria= seems intresting
 Look into the =secretaria= package
+*** Fold PROPERTIES Draws
+They stopped being auto folded, I think this is a bug in =org-roam=.
+This also hides code blocks; but, that's probably ok.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-hide-block-startup t
+				org-startup-folded "fold")
+#+END_SRC
 ** Dired
 :PROPERTIES:
 :NAME:     Dired
@@ -2259,6 +2282,10 @@ Use =matlab.exe -batch "1+1"= to run scripts on the shell.
   ;(add-hook 'matlab-mode-hook 'whitespace-cleanup)
   ;(add-hook 'matlab-mode-hook 'indent-buffer)
 #+END_SRC
+** R
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'ess)
+#+END_SRC
 ** Pascal
 :PROPERTIES:
 :NAME:     Pascal
@@ -2347,7 +2374,8 @@ Anki addon [[https://github.com/FooSoft/anki-connect#installation][AnkiConnect]]
 use [[https://github.com/ankidroid/Anki-Android][AnkiDroid]] as my client which supports native mathjax, due to a [[https://github.com/louietan/anki-editor/issues/60][bug]]
 this must be done before the plug ins loaded.
 #+BEGIN_SRC emacs-lisp
-  (setq-default anki-editor-use-math-jax t)
+  ;;(setq-default anki-editor-use-math-jax t)
+  (setq-default anki-editor-latex-style 'mathjax)
   (udh/install-and-load 'anki-editor)
 #+END_SRC
 *** TODO On push open anki and then close it again
@@ -2543,3 +2571,112 @@ t))
 ** Packages to look at
 Org-drill?
 outline-toc?
+* Post Config Startup
+** BROKEN Sync Org IDs
+:PROPERTIES:
+:NAME:     File_Motions_for_Internal_IDs
+:END:
+If a file moves, the link cache will forget where it is.  This also
+opens all of the org files, so it needs to be after all other
+configuration.
+
+Disabled because this opens every org file I have at startup, which is
+pretty annoying.
+#+BEGIN_SRC emacs-lisp
+;(org-id-update-id-locations)
+#+END_SRC
+*** TODO Rather than at startup, run this when a link fails to be found?
+*** TODO If the file wasn't already open, close it when scanned?
+* One Off Tools
+** Move sdate from org heading name to properties
+#+BEGIN_SRC emacs-lisp
+(defun udh/org-sdate-name-to-property ()
+		"I've named a lot of org headings in the format \"date - name\" and I'd
+like to move that date into the properties drawer."
+	(interactive)
+	(let ((current_name (nth 4 (org-heading-components)))
+				(date_pattern "[0-9][0-9][0-9][0-9][0-9]?")
+				(separator_pattern " - ")
+				(title_pattern ".+"))
+		(if (string-match (concat "^"
+															date_pattern
+															separator_pattern
+															title_pattern
+															"$")
+											current_name)
+		(let ((new_name (replace-regexp-in-string
+										 (concat date_pattern
+														 separator_pattern)
+										 ""
+										 current_name))
+		      (date (replace-regexp-in-string
+								 (concat separator_pattern
+												 title_pattern)
+								 ""
+								 current_name)))
+			(org-set-property "CREATION_DATE" date)
+			(org-edit-headline new_name)))))
+;; (org-map-entries 'udh/org-sdate-name-to-property)
+#+END_SRC
+** Move regular date from org heading name to sdate in properties
+#+BEGIN_SRC emacs-lisp
+(defun udh/org-date-name-to-property ()
+		"I've named a lot of org headings in the format \"date - name\" and I'd
+like to move that date into the properties drawer."
+	(interactive)
+	(let ((current_name (nth 4 (org-heading-components)))
+				(date_pattern "20[0-9][0-9]-[0-1][0-9]-[0-3][0-9]")
+				(separator_pattern " - ")
+				(title_pattern ".+"))
+		(if (string-match (concat "^"
+															date_pattern
+															separator_pattern
+															title_pattern
+															"$")
+											current_name)
+		(let ((new_name (replace-regexp-in-string
+										 (concat date_pattern
+														 separator_pattern)
+										 ""
+										 current_name))
+		      (date (replace-regexp-in-string
+								 (concat separator_pattern
+												 title_pattern)
+								 ""
+								 current_name)))
+			(org-set-property "CREATION_DATE" (udh/date-to-sdate date))
+			(org-edit-headline new_name)))))
+;; (org-map-entries 'udh/org-sdate-name-to-property)
+#+END_SRC
+** TODO Add Dates to "Dayly Note"s
+If the title is exactly "Daily Note", get the "CREATION_DATE" and add
+that to the title as "Daily Note (10056)"
+#+BEGIN_SRC emacs-lisp
+(defun udh/add-date-to-daily ()
+		"I've named a lot of org headings in the format \"date - name\" and I'd
+like to move that date into the properties drawer."
+	(interactive)
+	(let ((current_name (nth 4 (org-heading-components)))
+				(date_pattern "20[0-9][0-9]-[0-1][0-9]-[0-3][0-9]")
+				(separator_pattern " - ")
+				(title_pattern ".+"))
+		(if (string-match (concat "^"
+															date_pattern
+															separator_pattern
+															title_pattern
+															"$")
+											current_name)
+		(let ((new_name (replace-regexp-in-string
+										 (concat date_pattern
+														 separator_pattern)
+										 ""
+										 current_name))
+		      (date (replace-regexp-in-string
+								 (concat separator_pattern
+												 title_pattern)
+								 ""
+								 current_name)))
+			(org-set-property "CREATION_DATE" (udh/date-to-sdate date))
+			(org-edit-headline new_name)))))
+;; (org-map-entries 'udh/org-sdate-name-to-property)
+#+END_SRC
