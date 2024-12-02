@@ -25,9 +25,10 @@ sleep   3 && i3-msg 'workspace   1' &
 ##
 
 sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e "tmux attach"' &
+sleep   10 && i3-msg 'workspace 2; exec anki' &
 #sleep  10 && xscreensaver &
-sleep  10 && i3-msg 'workspace 0; exec xfce4-terminal -e "barriers --disable-crypto -f"' &
-#sleep  25 && i3-msg 'workspace 11; exec thunderbird' &
+sleep  20 && i3-msg 'workspace 0; exec xfce4-terminal -e "barriers --disable-crypto -f"' &
+sleep  35 && i3-msg 'workspace 11; exec thunderbird' &
 
 #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
 
@@ -42,7 +43,7 @@ sleep  10 && i3-msg 'workspace 0; exec xfce4-terminal -e "barriers --disable-cry
 
 #sleep  80 && i3-msg 'workspace  1; exec google-chrome-stable' &
 #wait for the tabs to load
-sleep 100 && i3-msg 'layout tabbed' &
+#sleep 100 && i3-msg 'layout tabbed' &
 
 ##
 # Move to main workspace
