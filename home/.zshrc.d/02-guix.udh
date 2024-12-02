@@ -9,7 +9,7 @@ if exists guix; then
 				ed sl cowsay youtube-dl vim \
 				aspell aspell-dict-en \
 				neofetch curl wget mc clang unzip \
-				figlet zsh-autosuggestions \
+				figlet zsh-autosuggestions thefuck \
 				sicp progress parallel bc bat zoxide fzf entr info-reader
 		# ghc-pandoc
 		# sh-z
@@ -18,6 +18,7 @@ if exists guix; then
 fi
 
 source ~/.zshrc.d/02-guix.base
+
 
 # TODO: only if guix is the base system
 #exists xinit && xinit(){
