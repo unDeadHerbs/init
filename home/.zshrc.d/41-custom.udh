@@ -43,7 +43,7 @@ quote(){ for s in $@; do echo -n $s|sedesc; echo -n " "; done; echo };
 # Create aliases for programs that  need to be run as root
 ##TODO: have that check if in sudoers file
 exists sudo || sudo(){
-	su -c "cd `pwd`; `quote "$@"`" -
+	su -c "cd \"`pwd`\"; `quote "$@"`" -
     }
 exists emerge && alias emerge="sudo emerge"
 exists eix-sync && alias eix-sync="sudo eix-sync -q"
