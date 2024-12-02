@@ -265,8 +265,12 @@ is back treaceable in elisp.
 :NAME:     Sdate_Function
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun sdate ()
+  (defun udh/sdate ()
+		"Today's date as an sdate"
 	  (udh/shell "sdate -f 5 -d"))
+  (defun udh/date-to-sdate (date)
+		"Convert a regular date to an sdate"
+	  (udh/shell (concat "sdate -f 5 -d -D " date)))
 #+END_SRC
 **** TODO rewrite this in elisp
 * GTD
@@ -507,14 +511,14 @@ I'm just going to build the tools my self for now.
 :PROPERTIES:
 :NAME:     Zettel_All_Custom_ID
 :END:
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
   (defun udh/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the
      current file which do not already have one."
     (interactive)
     (org-map-entries (lambda () (udh/org-custom-id-get (point) 'create))))
   
-  (defun org-id-new (&optional prefix)
+  (defun udh/org-id-new (&optional prefix)
     "Create a new globally unique ID.
   
   An ID consists of two parts separated by a colon:
@@ -573,7 +577,7 @@ I'm just going to build the tools my self for now.
 :END:
 #+BEGIN_SRC emacs-lisp
   ;; https://emacs.stackexchange.com/a/47752/27015
-  (defun udh/org-link-update ()
+  (defun udh/org-link-update-custom-id ()
     (interactive)
     (save-excursion
     (while (not (org-element-link-parser))
@@ -628,7 +632,7 @@ is easy enough.  This is much faster than walking the tree on save.
              t))
            (type (org-element-type context)))
       (cond
-        ((eq type 'link) (udh/org-link-update)))))
+        ((eq type 'link) (udh/org-link-update-id)))))
 
 
   (add-hook 'org-mode-hook
@@ -825,7 +829,7 @@ technical beginning of line.
   ;;(global-set-key (kbd "C-M-d") 'mc/mark-all-like-this)
 #+END_SRC
 *** TODO =ret= terminates multiple_cursors for some reason
-** Have middle click past not move the cursor
+** Have middle click paste not move the cursor
 :PROPERTIES:
 :NAME:     Mouse_Yank_at_Point
 :END:
