@@ -2,7 +2,7 @@ mkdir -p ~/init/logs
 # check if $HOST and $USER are system independant, otherwise switch to $(hostname) and $(whoami)
 for file in $(ls ~/.zshrc.d|
                   sed 's/./~\/.zshrc.d\/&/'|
-                  egrep "[.](base|$HOST|$USER)$"|
+                  grep -E "[.](base|$HOST|$USER)$"|
                   sed 's/-.*//'|
                   sort|uniq)
 do

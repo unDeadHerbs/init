@@ -82,13 +82,13 @@ clean:
 # Remake using find's features to filter and run
 .PHONY: format
 format:
-	@find|egrep '.*[.](cpp|hpp|cxx|hxx|cc|hc|c++|h++|c|h|tpp|txx)$$'|sed 's/[] ()'\''\\[&;]/\\&/g'|xargs clang-format -i
+	@find|grep -E '.*[.](cpp|hpp|cxx|hxx|cc|hc|c++|h++|c|h|tpp|txx)$$'|sed 's/[] ()'\''\\[&;]/\\&/g'|xargs clang-format -i
 	@echo "reformatted code"
 
 .PHONY: spell
 spell:
 	@echo " - Searching for Non-words in Code files -"
-	@git ls | cut -f 2 | egrep "[.][ch](pp|)$$" | \
+	@git ls | cut -f 2 | grep -E "[.][ch](pp|)$$" | \
 	 while read f; do \
 		w=`cat $$f | aspell list --camel-case | sort | uniq | awk '{ if(length($$1)>4)print $$1 } '` ; \
 		[ -z "$$w" ] || echo "$$f :: $$w" | xargs ; \
@@ -98,7 +98,7 @@ spell:
 .PHONY: histogram
 histogram:
 	@echo " - Building a histogram of used words - "
-	@git ls | cut -f 2 | egrep "[.][ch](pp|)$$" | \
+	@git ls | cut -f 2 | grep -E "[.][ch](pp|)$$" | \
 	 while read f; do cat $$f; done | \
 	 sed 's/\(\s\|[]({,<=>;})[*/+-]\|[0-9]\)/\n/g'|grep -v "^$$"|\
 	 sort|uniq -c|sort -gr|head
@@ -106,9 +106,9 @@ histogram:
 .PHONY: wet_detector
 wet_detector:
 	@echo " - Looking for WET lines - "
-	@find|egrep "[.]c$"|xargs cat|egrep "[[:alnum:]]"|\
+	@find|grep -E "[.]c$"|xargs cat|grep -E "[[:alnum:]]"|\
          sed -e 's,^\([[:space:]]\|[{}]\)*,,' -e 's,\([[:space:]]\|[{}]\)*$,,'|\
-         egrep -vxf <(echo "break;\nelse\nreturn.*;\n#.*\n//.*\ndefault:")|\
+         grep -E -vxf <(echo "break;\nelse\nreturn.*;\n#.*\n//.*\ndefault:")|\
          sort|uniq -c|grep -v "^[[:blank:]]*[1-4] " |sort -rn|head
 
 include $(wildcard $(DEPDIR)/*.d)

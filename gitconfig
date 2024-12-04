@@ -124,7 +124,7 @@
 	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start)..HEAD \"$@\"; }; f"
 	branch-name          = "rev-parse --abbrev-ref HEAD"
 	head-hash 	     = "rev-parse --short HEAD"
-	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | egrep -v \"^HEAD$\" | head -1; }; f"
+	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | grep -E -v \"^HEAD$\" | head -1; }; f"
 	cat                  = "show"
 	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	# TODO: This grep should be porcelain
@@ -173,7 +173,7 @@
 	# TODO: take an opional HEAD replacement
 	# TODO: this dumps the rebase help doc when it's done
 	# TODO: give the old hash of the kicked out commit
-	rebase-skip-hard                    = "!f(){ while git rebase --skip | grep \"CONFLICT\" >> /dev/null && echo \"rebase kicked one out\"; do true; done 2>&1 | egrep -v \"^fatal: No rebase in progress?\"; true; }; f"
+	rebase-skip-hard                    = "!f(){ while git rebase --skip | grep \"CONFLICT\" >> /dev/null && echo \"rebase kicked one out\"; do true; done 2>&1 | grep -E -v \"^fatal: No rebase in progress?\"; true; }; f"
 	# TODO: Give the killsed hash so that it can be found if needed
 	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name) ; git rebase-skip-hard; }; f"
 	#TODO: works when run manual, but fails when called
