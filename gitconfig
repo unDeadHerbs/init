@@ -138,6 +138,7 @@
 
 	# TODO: Have this take the common ancestor so that I can just specify "master"
 	# bisect-here-from-test = take hash or ref - take test script
+	bisect-branch-start = "!f(){ git bisect start ; git bisect good $(git branch-start) ; }; f"
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs hash and test\"; fi; }; f"
 	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
 
@@ -204,7 +205,9 @@
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
 	reset-up-one             = "reset HEAD^ --no-refresh"
 	clean-standard           = "clean -d -f"
+	clean-standard-ignored   = "clean -d -f -x"
 	reset-hard               = "fold reset-opt-file-or-commit clean-standard"
+	reset-hard-ignored       = "fold reset-opt-file-or-commit clean-standard-ignored"
 
 	#############################
 	# Local Commit Manipulation #
@@ -258,6 +261,8 @@
 	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -e \"s,$1,g\" -i ; }; f"
 	sed--pat-rule = "!f(){ git grep -l  \"$1\" | xargs -l -r sed -e \"$2\" -i ; }; f"
 	sed--pat-filter-rule = "!f(){ git grep -l  \"$1\" | grep -ivE \"$2\"  | xargs -l -r sed -e \"$3\" -i ; }; f"
+	# TODO: make a small change, commit it, repeat -- this matters for multiple changes on a single line
+	# TODO: convert a stack of commits into stashes
 
 	#########################
 	# Not Head Manipulation #
@@ -387,6 +392,10 @@
 	raict= "rep-wd fold add-interactive commit-branch-time"
 	rbo  = "rebase-origin"
 	rh   = "reset-hard"
+	rhx  = "reset-hard-ignored"
 	rsact= "rep-wd fold small-add commit-branch-time"
 	s    = "stash-tracked-verbose"
 	stat = "status"
+
+  # allow fast forwared merges on pull
+	pull = "pull -ff"
