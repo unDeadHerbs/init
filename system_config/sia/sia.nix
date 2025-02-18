@@ -110,7 +110,6 @@ in {
       "google-chrome"
     ];
 
-  programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.udh = {
     isNormalUser = true;
@@ -180,10 +179,12 @@ in {
       ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
     };
   };
-  services.emacs.enable = true;
 
-  # Install firefox.
+  # Install some core programs.
+  programs.zsh.enable = true;
+  services.emacs.enable = true;
   programs.firefox.enable = true;
+  programs.mosh.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
