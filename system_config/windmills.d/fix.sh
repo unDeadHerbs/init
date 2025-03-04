@@ -1,23 +1,27 @@
 #!/bin/bash
 set -e
 
-DefaultArgs="--keep-going --verbose-conflicts"
-
-u(){ until $@; do sleep 1; done }
+DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask"
+exclude_known_sad="--exclude libpvx"
 
 # Make system consistent
-emerge -qvDn @world --backtrack=30 $DefaultArgs
-emerge -qvDnNU @world --backtrack=30 $DefaultArgs
-emerge -qvDnNUu @world --backtrack=30 $DefaultArgs
+emerge -Dn @world --backtrack=30 $DefaultArgs
+emerge -DnNU @world --backtrack=30 $DefaultArgs
+emerge -DnNUu @world --backtrack=30 $DefaultArgs
 
 # Get any updates
 eix-sync -q
 
-emerge -qvDnNUu @world --backtrack=30 $DefaultArgs
+# Check the news before installing updates
+eselect news list
+echo
+echo "Cancle if there is any important news"
+echo "Otherwise, press enter to contune"
+read
 
-emerge -qvc --ask # yep, keep the ask
+emerge -DnNUu @world --backtrack=30 $DefaultArgs $exclude_known_sad
 
-
+emerge -qvc --ask --exclude gentoo-sources # keep the ask
 
 #emerge -NUu1D @world --backtrack=30 $DefaultArgs $@
 #emerge -NUu1D @world --backtrack=30 $DefaultArgs $@
@@ -32,29 +36,6 @@ revdep-rebuild -iv -- $DefaultArgs $@ # --exact seems to have been removed?
 # echo -n 255 > /sys/devices/platform/i8042/serio1/speed
 # echo -n 255 > /sys/devices/platform/i8042/serio1/sensitivity
 
-# cd /usr/include
-# ln -s freetype2 freetype
-
-#chsh -s $(which zsh)
-
 #emerge -qva1 $(emerge -qvac 2>&1|grep pulle|sed -e 's/^ [*]   //' -e 's/[:[].*//' -e 's/[=><]//g' -e 's/[-][r0-9.-]*$//'|grep -v "pull"|uniq|xargs echo) --autounmask=y
 
 mandb
-
-
-##
-# for later
-##
-# acct-group/tape: 0 none none
-# acct-group/tty: 0 none none
-# virtual/logger: 0-r1 none none
-# virtual/shadow: 0 none none
-# acct-group/disk: 0 none none
-# acct-group/cdrom: 0 none none
-# acct-group/video: 0 none none
-# sys-devel/bin86: 0.16.21 none none
-# acct-group/dialout: 0 none none
-# acct-group/kmem: 0 none none
-# virtual/python-funcsigs: 2-r1 none none
-# acct-group/audio: 0 none none
-
