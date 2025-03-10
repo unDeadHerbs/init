@@ -5,12 +5,12 @@ source ~/.zshrc.d/01-local
 source ~/.zshrc.d/02-guix.base
 if exists guix; then
     _guix_install_noreplace \
-				tmux i3status git emacs feh make htop \
+				tmux i3status mosh git emacs feh htop \
 				ed sl cowsay youtube-dl vim \
 				aspell aspell-dict-en \
-				neofetch curl wget mc clang unzip \
+				neofetch curl wget mc unzip clang make socat \
 				figlet zsh-autosuggestions thefuck \
-				sicp progress parallel bc bat zoxide fzf entr info-reader
+				sicp progress parallel bc bat zoxide fzf entr info-reader \
 		# ghc-pandoc
 		# sh-z
     # To look at: lean minikanren
