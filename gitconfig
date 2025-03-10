@@ -269,11 +269,12 @@
 	###########################
 
 	list--ext = "!f(){ find | grep -E \"[.]$1$\" ; }; f"
-	sed--ext-pat-replace = "!f(){ git list--ext \"$1\" | xargs -r -I {} -- sed -e \"s@$2@$3@g\" -i \"{}\"; }; f"
-	sed--from-to = "!f(){ git grep -l \"$1\" | xargs -l -r sed -e \"s,$1,$2,g\" -i ; }; f"
-	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -e \"s,$1,g\" -i ; }; f"
-	sed--pat-rule = "!f(){ git grep -l  \"$1\" | xargs -l -r sed -e \"$2\" -i ; }; f"
-	sed--pat-filter-rule = "!f(){ git grep -l  \"$1\" | grep -ivE \"$2\"  | xargs -l -r sed -e \"$3\" -i ; }; f"
+	sed--ext-pat-replace = "!f(){ git list--ext \"$1\" | xargs -r -I {} -- sed -Ee \"s@$2@$3@g\" -i \"{}\"; }; f"
+	sed--from-to = "!f(){ git grep -El \"$1\" | xargs -l -r sed -Ee \"s,$1,$2,g\" -i ; }; f"
+	ised--from-to = "!f(){ echo \"$1\" | sed \"s/,.*//\" | xargs -l -r git grep -l | xargs -l -r sed -Ee \"s,$1,g\" -i ; }; f"
+	sed--pat-rule = "!f(){ git grep -l  \"$1\" | xargs -l -r sed -Ee \"$2\" -i ; }; f"
+	sed--pat-filter-rule = "!f(){ git grep -l  \"$1\" | grep -ivE \"$2\"  | xargs -l -r sed -Ee \"$3\" -i ; }; f"
+	sed--pat-filter-rule-type = "!f(){ git grep -l  \"$1\" -- \"$4\" | grep -ivE \"$2\"  | xargs -l -r sed -Ee \"$3\" -i ; }; f"
 	# TODO: make a small change, commit it, repeat -- this matters for multiple changes on a single line
 	# TODO: convert a stack of commits into stashes
 
