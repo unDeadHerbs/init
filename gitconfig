@@ -219,6 +219,8 @@
 	clean-standard-ignored   = "clean -d -f -x"
 	reset-hard               = "fold reset-opt-file-or-commit clean-standard"
 	reset-hard-ignored       = "fold reset-opt-file-or-commit clean-standard-ignored"
+	reset-whole-branch       = "!git reset $(git branch-start--opt-branch) --no-refresh"
+	reset-fetch              = "fold reset-whole-branch reset-hard fetch-and-ff-pull"
 
 	#############################
 	# Local Commit Manipulation #
@@ -402,6 +404,7 @@
 	r1   = "reset-up-one"
 	raict= "rep-wd fold add-interactive commit-branch-time"
 	rbo  = "rebase-origin"
+	rf   = "reset-fetch"
 	rh   = "reset-hard"
 	rhx  = "reset-hard-ignored"
 	rsact= "rep-wd fold small-add commit-branch-time"
