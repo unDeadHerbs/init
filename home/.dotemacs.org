@@ -2023,6 +2023,13 @@ Shouldn't emacs know where etags is?
     (pretty-regexp "module" "◳"))
   (add-hook 'scad-mode-hook 'udh/scad-prettify)
 #+END_SRC
+** Coq
+:PROPERTIES:
+:NAME:     Coq
+:END:
+#+BEGIN_SRC emacs-lisp
+(udh/install-and-load 'proof-general)
+#+END_SRC
 ** Markdown
 :PROPERTIES:
 :NAME:     Markdown
