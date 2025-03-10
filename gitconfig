@@ -105,10 +105,21 @@
 	log-relivant = "log-relivant-here-master-opt-hash-list"
 
 	branch-head-authors = "for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' --sort=-committerdate"
-	branch-heads-by = "!git branch-head-authors|grep -i "
+	branch-heads-by--person = "!git branch-head-authors|grep -i "
 
-	branch-start = "merge-base HEAD origin/HEAD"
-	log-branch         = "!git log-standard $(git branch-start)~2..HEAD $(git branch-start)~2..refs/remotes/origin/HEAD"
+	branch-start--branch = "merge-base origin/HEAD"
+	branch-start--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git branch-start--branch HEAD ; else git branch-start--branch \"$1\" ; fi }; f"
+	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..refs/remotes/origin/HEAD"
+	diff-branch         = "!git diff-standard $(git branch-start--opt-branch)~2..HEAD"
+	diff-branch--branch = "!f(){ git diff-standard $(git branch-start--opt-branch \"$1\")~2..\"$1\"; };f"
+	diff-branch--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git diff-branch--branch HEAD ; else git diff-branch--branch \"$1\"; fi }; f"
+
+	# take two commits and diff the differences in them, all remaining arguments are given to the inner diff
+	diff-diffs--commit-commit = "!f(){ diff --color=auto \"${@:3}\" <(git diff $1^ $1) <(git diff $2^ $2) ; }; f"
+	I-diff-branchs--branch-branch = "!f(){ diff --color=auto \"${@:3}\" <(git diff-branch--branch $1) <(git diff-branch--branch $2) ; }; f"
+	diff-branchs--branch-branch = "paged I-diff-branchs--branch-branch"
+	upstream-branch-name = "rev-parse --abbrev-ref --symbolic-full-name @{u}"
+	diff-upstream = "!git diff-branchs--branch-branch HEAD $(git upstream-branch-name)"
 	####################
 	# Local Inspection #
 	####################
@@ -121,12 +132,12 @@
 	diff-opt-commit      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
 	# TODO this should find if `HEAD` or `master` is closer and then use that instead
 	#diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
-	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start) HEAD \"$@\"; }; f"
+	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start--opt-branch) HEAD \"$@\"; }; f"
 	branch-name          = "rev-parse --abbrev-ref HEAD"
 	head-hash 	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | grep -E -v \"^HEAD$\" | head -1; }; f"
 	cat                  = "show"
-	branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
+	#branch-start-commit = "common-ancestors HEAD refs/remotes/origin/HEAD"
 	# TODO: This grep should be porcelain
 	# TODO: make a wrapper that sorts the results by hash and then shows the log for them if there only a few (so that many matches with a few logs can be viewed)
 	blame-standard = "blame -wCCC"
@@ -138,9 +149,9 @@
 
 	# TODO: Have this take the common ancestor so that I can just specify "master"
 	# bisect-here-from-test = take hash or ref - take test script
-	bisect-branch-start = "!f(){ git bisect start ; git bisect good $(git branch-start) ; }; f"
+	bisect-branch-start = "!f(){ git bisect start ; git bisect good $(git branch-start--opt-branch) ; }; f"
 	bisect-here-from-test = "!f(){ if [ $# -eq 2 ]; then git bisect start && git bisect bad && git bisect good $1 && git bisect run $2; else echo \"Needs hash and test\"; fi; }; f"
-	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start) $1; else echo \"Requires A test command\"; fi; }; f"
+	bisect-branch = "!f(){ if [ $# -eq 1 ]; then git bisect-here-from-test $(git branch-start--opt-branch) $1; else echo \"Requires A test command\"; fi; }; f"
 
 	diff-stashed = "diff-standard HEAD refs/stash"
 
@@ -186,7 +197,7 @@
 
 	bisect-kick-from-test = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
 
-	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start) $1; done; }; f"
+	bisect-kick-test                    = "!f(){ until $1; do bisect-kick-from-test $(git branch-start--opt-branch) $1; done; }; f"
 	# TODO: In the case of trucncated history
 	# =clone shallow= or =fetch deepeing shallow=
 	# - one commit
