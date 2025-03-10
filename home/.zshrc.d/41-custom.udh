@@ -89,6 +89,15 @@ U(){
 		done
 }
 
+ut(){
+    until "$@"
+    do
+	echo "Waiting to retry [press enter]"
+	read
+    done
+}
+
+
 # A version of neofetch that always works.
 # - options are checked in order of usefulness of output
 # - The fact that a version was installed is also useful information 
@@ -186,6 +195,21 @@ fullfetch(){
 		done
 }
 
+#recursive_fetch () 
+#{
+#		# TODO: currently, this won't terminate if there is a cycle
+#		# - Have each host print out both the list of hosts it can see and its uname information
+#		# - have the top level bash then use jump hosts to reach the branches
+#		# - This way the enumeration can check for duplicates (and also record the known edges)
+#    body=$(type recursive_fetch | tail +3 | tr '\n\t' '  ' | sed 's,\\,\\\\,g' | sed 's,\$,\\\$,g' | sed 's,",\\",g' | sed 's,{ ;,{,g');
+#    echo "$(whoami) $(uname -a)";
+#    type avahi-browse > /dev/null 2>&1 && { 
+#        avahi-browse -altr | grep hostname | sed 's/ *hostname = [[]\(.*\)[]]/\1/' | sort -u | while read host; do
+#            true | timeout 60 ssh -q "$host" -t "bash -c \"recursive_fetch()$body; recursive_fetch\"";
+#        done
+#    }
+#}
+
 function sleep_until {
     # sleep_until "7:00 tomorrow"
     seconds=$(( $(date -d "$*" +%s) - $(date +%s) )) # Use $* to eliminate need for quotes
@@ -222,6 +246,7 @@ exists exa && l_test(){
 	fi	
     }
 
+# TODO: use locate to make some of a new version of this
 #uname -r | grep "gentoo" &&
 #    package_from(){
 #	location=`realpath $(whence -p "$@")` 2> /dev/null
@@ -271,6 +296,14 @@ uname -a|grep "\(Ubuntu\|Debian\)" &&
 
 exists sox && alias noise_wash="play -n synth brownnoise synth pinknoise mix synth sine amod 0.3 10"
 exists play && alias whitenoise="play -n synth whitenoise"
+
+exists inotifywait && exists make && exists watch && \
+		imake(){
+				while true; do
+						inotifywait $(make $@ -nd|sed -n "s,\s*Prerequisite '\([^']*\)' is \(newer\|older\) than target.*,\1,p"|sort|uniq)
+						make $@
+				done
+		}
 
 [ "$(hostname)" = "windmills" ] && {
 		init_sync(){
