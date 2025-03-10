@@ -106,6 +106,9 @@
 
 	branch-head-authors = "for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' --sort=-committerdate"
 	branch-heads-by--person = "!git branch-head-authors|grep -i "
+	all-branches = "for-each-ref --format='%(refname)'"
+	authors-on-branch = "!f(){ git log $(git branch-start--branch \"$1\")..\"$1\" --format=\"%ad%x09%an%x09$1\" | sort --field-separator='\t' --key=2 --unique ; }; f"
+	branches-containing-author = "!f(){ git all-branches | git pipe-each authors-on-branch | grep -i \"$1\" ; }; f"
 
 	branch-start--branch = "merge-base origin/HEAD"
 	branch-start--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git branch-start--branch HEAD ; else git branch-start--branch \"$1\" ; fi }; f"
