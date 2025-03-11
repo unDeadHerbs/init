@@ -5,9 +5,9 @@ DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask"
 exclude_known_sad="--exclude libpvx"
 
 # Make system consistent
-emerge -Dn @world --backtrack=30 $DefaultArgs
-emerge -DnNU @world --backtrack=30 $DefaultArgs
-emerge -DnNUu @world --backtrack=30 $DefaultArgs
+emerge -Dn @world --backtrack=30 $DefaultArgs $exclude_known_sad
+emerge -DnNU @world --backtrack=30 $DefaultArgs $exclude_known_sad
+emerge -DnNUu @world --backtrack=30 $DefaultArgs $exclude_known_sad
 
 # Get any updates
 eix-sync -q
@@ -20,6 +20,7 @@ echo "Otherwise, press enter to contune"
 read
 
 emerge -DnNUu @world --backtrack=30 $DefaultArgs $exclude_known_sad
+# if manually doing this, also try the "sad" things to see if any of them are fixed or fixable errors
 
 emerge -qvc --ask --exclude gentoo-sources # keep the ask
 
