@@ -42,11 +42,29 @@
   };
   
   # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
+  services.xserver = {
+    enable = true;
+    xrandrHeads = [
+      {
+        monitorConfig = "Option \"Rotate\" \"left\"";
+        output = "HDMI-1";
+        primary = true;
+      }
+    ];
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+    displayManager = {
+      lightdm.enable = true;
+    };
+    windowManager.i3.enable = true;
+  };
+  services.displayManager = {
+    defaultSession = "none+i3";
+    autoLogin.enable = true;
+    autoLogin.user = "reiko";
+  };
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -82,6 +100,26 @@
     ];
   };
 
+  # Install firefox.
+  programs.firefox.enable = true;
+  # firefox kiosk
+  systemd.services.firefox = {
+    # this is the "node" in the systemd dependency graph that will run the service
+    wantedBy = [];
+    # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
+    after = ["graphical.target"];
+    description = "Start the firefox kiosk for reiko.";
+    serviceConfig = {
+      # see systemd man pages for more information on the various options for "Type": "notify"
+      # specifies that this is a service that waits for notification from its predecessor (declared in
+      # `after=`) before starting
+      Type = "simple";
+      User = "reiko";
+      ExecStart = ''${pkgs.firefox}/bin/firefox --kiosk'';
+      ExecStop = ''${pkgs.procps}/bin/pkill firefox'';
+    };
+  };
+  
   environment.systemPackages = with pkgs; [
     # barrier
     htop
@@ -98,7 +136,10 @@
   # };
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = false;
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
