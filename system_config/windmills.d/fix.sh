@@ -2,7 +2,7 @@
 set -e
 
 DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask"
-exclude_known_sad="--exclude libpvx"
+exclude_known_sad="--exclude libvpx"
 
 # Make system consistent
 emerge -Dn @world --backtrack=30 $DefaultArgs $exclude_known_sad
