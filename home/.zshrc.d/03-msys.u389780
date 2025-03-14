@@ -1,0 +1,6 @@
+#! /usr/bin/env zsh
+
+source 03-msys.base
+if [ "$(uname -o)" = "Msys" ]; then
+    pacman -S -q --needed --noconfirm mingw64/mingw-w64-x86_64-bat mingw64/mingw-w64-x86_64-eza 2> /dev/null
+fi
