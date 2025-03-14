@@ -130,6 +130,7 @@ in {
       ed
       emacs
       evince
+      eza
       feh
       figlet
       git

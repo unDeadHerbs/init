@@ -10,7 +10,7 @@ if exists guix; then
 				aspell aspell-dict-en \
 				neofetch curl wget mc unzip clang make socat \
 				figlet zsh-autosuggestions thefuck \
-				sicp progress parallel bc bat zoxide fzf entr info-reader \
+				sicp progress parallel bc bat zoxide eza fzf entr info-reader \
 		# ghc-pandoc
 		# sh-z
     # To look at: lean minikanren

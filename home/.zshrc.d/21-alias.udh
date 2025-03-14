@@ -3,15 +3,18 @@ source ~/.zshrc.d/01-local
 exists emacs       && alias emacs='emacs -nw '
 exists emacsclient && alias emacsclient='emacsclient -a "" -tc '
 alias nano='echo use e for editing file '
-exists ls          && alias ls="ls --color=auto --ignore='*~'"
-exists exa         && alias exa="exa --color=auto --ignore-glob='*~'"
 exists clear || alias clear='printf "\033c"'
-if exists ls
-then
-		alias lt='clear && ls'
-		alias la='ls -a'
-		alias l='ls -trlha'
-		alias tl="clear && l"
+if exists eza ; then
+	alias ls="eza --color=auto --ignore-glob='*~' --git"
+	alias l='ls -rlha --changed'
+else ; if exists ls ; then
+	alias ls="ls --color=auto --ignore='*~'"
+	alias l='ls -trlha'
+fi ; fi
+if exists ls; then # don't care if ls is eza for these
+	alias lt='clear && ls'
+	alias la='ls -a'
+	alias tl="clear && l"
 fi
 exists dwarf-fortress &&  alias dwarf-fortress='dwarf-fortress && clear'
 exists git && exists emacs && alias magit="emacs --eval \"(magit-status)\""

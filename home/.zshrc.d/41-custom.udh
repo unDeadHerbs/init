@@ -236,11 +236,11 @@ exists ranger && rcd () {
     fi
 }
 
-exists exa && l_test(){
+exists eza && l_test(){
 	screen_rows=$(stty -a | grep -Po '(?<=rows )\d+')
 	if (( $(ls|wc -l) < $screen_rows*3/4 )); then
 	    #clear
-	    exa --tree --long --git --level=1
+	    eza --tree --long --git --level=1
 	else
 	    echo "more"
 	fi	
