@@ -7,7 +7,7 @@ if exists guix; then
     _guix_install_noreplace \
 				tmux i3status mosh git emacs feh htop \
 				ed sl cowsay youtube-dl vim \
-				aspell aspell-dict-en \
+				aspell aspell-dict-en cbonsai \
 				neofetch curl wget mc unzip clang make socat \
 				figlet zsh-autosuggestions thefuck ascii \
 				sicp progress parallel bc bat zoxide eza fzf entr info-reader \
