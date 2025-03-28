@@ -32,7 +32,7 @@
 	# TODO: add GIT_PREFIX to this
 	pipe-each = "!xargs -L 1 git"
 	piped = "!xargs git"
-	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | less -FXR; }; f"
+	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | $PAGER; }; f"
 	# TODO: make sure that staged and unstagedness is kept
 	# TODO: add a unique number to the stash name
 	# TODO: keep the return code from the inner call
@@ -62,7 +62,6 @@
 
 	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; }; f"
 
-	paged = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" 2>&1 | less -FXR; }; f"
 	echo = "!echo"
 
 	blame--file-line-to-hash = "!f(){ git blame-standard -pfL $2,$2 $1|head -1|awk '{print $1}'; }; f"
@@ -92,7 +91,7 @@
 	log-stashes        = "!git log-standard $(git reflog show --format="%h" stash)"
 	log-lost           = "!git log-standard $(git fsck --lost-found --unreachable 2>/dev/null |cut --delimiter=' ' -f 3 -)"
 	log-parent-commit-opt-commit = ""
-	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}' | less -FXR"
+	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}'"
 	ref-from-branch    = "rev-parse --short"
 
 	hash-short-from-hash  = "log -1 --format=\"%h\""
@@ -403,7 +402,7 @@
 	p    = "push-opt-branch"
 	pa   = "push-all"
 	pop  = "stash pop"
-	pov  = "project-over-view"
+	pov  = "paged project-over-view"
 	r    = "reset-opt-file-or-commit"
 	r1   = "reset-up-one"
 	raict= "rep-wd fold add-interactive commit-branch-time"
