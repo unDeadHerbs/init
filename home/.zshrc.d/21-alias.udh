@@ -32,3 +32,16 @@ fi
 exists zoxide && eval "$(zoxide init zsh --cmd cd)"
 exists cvlc && alias cvlc='cvlc --key-quit q'
 exists mpv && alias v="mpv --force-window"
+if exists fzf; then
+	# TODO: Find out how to have fzf update the directory when it changes
+	# TODO: Check the terminal size and use 'down' instead of 'right' if the terminal is too thin
+	# TODO: Make this recursive but ignore .git dirs
+	if exists batwatch; then
+		# TODO: test when I have batwatch
+		alias qref="fzf --layout=reverse --preview-window='right:80%' --preview 'batwatch --color=always {}'"
+	else; if exists bat; then
+		alias qref="fzf --layout=reverse --preview-window='right:80%' --preview 'bat --color=always {}'"
+	else
+		alias qref="fzf --layout=reverse --preview-window='right:80%' --preview '$PAGER --color=always {}'"
+	fi ; fi
+fi
