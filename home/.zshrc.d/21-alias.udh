@@ -22,8 +22,12 @@ exists cmatrix && alias cmatrix='cmatrix -abu 2'
 if exists bat ;
 then
 		alias cat='bat'
+		alias less='bat'
+		export PAGER='bat'
+		alias man='PAGER=less man'
 else
-		exists less && alias cat='less -FXR'
+		export LESS='-FXR'
+		exists less && alias cat='less'
 fi
 exists zoxide && eval "$(zoxide init zsh --cmd cd)"
 exists cvlc && alias cvlc='cvlc --key-quit q'
