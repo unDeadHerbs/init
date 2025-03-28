@@ -22,7 +22,7 @@ read
 emerge -DnNUu @world --backtrack=30 $DefaultArgs $exclude_known_sad
 # if manually doing this, also try the "sad" things to see if any of them are fixed or fixable errors
 
-emerge -qvc --ask --exclude gentoo-sources # keep the ask
+emerge -qvc --ask --exclude sys-kernel/gentoo-sources # keep the ask
 
 #emerge -NUu1D @world --backtrack=30 $DefaultArgs $@
 #emerge -NUu1D @world --backtrack=30 $DefaultArgs $@
