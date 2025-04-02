@@ -10,11 +10,37 @@
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-  boot.supportedFilesystems = ["ntfs"];
-  boot.loader.grub.splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+  boot = {
+    loader = {
+      # Menuing System
+      grub = {
+        enable = true;
+        device = "/dev/sda";
+        useOSProber = true;
+        splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+      };
+      # Hide the OS choice for bootloaders.
+      # It's still possible to open the bootloader list by pressing any key
+      # It will just not appear on screen unless a key is pressed
+      timeout = 0;
+    };
+    # Splash Screen (TODO: probably set a theme?)
+    plymouth.enable = true;
+    # Enable "Silent boot"
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
+    # Start faster (at the cost of a little space)
+    initrd.systemd.enable = true;
+    # Enable windows filesystm support
+    supportedFilesystems = ["ntfs"];
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
