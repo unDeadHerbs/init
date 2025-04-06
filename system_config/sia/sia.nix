@@ -133,6 +133,7 @@ in {
       eza
       feh
       figlet
+      flameshot
       git
       gnumake
       google-chrome
