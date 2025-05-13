@@ -2400,6 +2400,14 @@ async Anki and then close the async once it's done with it.
 *** TODO Have the name of the buffer change with the book
 I often want more than one info book open at a time.  This might be
 better done with org links and a folder.
+** Erlang
+#+BEGIN_SRC emacs-lisp
+(when is-windmills
+	(add-to-list 'load-path "/usr/lib64/erlang/lib/tools-3.6/emacs/")
+	(setq erlang-root-dir "/usr/lib64/erlang")
+	(add-to-list 'exec-path "/usr/lib64/erlang/bin")
+	(require 'erlang-start))
+#+END_SRC
 ** COBOL and Java
 #+BEGIN_QUOTE
 The Tao gave birth to machine language. Machine language gave
