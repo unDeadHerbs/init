@@ -231,12 +231,6 @@ in {
     settings.X11Forwarding = true;
   };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
   environment.etc."nextcloud-admin-pass".text = "PWD123456789";
   services.nextcloud = {
     enable = true;
@@ -245,4 +239,5 @@ in {
     config.adminpassFile = "/etc/nextcloud-admin-pass";
     config.dbtype = "sqlite";
   };
+  networking.firewall.allowedTCPPorts = [80 443];
 }
