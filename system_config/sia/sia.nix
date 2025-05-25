@@ -16,6 +16,12 @@ in {
   boot.supportedFilesystems = ["ntfs"];
   boot.loader.grub.splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
 
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
