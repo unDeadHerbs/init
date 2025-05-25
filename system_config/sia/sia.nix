@@ -238,6 +238,7 @@ in {
     hostName = "localhost";
     config.adminpassFile = "/etc/nextcloud-admin-pass";
     config.dbtype = "sqlite";
+    settings.trusted_domains = ["sia.local"];
   };
   networking.firewall.allowedTCPPorts = [80 443];
 }
