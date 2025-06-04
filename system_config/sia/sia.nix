@@ -161,6 +161,7 @@ in {
       links2
       lynx
       mc
+      mpv
       hyfetch
       netcat
       pandoc
