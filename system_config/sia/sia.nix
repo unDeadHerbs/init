@@ -150,6 +150,7 @@ in {
       evince
       eza
       feh
+      ffmpeg
       figlet
       flameshot
       git
