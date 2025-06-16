@@ -16,9 +16,9 @@ in {
     plymouth = {
       enable = true;
     };
-		consoleLogLevel = 3;
-		initrd.verbose = false;
-		kernelParams = [
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    kernelParams = [
       "quiet"
       "splash"
       "boot.shell_on_fail"
@@ -132,6 +132,7 @@ in {
     extraGroups = ["networkmanager"];
     packages = with pkgs; [
       kdePackages.kate
+      google-chrome
     ];
   };
 
@@ -161,7 +162,6 @@ in {
 
   # Install some core programs.
   programs.zsh.enable = true;
-  programs.firefox.enable = true;
   programs.mosh.enable = true;
 
   # List packages installed in system profile. To search, run:
@@ -187,6 +187,7 @@ in {
     enable = true;
     settings.X11Forwarding = true;
     settings.PasswordAuthentication = false;
+    permitRootLogin = "no";
   };
 
   services.tor = {
