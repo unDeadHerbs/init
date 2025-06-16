@@ -1,5 +1,4 @@
 # Edit this configuration file to define what should be installed on
-
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
@@ -11,9 +10,23 @@
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  # TODO: splash screen ../../bg/something.png
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    plymouth = {
+      enable = true;
+    };
+		consoleLogLevel = 3;
+		initrd.verbose = false;
+		kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
+    loader.timeout = 0;
+  };
 
   nix.gc = {
     automatic = true;
@@ -67,11 +80,13 @@ in {
   };
 
   # X11
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "us,ru";
-      variant = "";
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "us,ru";
+        variant = "";
+      };
     };
     displayManager.sddm.enable = true;
     displayManager.sddm.wayland.enable = true;
