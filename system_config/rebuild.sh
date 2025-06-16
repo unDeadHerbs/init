@@ -10,6 +10,13 @@ if ! uname -a | grep NixOS > /dev/null ; then
 		exit 1
 fi
 
+# TODO: better network control
+# 1. Use the script location as a start
+# 2. df -P .|awk 'NR==2 {print $1}' will say where the mountpoint comes from
+# 3. If it has a ":" in it, then that's the remote host we should use
+#    - check it's hostname
+#    - send the rebuild request to it over ssh
+
 # TODO: If non-existent, make a migrate script for the base config
 pushd ~/init/system_config/${HOSTNAME}
 $EDITOR ${HOSTNAME}.nix
