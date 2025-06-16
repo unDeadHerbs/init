@@ -5,6 +5,12 @@
 # A rebuild script that commits on a successful build
 set -e
 
+if ! uname -a | grep NixOS > /dev/null ; then
+		echo "This isn't a NixOS system?"
+		exit 1
+fi
+
+# TODO: If non-existent, make a migrate script for the base config
 pushd ~/init/system_config/${HOSTNAME}
 $EDITOR ${HOSTNAME}.nix
 
@@ -16,7 +22,7 @@ if git diff --quiet '*.nix' ;then
 fi
 
 # Auto format
-alejandra . & > /dev/null \
+alejandra . > /dev/null \
 			|| ( alejandra . ;echo "formatting failed!" && exit 1 )
 
 # Shows your changes so that errors are debug-able and the scroll back is nice
@@ -32,7 +38,7 @@ cat ~/tmp/nixos-switch.log | grep -Ei --color "warn|error|failed" || true
 # Commit on success
 current=$(nixos-rebuild list-generations | grep current)
 git add '*.nix'
-git commit -m "$current"
+git commit -m "${HOSTNAME}: $current"
 
 popd
 notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
