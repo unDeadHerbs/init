@@ -7,6 +7,8 @@
   lib,
   ...
 }: let
+  # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
+  # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   # Bootloader.
@@ -79,7 +81,7 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-  # X11
+  # Display
   services = {
     xserver = {
       enable = false;
@@ -92,16 +94,15 @@ in {
     displayManager.sddm.wayland.enable = true;
     desktopManager.plasma6.enable = true;
   };
-  #services.displayManager = {
-  #  autoLogin.enable = true;
-  #  autoLogin.user = "vika";
-  #};
-  #services.picom.enable = true; # for transparency
+  fonts.packages = with pkgs; [
+    fira
+    fira-code
+  ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  # Sound
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -111,18 +112,10 @@ in {
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      # Add additional package names here
       "google-chrome"
     ];
 
@@ -155,41 +148,25 @@ in {
       zsh-autosuggestions
     ];
   };
+  # Enable sudo without having a user password
   security.sudo.wheelNeedsPassword = false;
 
-  # Allow xfce4-terminal to have a settings file.
-  programs.xfconf.enable = true;
-
-  # Install some core programs.
+  # Install core programs
   programs.zsh.enable = true;
   programs.mosh.enable = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     htop
     wget
     vim
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
   # Setup Remote Administration
   services.openssh = {
     enable = true;
     settings.X11Forwarding = true;
     settings.PasswordAuthentication = false;
-    permitRootLogin = "no";
+    settings.PermitRootLogin = "no";
   };
-
   services.tor = {
     enable = true;
     openFirewall = true;
