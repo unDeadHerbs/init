@@ -124,8 +124,14 @@ in {
     description = "Viktoriia";
     extraGroups = ["networkmanager"];
     packages = with pkgs; [
-      kdePackages.kate
+      anki
       google-chrome
+      kdePackages.kate
+      p7zip
+      pandoc
+      R
+      rstudio
+      thunderbird
     ];
   };
 
