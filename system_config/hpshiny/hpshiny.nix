@@ -90,6 +90,7 @@ in {
         variant = "";
       };
     };
+    # TODO: hide "udh" in sddm
     displayManager.sddm.enable = true;
     displayManager.sddm.wayland.enable = true;
     desktopManager.plasma6.enable = true;
@@ -126,12 +127,18 @@ in {
     packages = with pkgs; [
       anki
       google-chrome
+      hunspell
+      hunspellDicts.uk_UA
+      hunspellDicts.en_US
       kdePackages.kate
+      krita
+      libreoffice
       p7zip
       pandoc
       R
       rstudio
       thunderbird
+      vlc
     ];
   };
 
