@@ -123,7 +123,7 @@ in {
   users.users.vika = {
     isNormalUser = true;
     description = "Viktoriia";
-    extraGroups = ["networkmanager"];
+    extraGroups = ["networkmanager" "disk" "audio" "dialout" "video" "input"];
     packages = with pkgs; [
       anki
       google-chrome
