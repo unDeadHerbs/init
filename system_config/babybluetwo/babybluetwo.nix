@@ -6,14 +6,35 @@
   pkgs,
   lib,
   ...
-}: let
-  unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
-in {
+}:
+# let
+# sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
+# sudo nix-channel --update
+#unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
+#in
+{
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-  boot.loader.grub.splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+  boot = {
+    loader.grub = {
+      enable = true;
+      device = "/dev/sda";
+      useOSProber = true;
+      #splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+    };
+    plymouth = {
+      enable = true;
+    };
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=0"
+      "rd.systemd.show_status=false"
+    ];
+    loader.timeout = 0;
+  };
 
   nix.gc = {
     automatic = true;
@@ -50,42 +71,45 @@ in {
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "uk_UA.UTF-8";
-  i18n.supportedLocales = ["uk_UA.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" "en_US.UTF-8/UTF-8"];
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.supportedLocales = ["en_US.UTF-8/UTF-8"];
 
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "ru_RU.UTF-8";
-    LC_IDENTIFICATION = "ru_RU.UTF-8";
-    LC_MEASUREMENT = "ru_RU.UTF-8";
-    LC_MONETARY = "ru_RU.UTF-8";
-    LC_NAME = "ru_RU.UTF-8";
-    LC_NUMERIC = "ru_RU.UTF-8";
-    LC_PAPER = "ru_RU.UTF-8";
-    LC_TELEPHONE = "ru_RU.UTF-8";
-    LC_TIME = "ru_RU.UTF-8";
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
   };
 
-  # X11
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "ru,us";
-      variant = "";
+  # Display
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "us,ru";
+        variant = "";
+      };
     };
-    displayManager.lightdm.enable = true;
-    desktopManager.cinnamon.enable = true;
+    # TODO: hide "udh" in sddm
+    displayManager.sddm.enable = true;
+    displayManager.sddm.wayland.enable = true;
+    desktopManager.plasma6.enable = true;
   };
-  services.displayManager = {
-    autoLogin.enable = true;
-    autoLogin.user = "serhii";
-  };
-  services.picom.enable = true; # for transparency
+  fonts.packages = with pkgs; [
+    fira
+    fira-code
+  ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  # Sound
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -94,27 +118,28 @@ in {
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      # Add additional package names here
       "google-chrome"
     ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.serhii = {
+  users.users.fiona = {
     isNormalUser = true;
-    description = "Serhii";
-    extraGroups = ["networkmanager"];
+    description = "Fiona";
+    extraGroups = ["networkmanager" "disk" "audio" "dialout" "video" "input"];
     packages = with pkgs; [
+      google-chrome
+      hunspell
+      hunspellDicts.en_US
+      kdePackages.kate
+      kdePackages.kolourpaint
+      libreoffice
+      p7zip
+      pandoc
+      thunderbird
+      vlc
     ];
   };
 
@@ -137,44 +162,25 @@ in {
       zsh-autosuggestions
     ];
   };
+  # Enable sudo without having a user password
   security.sudo.wheelNeedsPassword = false;
 
-  # Allow xfce4-terminal to have a settings file.
-  programs.xfconf.enable = true;
-
-  # Install some core programs.
+  # Install core programs
   programs.zsh.enable = true;
-  programs.firefox.enable = true;
   programs.mosh.enable = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     htop
     wget
     vim
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # Allow unfree packages
-  # nixpkgs.config.allowUnfree = true;
-
-  # List services that you want to enable:
-
   # Setup Remote Administration
   services.openssh = {
     enable = true;
     settings.X11Forwarding = true;
     settings.PasswordAuthentication = false;
+    settings.PermitRootLogin = "no";
   };
-
   services.tor = {
     enable = true;
     openFirewall = true;

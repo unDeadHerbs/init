@@ -4,7 +4,7 @@
   options,
   ...
 }: let
-  hostname = "jaguar"; # to alllow per-machine config
+  hostname = "babybluetwo"; # to alllow per-machine config
 in {
   networking.hostName = hostname;
 
