@@ -91,7 +91,7 @@
     xserver = {
       enable = false;
       xkb = {
-        layout = "us,ru";
+        layout = "us";
         variant = "";
       };
     };
