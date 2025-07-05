@@ -123,6 +123,7 @@
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
+      "zoom"
     ];
 
   users.users.fiona = {
@@ -138,8 +139,10 @@
       libreoffice
       p7zip
       pandoc
+      pdfchain
       thunderbird
       vlc
+      zoom-us
     ];
   };
 
