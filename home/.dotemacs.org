@@ -2427,8 +2427,8 @@ But do not program in COBOL if you can avoid it.
 I feel that Java fills the same position as COBOL did.  It's an
 excessively verbose language that use "best practices" as a substitute
 for good design.  In both cases this is because the language is
-relegated to those who haven't groked program computer architecture at
-the smallest level[fn::Many because they haven't cared to; but, a few
+relegated to those who haven't groked program/computer architecture at
+the basic levels[fn::Many because they haven't cared to; but, a few
 because they are only programmers for economic reasons.]; but, at
 least COBOL recognised and embraced that.
 * Minor Mode Settings

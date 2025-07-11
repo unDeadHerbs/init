@@ -247,6 +247,7 @@ exists eza && l_test(){
     }
 
 # TODO: use locate to make some of a new version of this
+# also use qfile and e-file
 #uname -r | grep "gentoo" &&
 #    package_from(){
 #	location=`realpath $(whence -p "$@")` 2> /dev/null

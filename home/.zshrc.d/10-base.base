@@ -61,7 +61,7 @@ key[PageDown]=${terminfo[knp]}
 [[ -n "${key[PageUp]}"   ]]  && bindkey  "${key[PageUp]}"   beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}" ]]  && bindkey  "${key[PageDown]}" end-of-buffer-or-history
 
-# Finally, make sure the terminal is in application mode, when zle is
+# Make sure the terminal is in application mode, when zle is
 # active. Only then are the values from $terminfo valid.
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
     function zle-line-init () {
@@ -126,3 +126,15 @@ then
 fi
 
 setopt correct
+
+##
+# If mc is installed, set it up
+##
+#  * Messages for package app-misc/mc-4.8.32-r1:
+#
+# * mc extension scripts depend on many external tools, install them as needed
+# *
+# * To enable exiting to latest working directory,
+# * put this into your ~/.bashrc:
+# * . /usr/libexec/mc/mc.sh
+
