@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask"
+DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask" # --ask
 exclude_known_sad="--exclude libvpx"
 
 # Make system consistent
@@ -15,7 +15,7 @@ eix-sync -q
 # Check the news before installing updates
 eselect news list
 echo
-echo "Cancle if there is any important news"
+echo "Cancel if there is any important news"
 echo "Otherwise, press enter to contune"
 read
 
@@ -28,7 +28,7 @@ emerge -qvc --ask --exclude sys-kernel/gentoo-sources # keep the ask
 #emerge -NUu1D @world --backtrack=30 $DefaultArgs $@
 #python-updater -- $DefaultArgs $@
 # --exclude libreoffice --exclude google-chrome --exclude cross-i686-pc-mingw32/gcc
-perl-cleaner --reallyall -- -qv $DefaultArgs $@
+perl-cleaner --reallyall -- $DefaultArgs $@
 # --exclude libreoffice --exclude google-chrome --exclude cross-i686-pc-mingw32/gcc
 emerge @preserved-rebuild $DefaultArgs $@
 revdep-rebuild -iv -- $DefaultArgs $@ # --exact seems to have been removed?
