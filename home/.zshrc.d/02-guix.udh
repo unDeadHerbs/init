@@ -11,6 +11,7 @@ if exists guix; then
 				neofetch curl wget mc unzip clang make socat \
 				figlet zsh-autosuggestions thefuck ascii \
 				sicp progress parallel bc bat zoxide eza fzf entr info-reader \
+				astroterm
 		# ghc-pandoc
 		# sh-z
     # To look at: lean minikanren
