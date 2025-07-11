@@ -17,17 +17,24 @@ sleep   2 && picom &
 # Move Desktops to the correct screens
 ##
 
-sleep   2 && i3-msg 'workspace   2' &
-sleep   3 && i3-msg 'workspace   1' &
+#sleep   2 && i3-msg 'workspace   2' &
+#sleep   3 && i3-msg 'workspace   1' &
 
 ##
 # Programs
 ##
 
-sleep   5 && i3-msg 'workspace 2; exec xfce4-terminal -e "tmux attach"' &
-sleep   10 && i3-msg 'workspace 2; exec anki' &
+sleep   3 && i3-msg 'workspace 2' &
+sleep   5 && i3-msg 'exec xfce4-terminal -e "tmux attach"' &
+sleep   5 && i3-msg 'exec anki' &
+sleep   5 && i3-msg 'exec gpodder' &
+sleep  19 && i3-msg 'layout tabbed' &
+
 #sleep  10 && xscreensaver &
-sleep  20 && i3-msg 'workspace 0; exec xfce4-terminal -e "barriers --disable-crypto -f"' &
+
+sleep  20 && i3-msg 'workspace 0' &
+sleep  21 && i3-msg 'exec xfce4-terminal -e "barriers --disable-crypto -f"' &
+
 sleep  35 && i3-msg 'workspace 11; exec thunderbird' &
 
 #sleep  60 && i3-msg 'workspace  3; exec ~/steam/steam/steam.sh' &
@@ -49,8 +56,8 @@ sleep  35 && i3-msg 'workspace 11; exec thunderbird' &
 # Move to main workspace
 ##
 
-sleep 120 && i3-msg 'workspace 11' &
-sleep 121 && i3-msg 'workspace  1' &
+#sleep 120 && i3-msg 'workspace 11' &
+#sleep 121 && i3-msg 'workspace  1' &
 sleep 122 && i3-msg 'workspace  2' &
 
 exec dbus-launch --exit-with-session i3

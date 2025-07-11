@@ -26,3 +26,7 @@ if [ -e "$HOME/.xinitrc.d/$(hostname)" ]
 then
     source "$HOME/.xinitrc.d/$(hostname)"
 fi
+
+if type flameshot >> /dev/null; then
+	sleep 20 && flameshot &
+fi
