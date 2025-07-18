@@ -193,15 +193,49 @@ in {
     settings.X11Forwarding = true;
   };
 
-  # Run a nextcloud server
-  environment.etc."nextcloud-admin-pass".text = "PWD123456789";
-  services.nextcloud = {
+  # Run local servers in containers
+  networking.nat = {
     enable = true;
-    package = pkgs.nextcloud31;
-    hostName = "localhost";
-    config.adminpassFile = "/etc/nextcloud-admin-pass";
-    config.dbtype = "sqlite";
-    settings.trusted_domains = ["sia.local"];
+    internalInterfaces = ["ve-+"];
+    externalInterface = "eno1";
+    # Lazy IPv6 connectivity for the container
+    enableIPv6 = true;
   };
-  networking.firewall.allowedTCPPorts = [80 443];
+
+  # Run a nextcloud server
+  containers.nextcloud-server = {
+    autoStart = true;
+    privateNetwork = true;
+    hostAddress = "192.168.100.10";
+    localAddress = "192.168.100.11";
+    hostAddress6 = "fc00::1";
+    localAddress6 = "fc00::2";
+    config = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: {
+      environment.etc."nextcloud-admin-pass".text = "PWD123456789";
+      services.nextcloud = {
+        enable = true;
+        package = pkgs.nextcloud31;
+        hostName = "localhost";
+        config.adminpassFile = "/etc/nextcloud-admin-pass";
+        config.dbtype = "sqlite";
+        settings.trusted_domains = ["sia.local"];
+      };
+
+      networking = {
+        firewall.allowedTCPPorts = [80 443];
+        # Use systemd-resolved inside the container
+        # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+        useHostResolvConf = lib.mkForce false;
+      };
+
+      services.resolved.enable = true;
+
+      system.stateVersion = "24.11";
+    };
+  };
 }
