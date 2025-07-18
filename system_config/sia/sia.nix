@@ -36,10 +36,6 @@ in {
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   # Enable networking
   networking.networkmanager.enable = true;
   services.avahi = {
@@ -49,12 +45,8 @@ in {
     publish.userServices = true;
   };
 
-  # Set your time zone.
   time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -81,12 +73,8 @@ in {
       layout = "us";
       variant = "";
     };
-    displayManager = {
-      lightdm.enable = true;
-    };
-    windowManager = {
-      i3.enable = true;
-    };
+    displayManager.lightdm.enable = true;
+    windowManager.i3.enable = true;
   };
   services.displayManager = {
     defaultSession = "none+i3";
@@ -111,20 +99,10 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      # Add additional package names here
       "google-chrome"
     ];
 
@@ -181,35 +159,14 @@ in {
     ];
   };
 
-  # Allow xfce4-terminal to have a settings file.
+  # Programs with extra config requirements
   programs.xfconf.enable = true;
-
-  # Enable Barrier
-  systemd.services.barrierc = {
-    # this is the "node" in the systemd dependency graph that will run the service
-    wantedBy = ["graphical.target"];
-    # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
-    after = ["network.target"];
-    description = "Start the brarrier client for uDH.";
-    serviceConfig = {
-      # see systemd man pages for more information on the various options for "Type": "notify"
-      # specifies that this is a service that waits for notification from its predecessor (declared in
-      # `after=`) before starting
-      Type = "simple";
-      User = "udh";
-      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.15'';
-      ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
-    };
-  };
-
-  # Install some core programs.
   programs.zsh.enable = true;
   services.emacs.enable = true;
   programs.firefox.enable = true;
   programs.mosh.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
     barrier
     htop
@@ -217,15 +174,18 @@ in {
     vim
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
+  # Enable Barrier
+  systemd.services.barrierc = {
+    wantedBy = ["graphical.target"];
+    after = ["network.target"];
+    description = "Start the brarrier client for uDH.";
+    serviceConfig = {
+      Type = "simple";
+      User = "udh";
+      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.15'';
+      ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
+    };
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -233,6 +193,7 @@ in {
     settings.X11Forwarding = true;
   };
 
+  # Run a nextcloud server
   environment.etc."nextcloud-admin-pass".text = "PWD123456789";
   services.nextcloud = {
     enable = true;
