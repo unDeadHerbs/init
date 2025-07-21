@@ -182,7 +182,7 @@ in {
     serviceConfig = {
       Type = "simple";
       User = "udh";
-      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.15'';
+      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.31'';
       ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
     };
   };
