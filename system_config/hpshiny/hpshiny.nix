@@ -28,6 +28,7 @@ in {
       "rd.systemd.show_status=auto"
     ];
     loader.timeout = 0;
+    supportedFilesystems = ["ntfs"];
   };
 
   nix.gc = {
@@ -98,10 +99,14 @@ in {
   fonts.packages = with pkgs; [
     fira
     fira-code
+    fira-code-symbols
+    liberation_ttf
+    ubuntu_font_family
   ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = [pkgs.brlaser];
 
   # Sound
   hardware.pulseaudio.enable = false;
@@ -118,6 +123,8 @@ in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
+      "vscode"
+      "zoom"
     ];
 
   users.users.vika = {
@@ -127,18 +134,40 @@ in {
     packages = with pkgs; [
       anki
       google-chrome
+      ffmpeg
       hunspell
       hunspellDicts.uk_UA
       hunspellDicts.en_US
       kdePackages.kate
+      kdePackages.kdenlive
+      kdePackages.kolourpaint
       krita
       libreoffice
+      obs-studio
       p7zip
       pandoc
+      pdfchain
+      (python311.withPackages (ps:
+        with ps; [
+          ipykernel
+          jupyter
+          jupyterlab
+          matplotlib
+          notebook
+          numpy
+          pandas
+          pip
+          scikitlearn
+          scipy
+          statsmodels
+        ]))
       R
       rstudio
+      spyder
       thunderbird
       vlc
+      vscode
+      zoom-us
     ];
   };
 
@@ -167,6 +196,7 @@ in {
   # Install core programs
   programs.zsh.enable = true;
   programs.mosh.enable = true;
+  #programs.firefox.enable = true;
   environment.systemPackages = with pkgs; [
     htop
     wget
