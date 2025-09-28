@@ -92,7 +92,7 @@ in {
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -194,48 +194,100 @@ in {
   };
 
   # Run local servers in containers
-  networking.nat = {
-    enable = true;
-    internalInterfaces = ["ve-+"];
-    externalInterface = "eno1";
-    # Lazy IPv6 connectivity for the container
-    enableIPv6 = true;
+  networking = {
+    #bridges.br0.interfaces = ["eno1"]; # Adjust interface accordingly
+
+    # Get bridge-ip with DHCP
+    #useDHCP = true;
+    #interfaces."br0".useDHCP = true;
+
+    # Set bridge-ip static
+    #interfaces."br0".ipv4.addresses = [
+    #  {
+    #    address = "192.168.0.100";
+    #    prefixLength = 24;
+    #  }
+    #];
+    #defaultGateway = "192.168.0.1";
+    #nameservers = ["192.168.0.1"];
   };
+  #networking.nat = {
+  #  enable = true;
+  #  internalInterfaces = ["ve-+"];
+  #  externalInterface = "eno1";
+  #  # Lazy IPv6 connectivity for the container
+  #  enableIPv6 = true;
+  #};
 
   # Run a nextcloud server
-  containers.nextcloud-server = {
-    autoStart = true;
-    privateNetwork = true;
-    hostAddress = "192.168.100.10";
-    localAddress = "192.168.100.11";
-    hostAddress6 = "fc00::1";
-    localAddress6 = "fc00::2";
-    config = {
-      config,
-      pkgs,
-      lib,
-      ...
-    }: {
-      environment.etc."nextcloud-admin-pass".text = "PWD123456789";
-      services.nextcloud = {
-        enable = true;
-        package = pkgs.nextcloud31;
-        hostName = "localhost";
-        config.adminpassFile = "/etc/nextcloud-admin-pass";
-        config.dbtype = "sqlite";
-        settings.trusted_domains = ["sia.local"];
-      };
+  #containers.nextcloud-server = {
+  #  autoStart = true;
+  #  privateNetwork = true;
+  #  hostBridge = "br0"; # Specify the bridge name
+  #  localAddress = "192.168.0.112/24";
+  #  #hostAddress = "192.168.0.40";
+  #  #localAddress = "192.168.0.112";
+  #  #hostAddress6 = "fc00::1";
+  #  #localAddress6 = "fc00::2";
+  #  config = {
+  #    config,
+  #    pkgs,
+  #    lib,
+  #    ...
+  #  }: {
+  #    environment.etc."nextcloud-admin-pass".text = "PWD123456789";
+  #    services.nextcloud = {
+  #      enable = true;
+  #      package = pkgs.nextcloud31;
+  #      hostName = "localhost";
+  #      config.adminpassFile = "/etc/nextcloud-admin-pass";
+  #      config.dbtype = "sqlite";
+  #      settings.trusted_domains = ["sia.local"];
+  #    };
+  #
+  #    networking = {
+  #      firewall.allowedTCPPorts = [80 443];
+  #      # Use systemd-resolved inside the container
+  #      # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+  #      useHostResolvConf = lib.mkForce false;
+  #    };
+  #
+  #    services.resolved.enable = true;
+  #
+  #    system.stateVersion = "24.11";
+  #  };
+  #};
 
-      networking = {
-        firewall.allowedTCPPorts = [80 443];
-        # Use systemd-resolved inside the container
-        # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-        useHostResolvConf = lib.mkForce false;
-      };
-
-      services.resolved.enable = true;
-
-      system.stateVersion = "24.11";
-    };
-  };
+  # Run a mattermost server
+  #containers.mattermost-server = {
+  #  autoStart = true;
+  #  privateNetwork = true;
+  #  hostBridge = "br0"; # Specify the bridge name
+  #  localAddress = "192.168.0.113/24";
+  #  #hostAddress = "192.168.100.40";
+  #  #localAddress = "192.168.100.113";
+  #  #hostAddress6 = "fc00::1";
+  #  #localAddress6 = "fc00::3";
+  #  config = {
+  #    config,
+  #    pkgs,
+  #    lib,
+  #    ...
+  #  }: {
+  #    services.mattermost = {
+  #      enable = true;
+  #      siteUrl = "https://mattermost.example.com"; # Set this to the URL you will be hosting the site on.
+  #    };
+  #    networking = {
+  #      firewall.allowedTCPPorts = [80 443];
+  #      # Use systemd-resolved inside the container
+  #      # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+  #      useHostResolvConf = lib.mkForce false;
+  #    };
+  #
+  #    services.resolved.enable = true;
+  #
+  #    system.stateVersion = "24.11";
+  #  };
+  #};
 }
