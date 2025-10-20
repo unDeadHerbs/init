@@ -1,7 +1,6 @@
 #! /usr/bin/env zsh
 # this fils is a coleciton of general settings for configureing the zsh environment
 
-
 ##
 # The following lines were added by compinstall
 ##
@@ -90,6 +89,11 @@ RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}] %{$fg_no_bold[cyan]%}20%DT%
 
 # Fish-Like syntax hilighting
 # source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+##
+# Bash Compatibility
+##
+setopt OCTAL_ZEROES
 
 ##
 # Make sure that the folder and commands lists are up to date (but a little slower)
