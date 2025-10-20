@@ -8,3 +8,4 @@ home/.emacs.d/srecode-map.el
 home/.local/share/zoxide/db.zo
 home/.config/hyfetch.json
 home/.config/neofetch/config.conf
+**/*~
