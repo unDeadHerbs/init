@@ -510,10 +510,14 @@ https://org-roam.discourse.group/t/org-roam-buffer-do-not-refresh-automaticly/28
 (global-set-key (kbd "C-c n f") #'org-roam-node-find)
 (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
 (global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+;(global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
+(global-set-key (kbd "C-c n d") #'org-roam-dailies-goto-today)
 #+END_SRC
+
 *** Automatically add added notes to added notes
 :PROPERTIES:
 :NAME:     org-roam-auto-add-added
+:ID:       91356532-4311-4dc1-91c6-409b6a61d172
 :END:
 By default newly added notes aren't added to the note cache, so the
 database is permanently out of sync.
@@ -534,6 +538,40 @@ database is permanently out of sync.
 '(("d" "default" plain "%?" :target
 	(file+head "%<%Y%m%d%H%M%S>-${slug}.org" "* ${title} :UPDATE:\n:PROPERTIES:\n:CREATION_DATE: %(udh/sdate)\n:END:\n")
 	:unnarrowed t)))
+#+END_SRC
+*** Daily Capture Template
+:PROPERTIES:
+:NAME:     org-roam-daily-capture-template
+:END:
+#+BEGIN_SRC emacs-lisp
+;;(defun my-read-org-template (file)
+;;  "Read the contents of FILE and expand Org capture template expressions."
+;;  (let ((template (with-temp-buffer
+;;                    (insert-file-contents file)
+;;                    (buffer-string))))
+;;    (org-roam-capture--fill-template template)))
+
+;;(setq org-roam-dailies-capture-templates
+;;			'(("d" "default from template" plain "%?"
+;;				 :target (file+head "%<%Y%m%d>-Daily.org"
+;;														"%(with-temp-buffer
+;;															 (insert-file-contents \"~/org/roam/daily/daily-template.org\")
+;;															 (buffer-string))")
+;;				 :unnarrowed t)))
+
+;;(setq org-roam-dailies-capture-templates
+;;			'(("d" "default from template" plain "%?"
+;;				 :target (file+head "%<%Y%m%d>-Daily.org"
+;;														"%(my-read-org-template \"~/org/roam/daily/daily-template.org\")")
+;;				 :unnarrowed t)))
+
+(setq org-roam-dailies-capture-templates
+			`(("d" "default from template" plain "%?"
+				 :target (file+head "%<%Y%m%d>-Daily.org"
+														,(with-temp-buffer
+																(insert-file-contents "~/org/roam/daily/daily-template.org")
+																(buffer-string)))
+				 :unnarrowed t)))
 #+END_SRC
 *** Single Line Backlinks
 :PROPERTIES:
