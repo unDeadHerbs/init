@@ -143,6 +143,7 @@ in {
       mpv
       hyfetch
       netcat
+      p7zip
       pandoc
       progress
       unstable.R
