@@ -151,6 +151,7 @@ in {
       scrot
       sl
       sshfs
+      texliveFull
       tmux
       unzip
       wdiff
