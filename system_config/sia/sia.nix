@@ -134,6 +134,10 @@ in {
       git
       gnumake
       google-chrome
+      hunspell
+      hunspellDicts.en_US
+      hunspellDicts.en_GB-ise
+      hunspellDicts.en_GB-ize
       i3status
       imagemagick
       libnotify
