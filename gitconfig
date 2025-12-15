@@ -19,6 +19,8 @@
 	enabled = true
 [status]
 	submodulesummary = true
+[protocol "file"]
+	allow = always
 [alias]
 
 	#
@@ -504,6 +506,7 @@
 	diff-submodule = "submodule foreach --recursive \"git d\""
 	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch-and-ff-pull ; git submodule sync ; git submodule update --init --recursive ; }; f"
 	submodules-fix = "submodules-update"
+	fix-submodules = "submodules-fix"
 	# I suspect the quoting isn't right on this
 	#submodule-recurse = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" && git submodule foreach \"git submodule-recurse $@\" }; f"
 
