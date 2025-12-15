@@ -48,6 +48,7 @@
 	# - Can I store it as a branch name?
 	# TODO: support different remote names
 	upstream-head = "echo origin/HEAD"
+	upstream-head-ref = "echo refs/remotes/$(git upstream-head)" # if no such, check refs/heads
 
 	watch = "!watch -c git"
 	rep-while-diff = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
@@ -142,7 +143,7 @@
 
 	branch-start--branch = "!git merge-base $(git upstream-head)"
 	branch-start--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git branch-start--branch HEAD ; else git branch-start--branch \"$1\" ; fi }; f"
-	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..refs/remotes/$(git upstream-head)"
+	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..$(git upstream-head-ref)"
 	log-branch-no-context = "!git log-standard $(git branch-start--opt-branch)..HEAD $(git branch-start--opt-branch)"
 	log-branch-only-hash = "!f(){ git log-branch-no-context --format=format:\"%H\" \"$@\" | sed 's,^[*] ,,' ; }; f"
 	# make a log-branch that only shows commits on origin/HEAD that conflict with the current branch?
