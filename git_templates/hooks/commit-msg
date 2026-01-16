@@ -1,0 +1,14 @@
+#!/bin/bash
+
+ASPELL=$(which aspell)
+if [ $? -ne 0 ]; then
+    echo "Aspell not installed - unable to check spelling" >&2
+    exit 0
+else
+		exec < /dev/tty
+		aspell check "$1" || {
+				echo "--- Spelling errors found in commit message ---"
+				echo "Please fix the errors above before committing."
+				exit 1 # Abort commit if aspell finds errors
+		}
+fi
