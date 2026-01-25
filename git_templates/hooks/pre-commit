@@ -1,0 +1,4 @@
+if ! uvx black --check .; then
+		echo "please run 'uvx black' over the listed files"
+		exit 1
+fi
