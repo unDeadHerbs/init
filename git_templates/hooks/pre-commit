@@ -1,4 +1,27 @@
-if ! uvx black --check .; then
-		echo "please run 'uvx black' over the listed files"
-		exit 1
+#!/bin/bash
+
+ASPELL=$(which aspell)
+if [ $? -ne 0 ]; then
+		echo "Aspell not installed - unable to check spelling" >&2
+		exit 0
+else
+		git diff --name-only --staged |
+				while read f; do
+						if [[ $(file $f) =~ "text" ]] ; then
+								( exec < /dev/tty ; aspell --camel-case --run-together -c $f )
+						fi
+				done
+fi
+
+
+# TODO: Don't check sub-module's files.
+UVX=$(which uvx)
+if [ $? -ne 0 ]; then
+		echo "uvx not installed - unable to format python" >&2
+		exit 0
+else
+		if ! uvx black --check .; then
+				echo "please run 'uvx black' over the listed files"
+				exit 1
+		fi
 fi
