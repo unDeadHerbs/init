@@ -31,6 +31,16 @@ exists curl && weather(){
 	fi
     }
 
+_sh_quote() {
+		# Convert arguments into a single quoted string with correct escaping
+		# Inspired by https://stackoverflow.com/a/41453954
+		# Example:
+		# $ _sh_quote ls a b 'c d'
+		# > ls a b c\ d
+		# Usage: some_command --expects_sub_command "$(_sh_quote "$@")"
+		printf ' %q' "$@" | cut -b2-
+}
+
 exists curl && alias forcast='curl -s wttr.in|tail -n +8|head -n -2'
 if exists sox
 then
@@ -317,3 +327,5 @@ exists inotifywait && exists make && exists watch && \
 		}
 		
 }
+
+exists nix-shell && n(){ nix-shell -p "$1" --command "$(_sh_quote "$@")" ; }
