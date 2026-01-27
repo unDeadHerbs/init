@@ -210,13 +210,6 @@ fullfetch(){
 #    }
 #}
 
-function sleep_until {
-    # sleep_until "7:00 tomorrow"
-    seconds=$(( $(date -d "$*" +%s) - $(date +%s) )) # Use $* to eliminate need for quotes
-    #echo "Sleeping for $seconds seconds"
-    sleep $seconds
-}
-
 exists cowsay && exists fortune &&
     if exists lolcat; then
 	cowfortune(){clear && fortune | cowsay -f $(find /usr/share/cowsay*|grep "[.]cow"| shuf -n1)  -W $(($COLUMNS-15))|lolcat}
