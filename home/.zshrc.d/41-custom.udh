@@ -328,4 +328,4 @@ exists inotifywait && exists make && exists watch && \
 		
 }
 
-exists nix-shell && n(){ nix-shell -p "$1" --command "$(_sh_quote "$@")" ; }
+exists nix-shell && n(){ NIXPKGS_ALLOW_UNFREE=1 nix-shell -p "$1" --command "$(_sh_quote "$@")" ; }
