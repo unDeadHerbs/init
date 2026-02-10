@@ -496,8 +496,9 @@ https://org-roam.discourse.group/t/org-roam-buffer-do-not-refresh-automaticly/28
 :NAME:     org-roam-startup
 :END:
 
+Move to =init.el=.
 #+BEGIN_SRC emacs-lisp
-;(org-roam-db-sync)
+;(org-roam-db-sync t)
 ;(org-roam-db-autosync-mode)
 #+END_SRC
 *** Keybindings
@@ -600,7 +601,7 @@ headline, up to the next headline."
   least the whole sentince.
 - This currently doesn't find the end of the link before calculating
   the end of the line, so it might not even capture the whole link.
-*** TODO org roam refile as file
+*** org roam refile as file
 It's useful to be able to export an existing header as a new card.
 
 #+BEGIN_SRC emacs-lisp
