@@ -5,9 +5,18 @@
       '(
 				c-electric-slash
 				indent-for-tab-command
+				ispell-word
 				kill-region
+				markdown-end-of-line
+				markdown-outdent-or-delete
+				org-beginning-of-line
+				org-cycle
 				org-end-of-line
+				org-fill-paragraph
+				org-force-self-insert
 				org-kill-line
+				org-metaright
+				org-return
 				org-self-insert-command
 				org-yank
 				))
