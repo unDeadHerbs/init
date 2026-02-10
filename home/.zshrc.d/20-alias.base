@@ -46,10 +46,12 @@ exists reboot      && alias reboot="sudo reboot"
 [ `os` = "gentoo" ] && alias dhcpcd-reset="sudo 'dhcpcd && dhcpcd -x && dhcpcd && dhcpcd -x && dhcpcd'"
 [ `os` = "gentoo" ] && exists wicd-curses && alias wicd-restart="sudo 'rc-config restart wicd'"
 
-
 exists ls && alias l="ls -lha"
 
 exists find && alias rmdire="find . -type d -empty -delete"
+
+exists zoxide && eval "$(zoxide init zsh --cmd cd)"
+exists fzf && eval "$(fzf --zsh)"
 
 #check that not running pulse audio
 #exists skype && alias skype='apulse skype'
