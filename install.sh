@@ -7,7 +7,7 @@ toInstall=""
 if type stow > /dev/null 2>&1
 then
     pushd home
-    stow . -v -t ~
+    stow . -v -t ~ --adopt
     popd
 else
     toInstall="$toInstall stow"   
