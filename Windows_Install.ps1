@@ -20,3 +20,8 @@ Start-Process powershell.exe "choco install -y vcxsrv cmder git msys2" -NoNewWin
 # Import cmder config
 # ConEmu.xml
 Copy-Item Cmder_Config.xml C:\tools\Cmder\config\user-ConEmu.xml
+
+# Update WSL
+# wsl --unregister Ubuntu
+# wsl --update
+# wsl --install
