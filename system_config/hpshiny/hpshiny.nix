@@ -123,7 +123,7 @@ in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
-      "vscode"
+      #"vscode"
       "zoom"
     ];
 
@@ -161,13 +161,13 @@ in {
           scipy
           statsmodels
         ]))
-      R
-      rstudio
+      #R
+      #rstudio
       spyder
       thunderbird
       vlc
-      vscode
-      zoom-us
+      #vscode
+      #zoom-us
     ];
   };
 
@@ -177,16 +177,49 @@ in {
     extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.zsh;
     packages = with pkgs; [
+      #moreutils cpufrequtils binutils usbutils
+      #sh-z sicp inetutils xpdf
       alejandra
+      alsa-utils
+      aspell
       bat
+      clang
+      cowsay
+      curl
+      dmenu
+      ed
+      emacs
+      evince
+      eza
+      feh
+      ffmpeg
+      figlet
+      flameshot
       git
+      gnumake
+      google-chrome
+      i3status
+      imagemagick
+      libnotify
+      links2
+      lynx
+      mc
+      mpv
       hyfetch
       netcat
+      pandoc
+      progress
+      #unstable.R
+      #unstable.rstudio
       scrot
+      sl
+      sshfs
       stow
       tmux
       unzip
       wdiff
+      xfce.xfce4-terminal
+      #youtube-dl
       zsh-autosuggestions
     ];
   };
@@ -198,7 +231,10 @@ in {
   programs.mosh.enable = true;
   #programs.firefox.enable = true;
   environment.systemPackages = with pkgs; [
+    git
     htop
+    gnumake
+    screen
     wget
     vim
   ];
