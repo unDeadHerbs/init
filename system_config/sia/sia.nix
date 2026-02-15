@@ -6,16 +6,20 @@
   pkgs,
   lib,
   ...
-}: let
+}: with lib; let
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-  boot.supportedFilesystems = ["ntfs"];
-  boot.loader.grub.splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
-
+  options.per_system_config = {
+    auto_login_user = lib.mkOption {
+      type = types.str;
+      default = "udh";
+      description = "Name of default user";
+    };
+  };
+  imports = [
+    ../nix/common.nix
+  ];
+  config={
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
@@ -25,41 +29,6 @@ in {
   system.stateVersion = "25.11"; # Did you read the comment?
   # sudo nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
   # sudo nixos-rebuild switch --upgrade
-
-  system.autoUpgrade = {
-    enable = true; # periodically execute systemd service nixos-upgrade.service
-    allowReboot = false; # If false, run nixos-rebuild switch --upgrade
-  };
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-  services.avahi = {
-    enable = true;
-    publish.enable = true;
-    publish.workstation = true;
-    publish.userServices = true;
-  };
-
-  time.timeZone = "America/Chicago";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   # X11
   services.xserver = {
@@ -81,14 +50,9 @@ in {
   services.displayManager = {
     defaultSession = "none+i3";
     autoLogin.enable = true;
-    autoLogin.user = "udh";
+    autoLogin.user = config.per_system_config.auto_login_user;
   };
   services.picom.enable = true; # for transparency
-
-  fonts.packages = with pkgs; [
-    fira
-    fira-code
-  ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -179,37 +143,13 @@ in {
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-    #barrier # TODO: deskflow
-    deskflow
-    htop
     mattermost
     nginx
     noip
-    wget
-    vim
   ];
 
-  # Enable deskflow
-  systemd.services.deskflow = {
-    wantedBy = ["graphical.target"];
-    after = ["network.target"];
-    description = "Start the deskflow client for uDH.";
-    serviceConfig = {
-      Type = "simple";
-      User = "udh";
-      ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
-      ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
-    };
-  };
-
-  # Enable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
-    settings.X11Forwarding = true;
-  };
-
   # Public Servers
-  networking.firewall.allowedTCPPorts = [ 80 443 8065 ];
+  networking.firewall.allowedTCPPorts = [80 443 8065];
   security.acme = {
     acceptTerms = true;
     defaults.email = "undeadherbs@gmail.com";
@@ -221,7 +161,7 @@ in {
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
-    recommendedTlsSettings = true;    
+    recommendedTlsSettings = true;
     virtualHosts = {
       # Replace with the domain from your siteUrl
       "udh.ddns.net" = {
@@ -244,4 +184,5 @@ in {
   #  config.dbtype = "sqlite";
   #  settings.trusted_domains = ["sia.local"];
   #};
+  };
 }
