@@ -43,7 +43,7 @@ sudo nixos-rebuild switch &> ~/tmp/nixos-switch.log || ( cat ~/tmp/nixos-switch.
 cat ~/tmp/nixos-switch.log | grep -Ei --color "warn|error|failed" || true
 
 # Commit on success
-current=$(nixos-rebuild list-generations | grep current)
+current=$(nixos-rebuild list-generations | grep current || nixos-rebuild list-generations | grep True\$)
 git add '*.nix'
 git commit -m "${HOSTNAME}: $current"
 
