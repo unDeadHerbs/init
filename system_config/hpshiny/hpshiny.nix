@@ -42,7 +42,7 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
   system.autoUpgrade.enable = true; # periodically execute systemd service nixos-upgrade.service
   system.autoUpgrade.allowReboot = false; # If false, run nixos-rebuild switch --upgrade
@@ -101,7 +101,7 @@ in {
     fira-code
     fira-code-symbols
     liberation_ttf
-    ubuntu_font_family
+    ubuntu-classic
   ];
 
   # Enable CUPS to print documents.
@@ -109,7 +109,7 @@ in {
   services.printing.drivers = [pkgs.brlaser];
 
   # Sound
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -157,13 +157,13 @@ in {
           numpy
           pandas
           pip
-          scikitlearn
+          scikit-learn
           scipy
           statsmodels
         ]))
       #R
       #rstudio
-      spyder
+      #spyder # qt bug
       thunderbird
       vlc
       #vscode
