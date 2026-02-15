@@ -22,8 +22,8 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
-  # sudo nix-channel --add https://channels.nixos.org/nixos-25.05 nixos
+  system.stateVersion = "25.11"; # Did you read the comment?
+  # sudo nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
   # sudo nixos-rebuild switch --upgrade
 
   system.autoUpgrade = {
@@ -179,7 +179,8 @@ in {
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-    barrier
+    #barrier # TODO: deskflow
+    deskflow
     htop
     mattermost
     nginx
@@ -188,16 +189,16 @@ in {
     vim
   ];
 
-  # Enable Barrier
-  systemd.services.barrierc = {
+  # Enable deskflow
+  systemd.services.deskflow = {
     wantedBy = ["graphical.target"];
     after = ["network.target"];
-    description = "Start the brarrier client for uDH.";
+    description = "Start the deskflow client for uDH.";
     serviceConfig = {
       Type = "simple";
       User = "udh";
-      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.31'';
-      ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
+      ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
+      ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
     };
   };
 
@@ -209,10 +210,10 @@ in {
 
   # Public Servers
   networking.firewall.allowedTCPPorts = [ 80 443 8065 ];
-  #security.acme = {
-  #  acceptTerms = true;
-  #  defaults.email = "undeadherbs@gmail.com";
-  #};
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "undeadherbs@gmail.com";
+  };
   services.mattermost = {
     enable = true;
     siteUrl = "http://udh.ddns.net";
@@ -224,8 +225,8 @@ in {
     virtualHosts = {
       # Replace with the domain from your siteUrl
       "udh.ddns.net" = {
-        #forceSSL = true; # Enforce SSL for the site
-        #enableACME = true; # Enable SSL for the site
+        forceSSL = true; # Enforce SSL for the site
+        enableACME = true; # Enable SSL for the site
         locations."/" = {
           proxyPass = "http://127.0.0.1:8065"; # Route to Mattermost
           proxyWebsockets = true;
