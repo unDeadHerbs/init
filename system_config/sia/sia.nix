@@ -19,6 +19,7 @@ in {
   imports = [
     ../nix/common.nix
     ../nix/desk.nix
+    ../nix/user-udh.nix
   ];
   config={
   # This value determines the NixOS release from which the default
@@ -68,72 +69,6 @@ in {
     pulse.enable = true;
   };
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "google-chrome"
-    ];
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.udh = {
-    isNormalUser = true;
-    description = "udh";
-    extraGroups = ["networkmanager" "wheel"];
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-      #moreutils cpufrequtils binutils usbutils
-      #sh-z sicp inetutils xpdf
-      alejandra
-      alsa-utils
-      aspell
-      (aspellWithDicts
-        (dicts: with dicts; [en en-computers])) # en-science]))
-      bat
-      clang
-      cowsay
-      curl
-      dmenu
-      ed
-      emacs
-      evince
-      eza
-      feh
-      ffmpeg
-      figlet
-      flameshot
-      git
-      gnumake
-      google-chrome
-      hunspell
-      hunspellDicts.en_US
-      hunspellDicts.en_GB-ise
-      hunspellDicts.en_GB-ize
-      i3status
-      imagemagick
-      libnotify
-      links2
-      lynx
-      mattermost-desktop
-      mc
-      mpv
-      hyfetch
-      netcat
-      p7zip
-      pandoc
-      progress
-      unstable.R
-      unstable.rstudio
-      scrot
-      sl
-      sshfs
-      texliveFull
-      tmux
-      unzip
-      wdiff
-      xfce.xfce4-terminal
-      #youtube-dl
-      zsh-autosuggestions
-    ];
-  };
 
   # Programs with extra config requirements
   programs.xfconf.enable = true;

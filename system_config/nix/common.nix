@@ -52,7 +52,21 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
+    # Install for all users
+    aspell
+    (aspellWithDicts
+      (dicts: with dicts; [en]))
+          evince
+      p7zip
+      unzip
+    # System Administration
+    curl
+    git
     htop
+    hyfetch
+    netcat
+    stow
+    tmux
     wget
     vim
   ];
