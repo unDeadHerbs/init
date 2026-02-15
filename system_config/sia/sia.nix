@@ -18,6 +18,7 @@ in {
   };
   imports = [
     ../nix/common.nix
+    ../nix/desk.nix
   ];
   config={
   # This value determines the NixOS release from which the default

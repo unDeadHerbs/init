@@ -1,6 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# Common config options for all of my systems.
 {
   config,
   pkgs,
@@ -32,12 +30,6 @@ in {
 
   # Enable networking
   networking.networkmanager.enable = true;
-  services.avahi = {
-    enable = true;
-    publish.enable = true;
-    publish.workstation = true;
-    publish.userServices = true;
-  };
 
   time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -54,30 +46,16 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-    fonts.packages = with pkgs; [
+  fonts.packages = with pkgs; [
     fira
     fira-code
   ];
 
   environment.systemPackages = with pkgs; [
-    deskflow
     htop
     wget
     vim
   ];
-
-  # Enable deskflow
-  systemd.services.deskflow = {
-    wantedBy = ["graphical.target"];
-    after = ["network.target"];
-    description = "Start the deskflow client for the default user.";
-    serviceConfig = {
-      Type = "simple";
-      User = config.per_system_config.auto_login_user;
-      ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
-      ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
-    };
-  };
 
   # Setup Remote Administration
   services.openssh = {
