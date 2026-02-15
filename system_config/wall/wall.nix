@@ -6,23 +6,22 @@
   pkgs,
   lib,
   ...
-}: let
-  # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
-  # sudo nix-channel --update
+}: with lib; let
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
-  # Bootloader.
-  boot = {
-    loader.grub.enable = true;
-    loader.grub.device = "/dev/sda";
-    loader.grub.useOSProber = true;
+  options.per_system_config = {
+    auto_login_user = lib.mkOption {
+      type = types.str;
+      default = "reiko";
+      description = "Name of default user";
+    };
   };
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
+  imports = [
+    ../nix/common.nix
+    ../nix/desk.nix
+    ../nix/user-udh.nix
+  ];
+  config={
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
@@ -31,43 +30,11 @@ in {
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
 
-  system.autoUpgrade.enable = true; # periodically execute systemd service nixos-upgrade.service
-  system.autoUpgrade.allowReboot = false; # If false, run nixos-rebuild switch --upgrade
-
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-  services.avahi = {
-    enable = true;
-    publish.enable = true;
-    publish.workstation = true;
-    publish.userServices = true;
-  };
-
-  # Set your time zone.
-  time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
-  #i18n.defaultLocale = "uk_UA.UTF-8";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.supportedLocales = ["uk_UA.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" "en_US.UTF-8/UTF-8"];
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   # Display
   services = {
@@ -101,11 +68,6 @@ in {
     };
   };
 
-  fonts.packages = with pkgs; [
-    fira
-    fira-code
-  ];
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -138,25 +100,6 @@ in {
     ];
   };
 
-  users.users.udh = {
-    isNormalUser = true;
-    description = "udh";
-    extraGroups = ["networkmanager" "wheel"];
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-      alejandra
-      bat
-      git
-      hyfetch
-      netcat
-      scrot
-      stow
-      tmux
-      unzip
-      wdiff
-      zsh-autosuggestions
-    ];
-  };
   # Enable sudo without having a user password
   security.sudo.wheelNeedsPassword = false;
 
@@ -164,30 +107,6 @@ in {
   programs.zsh.enable = true;
   programs.mosh.enable = true;
   programs.firefox.enable = true;
-  environment.systemPackages = with pkgs; [
-    deskflow
-    htop
-    wget
-    vim
-  ];
-
-  # Enable Deskflow
-  systemd.services.deskflow = {
-    # this is the "node" in the systemd dependency graph that will run the service
-    wantedBy = ["graphical.target"];
-    # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
-    after = ["network.target"];
-    description = "Start the deskflow client for Reiko.";
-    serviceConfig = {
-      # see systemd man pages for more information on the various options for "Type": "notify"
-      # specifies that this is a service that waits for notification from its predecessor (declared in
-      # `after=`) before starting
-      Type = "simple";
-      User = "reiko";
-      ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
-      ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
-    };
-  };
 
   # Kiosk Application
   systemd.services.firefox = {
@@ -210,32 +129,5 @@ in {
       RestartSec = "10";
     };
   };
-
-  # Setup Remote Administration
-  services.openssh = {
-    enable = true;
-    settings.X11Forwarding = true;
-    settings.PasswordAuthentication = false;
-    settings.PermitRootLogin = "no";
-  };
-  services.tor = {
-    enable = true;
-    openFirewall = true;
-    relay = {
-      enable = true;
-      role = "relay";
-      onionServices.remoteAdmin = {
-        version = 3;
-        map = [
-          {
-            port = 1234;
-            target = {
-              addr = "[::1]";
-              port = 22;
-            };
-          }
-        ];
-      };
-    };
   };
 }
