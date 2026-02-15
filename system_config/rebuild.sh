@@ -39,7 +39,7 @@ echo "NixOS Rebuilding..."
 mkdir -p ~/tmp
 
 # Rebuild, log last trace back, output only errors
-sudo nixos-rebuild switch &> ~/tmp/nixos-switch.log || ( cat ~/tmp/nixos-switch.log | grep -Ei --color "warn|error|failed" -C2 && popd && exit 1 )
+sudo nixos-rebuild switch --upgrade &> ~/tmp/nixos-switch.log || ( cat ~/tmp/nixos-switch.log | grep -Ei --color "warn|error|failed" -C2 && popd && exit 1 )
 cat ~/tmp/nixos-switch.log | grep -Ei --color "warn|error|failed" || true
 
 # Commit on success
