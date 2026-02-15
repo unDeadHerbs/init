@@ -29,7 +29,7 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
   system.autoUpgrade.enable = true; # periodically execute systemd service nixos-upgrade.service
   system.autoUpgrade.allowReboot = false; # If false, run nixos-rebuild switch --upgrade
@@ -165,50 +165,51 @@ in {
   programs.mosh.enable = true;
   programs.firefox.enable = true;
   environment.systemPackages = with pkgs; [
-    barrier
+    deskflow
     htop
     wget
     vim
   ];
 
-  # Enable Barrier
-  systemd.services.barrierc = {
+  # Enable Deskflow
+  systemd.services.deskflow = {
     # this is the "node" in the systemd dependency graph that will run the service
     wantedBy = ["graphical.target"];
     # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
     after = ["network.target"];
-    description = "Start the brarrier client for Reiko.";
+    description = "Start the deskflow client for Reiko.";
     serviceConfig = {
       # see systemd man pages for more information on the various options for "Type": "notify"
       # specifies that this is a service that waits for notification from its predecessor (declared in
       # `after=`) before starting
       Type = "simple";
       User = "reiko";
-      ExecStart = ''${pkgs.barrier}/bin/barrierc -f --restart --disable-crypto 192.168.0.31'';
-      ExecStop = ''${pkgs.procps}/bin/pkill barrierc'';
+      ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
+      ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
     };
   };
 
-  # TODO: Kiosk Application
-  #systemd.services.firefox = {
-  #  # this is the "node" in the systemd dependency graph that will run the service
-  #  wantedBy = ["default.target"];
-  #  # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
-  #  after = ["network.target"];
-  #  wants = ["display-manager.service"];
-  #  description = "Start the firefox kiosk for reiko.";
-  #  serviceConfig = {
-  #    # see systemd man pages for more information on the various options for "Type": "notify"
-  #    # specifies that this is a service that waits for notification from its predecessor (declared in
-  #    # `after=`) before starting
-  #    Type = "simple";
-  #    User = "reiko";
-  #    ExecStart = ''${pkgs.firefox}/bin/firefox --kiosk'';
-  #    ExecStop = ''${pkgs.procps}/bin/pkill firefox'';
-  #    Restart = "always";
-  #    RestartSec = "10";
-  #  };
-  #};
+  # Kiosk Application
+  systemd.services.firefox = {
+    # this is the "node" in the systemd dependency graph that will run the service
+    wantedBy = ["default.target"];
+    # systemd service unit declarations involve specifying dependencies and order of execution of systemd nodes
+    after = ["network.target"];
+    wants = ["display-manager.service"];
+    description = "Start the firefox kiosk for reiko.";
+    serviceConfig = {
+      # see systemd man pages for more information on the various options for "Type": "notify"
+      # specifies that this is a service that waits for notification from its predecessor (declared in
+      # `after=`) before starting
+      Type = "simple";
+      User = "reiko";
+      Environment = "DISPLAY=:0";
+      ExecStart = ''${pkgs.firefox}/bin/firefox --kiosk'';
+      ExecStop = ''${pkgs.procps}/bin/pkill firefox'';
+      Restart = "always";
+      RestartSec = "10";
+    };
+  };
 
   # Setup Remote Administration
   services.openssh = {
