@@ -8,9 +8,10 @@ set -e
 nix_computers=("wall" "hpshiny" "sia" "Chris")
 
 for comp in $nix_computers; do
-		[[ -e ~/network/$comp/home ]] || { figlet "Missing : $comp" ; continue;}
+		ssh $comp echo || { figlet "Skipping : $comp" ; continue;}
 		figlet "Trying : $comp"
-		cp -r ~/init/system_config/. ~/network/$comp/home/udh/init/system_config
+		# TODO: maybe rsync?
+		scp -qr ~/init/system_config/. $comp:/home/udh/init/system_config
 		ssh $comp -t sudo nixos-rebuild test
 done
 
