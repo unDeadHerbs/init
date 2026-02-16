@@ -10,28 +10,37 @@
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   # Bootloader.
-  boot = lib.mkMerge [ ({
-    loader.grub = {
-      enable = true;
-      device = "/dev/sda";
-      useOSProber = true;
-      splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
-    };
-    supportedFilesystems = ["ntfs"];
-  })
-                       (lib.mkIf (config.per_system_config.primary_account != "udh") {
-    plymouth.enable = true;
-    initrd.verbose = false;
-    kernelParams = [
-      "quiet"
-      "splash"
-      "boot.shell_on_fail"
-      "udev.log_priority=3"
-      "rd.systemd.show_status=auto"
-    ];
-    loader.timeout = 0;
-  })];
-
+  boot = lib.mkMerge [
+    (lib.mkIf config.per_system_config.boot_grub_not_systemd {
+      loader.grub = {
+        enable = true;
+        device = "/dev/sda";
+        useOSProber = true;
+        splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+      };
+    })
+    (lib.mkIf (!config.per_system_config.boot_grub_not_systemd) {
+      loader ={
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
+    })
+    ({
+      supportedFilesystems = ["ntfs"];
+    })
+    (lib.mkIf(config.per_system_config.primary_account != "udh") {
+      plymouth.enable = true;
+      initrd.verbose = false;
+      kernelParams = [
+        "quiet"
+        "splash"
+        "boot.shell_on_fail"
+        "udev.log_priority=3"
+        "rd.systemd.show_status=auto"
+      ];
+      loader.timeout = 1;
+    })];
+  
   system.autoUpgrade = {
     enable = true; # periodically execute systemd service nixos-upgrade.service
     allowReboot = false; # If false, run nixos-rebuild switch --upgrade
@@ -63,6 +72,9 @@ in {
   fonts.packages = with pkgs; [
     fira
     fira-code
+    fira-code-symbols
+    liberation_ttf
+    ubuntu-classic
   ];
 
   environment.systemPackages = with pkgs; [

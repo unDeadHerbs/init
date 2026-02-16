@@ -6,264 +6,63 @@
   pkgs,
   lib,
   ...
-}: let
+}: with lib; let
   # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
-  # Bootloader.
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-    plymouth = {
-      enable = true;
+  options.per_system_config = {
+    primary_account = lib.mkOption {
+      default = "udh";
     };
-    consoleLogLevel = 3;
-    initrd.verbose = false;
-    kernelParams = [
-      "quiet"
-      "splash"
-      "boot.shell_on_fail"
-      "udev.log_priority=3"
-      "rd.systemd.show_status=auto"
-    ];
-    loader.timeout = 0;
-    supportedFilesystems = ["ntfs"];
+    auto_login = lib.mkOption{ default= false;};
+    boot_grub_not_systemd = lib.mkOption{ default= false;};
   };
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.11"; # Did you read the comment?
-
-  system.autoUpgrade.enable = true; # periodically execute systemd service nixos-upgrade.service
-  system.autoUpgrade.allowReboot = false; # If false, run nixos-rebuild switch --upgrade
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-  services.avahi = {
-    enable = true;
-    publish.enable = true;
-    publish.workstation = true;
-    publish.userServices = true;
-  };
-
-  # Set your time zone.
-  time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
-  #i18n.defaultLocale = "uk_UA.UTF-8";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.supportedLocales = ["uk_UA.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" "en_US.UTF-8/UTF-8"];
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  # Display
-  services = {
-    xserver = {
-      enable = false;
-      xkb = {
-        layout = "us,ru";
-        variant = "";
-      };
-    };
-    # TODO: hide "udh" in sddm
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
-    desktopManager.plasma6.enable = true;
-  };
-  fonts.packages = with pkgs; [
-    fira
-    fira-code
-    fira-code-symbols
-    liberation_ttf
-    ubuntu-classic
+  imports = [
+    ../nix/common.nix
+    ../nix/desk.nix
+    ../nix/user-udh.nix
+    ../nix/user-vika.nix
   ];
+  config={
+    # This value determines the NixOS release from which the default
+    # settings for stateful data, like file locations and database versions
+    # on your system were taken. It‘s perfectly fine and recommended to leave
+    # this value at the release version of the first install of this system.
+    # Before changing this value read the documentation for this option
+    # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+    system.stateVersion = "25.11"; # Did you read the comment?
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = [pkgs.brlaser];
-
-  # Sound
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-  };
-
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "google-chrome"
-      #"vscode"
-      "zoom"
-    ];
-
-  users.users.vika = {
-    isNormalUser = true;
-    description = "Viktoriia";
-    extraGroups = ["networkmanager" "disk" "audio" "dialout" "video" "input"];
-    packages = with pkgs; [
-      anki
-      google-chrome
-      ffmpeg
-      hunspell
-      hunspellDicts.uk_UA
-      hunspellDicts.en_US
-      kdePackages.kate
-      kdePackages.kdenlive
-      kdePackages.kolourpaint
-      krita
-      libreoffice
-      obs-studio
-      p7zip
-      pandoc
-      pdfchain
-      (python311.withPackages (ps:
-        with ps; [
-          ipykernel
-          jupyter
-          jupyterlab
-          matplotlib
-          notebook
-          numpy
-          pandas
-          pip
-          scikit-learn
-          scipy
-          statsmodels
-        ]))
-      #R
-      #rstudio
-      #spyder # qt bug
-      thunderbird
-      vlc
-      #vscode
-      #zoom-us
-    ];
-  };
-
-  users.users.udh = {
-    isNormalUser = true;
-    description = "udh";
-    extraGroups = ["networkmanager" "wheel"];
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-      #moreutils cpufrequtils binutils usbutils
-      #sh-z sicp inetutils xpdf
-      alejandra
-      alsa-utils
-      aspell
-      bat
-      clang
-      cowsay
-      curl
-      dmenu
-      ed
-      emacs
-      evince
-      eza
-      feh
-      ffmpeg
-      figlet
-      flameshot
-      git
-      gnumake
-      google-chrome
-      i3status
-      imagemagick
-      libnotify
-      links2
-      lynx
-      mc
-      mpv
-      hyfetch
-      netcat
-      pandoc
-      progress
-      #unstable.R
-      #unstable.rstudio
-      scrot
-      sl
-      sshfs
-      stow
-      tmux
-      unzip
-      wdiff
-      xfce.xfce4-terminal
-      #youtube-dl
-      zsh-autosuggestions
-    ];
-  };
-  # Enable sudo without having a user password
-  security.sudo.wheelNeedsPassword = false;
-
-  # Install core programs
-  programs.zsh.enable = true;
-  programs.mosh.enable = true;
-  #programs.firefox.enable = true;
-  environment.systemPackages = with pkgs; [
-    git
-    htop
-    gnumake
-    screen
-    wget
-    vim
-  ];
-
-  # Setup Remote Administration
-  services.openssh = {
-    enable = true;
-    settings.X11Forwarding = true;
-    settings.PasswordAuthentication = false;
-    settings.PermitRootLogin = "no";
-  };
-  services.tor = {
-    enable = true;
-    openFirewall = true;
-    relay = {
-      enable = true;
-      role = "relay";
-      onionServices.remoteAdmin = {
-        version = 3;
-        map = [
-          {
-            port = 1234;
-            target = {
-              addr = "[::1]";
-              port = 22;
-            };
-          }
-        ];
-      };
+    # Display
+    services = {
+      # TODO: hide "udh" in sddm
+      displayManager.sddm.enable = true;
+      displayManager.sddm.wayland.enable = true;
+      desktopManager.plasma6.enable = true;
     };
+
+    # Enable CUPS to print documents.
+    services.printing.enable = true;
+    services.printing.drivers = [pkgs.brlaser];
+
+    # Sound
+    services.pulseaudio.enable = false;
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      # If you want to use JACK applications, uncomment this
+      #jack.enable = true;
+    };
+
+    # Enable sudo without having a user password
+    security.sudo.wheelNeedsPassword = false;
+
+    # Install core programs
+    programs.zsh.enable = true;
+    programs.mosh.enable = true;
+    #programs.firefox.enable = true;
   };
 }

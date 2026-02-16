@@ -14,7 +14,8 @@ in {
     primary_account = lib.mkOption {
       default = "reiko";
     };
-    auto_login = lib.mkDefault true;
+    auto_login = lib.mkOption { default = true; };
+    boot_grub_not_systemd = lib.mkOption { default = true; };
   };
   imports = [
     ../nix/common.nix

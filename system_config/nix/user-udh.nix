@@ -19,7 +19,7 @@ in {
   users.users.udh = {
     isNormalUser = true;
     description = "udh";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "disk" "audio" "dialout" "video" "input"];
     shell = pkgs.zsh;
     packages = with pkgs;
       [
@@ -37,9 +37,11 @@ in {
       ++ (
         if (config.per_system_config.primary_account == "udh")
         then [
+          #moreutils cpufrequtils binutils usbutils
+          #sh-z sicp inetutils xpdf
+          alsa-utils
           (aspellWithDicts
             (dicts: with dicts; [en-computers])) # en-science]))
-          alsa-utils
           clang
           cowsay
           dmenu
@@ -62,8 +64,8 @@ in {
           mattermost-desktop
           mpv
           pandoc
-          unstable.R
-          unstable.rstudio
+          #unstable.R
+          #unstable.rstudio
           scrot
           sl
           texliveFull

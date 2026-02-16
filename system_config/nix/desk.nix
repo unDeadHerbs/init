@@ -9,7 +9,6 @@
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
-  # Enable networking
   services.avahi = {
     enable = true;
     publish.enable = true;
