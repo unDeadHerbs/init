@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-DefaultArgs="-qv --keep-going --verbose-conflicts --autounmask" # --ask
-exclude_known_sad="--exclude libvpx"
+DefaultArgs="-qv --keep-going --verbose-conflicts"
+exclude_known_sad="--exclude libvpx --exclude erlang --exclude dev-qt/qtbase --exclude flameshot"
+# --autounmask --autounmask-license y --autounmask-backtrack=y --ask
 
 # Make system consistent
 emerge -Dn @world --backtrack=30 $DefaultArgs $exclude_known_sad
@@ -39,4 +40,6 @@ revdep-rebuild -iv -- $DefaultArgs $@ # --exact seems to have been removed?
 
 #emerge -qva1 $(emerge -qvac 2>&1|grep pulle|sed -e 's/^ [*]   //' -e 's/[:[].*//' -e 's/[=><]//g' -e 's/[-][r0-9.-]*$//'|grep -v "pull"|uniq|xargs echo) --autounmask=y
 
-mandb
+mandb > /dev/null # update the man pages (still noisy)
+pfl > /dev/null # update the e-file database (noisy)
+
