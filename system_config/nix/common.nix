@@ -4,19 +4,33 @@
   pkgs,
   lib,
   ...
-}: let
+}: with lib; let
   # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   # Bootloader.
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    useOSProber = true;
-    splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
-  };
-  boot.supportedFilesystems = ["ntfs"];
+  boot = lib.mkMerge [ ({
+    loader.grub = {
+      enable = true;
+      device = "/dev/sda";
+      useOSProber = true;
+      splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
+    };
+    supportedFilesystems = ["ntfs"];
+  })
+                       (lib.mkIf (config.per_system_config.primary_account != "udh") {
+    plymouth.enable = true;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
+    loader.timeout = 0;
+  })];
 
   system.autoUpgrade = {
     enable = true; # periodically execute systemd service nixos-upgrade.service
@@ -56,9 +70,9 @@ in {
     aspell
     (aspellWithDicts
       (dicts: with dicts; [en]))
-          evince
-      p7zip
-      unzip
+    evince
+    p7zip
+    unzip
     # System Administration
     curl
     git

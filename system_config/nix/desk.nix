@@ -28,7 +28,7 @@ in {
     description = "Start the deskflow client for the default user.";
     serviceConfig = {
       Type = "simple";
-      User = config.per_system_config.auto_login_user;
+      User = config.per_system_config.primary_account;
       ExecStart = ''${pkgs.deskflow}/bin/deskflow-core client -f --restart 192.168.0.31'';
       ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
     };
