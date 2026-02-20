@@ -8,11 +8,10 @@ set -e
 nix_computers=("loaner" "hpshiny" "sia" "Chris") # "wall"
 
 test_computer(){
-		ssh "$1" echo || { figlet "Skipping : $1" ; continue;}
+		ssh "$1" echo || { figlet "Skipping : $1" ; return ;}
 		figlet "Trying : $1"
-		# TODO: maybe rsync?
-		scp -qr ~/init/system_config/* "$1":/home/udh/init/system_config
-		ssh "$1" -t sudo nixos-rebuild test
+		rsync -az ~/init/system_config/ "$1":/home/udh/init/system_config/
+		ssh "$1" -t sudo nixos-rebuild test --show-trace
 		#ssh $1 git checkout HEAD -- /home/udh/init/system_config
 }
 
