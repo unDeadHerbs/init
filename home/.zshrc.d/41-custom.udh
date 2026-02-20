@@ -329,3 +329,36 @@ exists inotifywait && exists make && exists watch && \
 }
 
 exists nix-shell && n(){ NIXPKGS_ALLOW_UNFREE=1 nix-shell -p "$1" --command "$(_sh_quote "$@")" ; }
+
+exists mpv && vramp(){
+				# TODO: There's a smoother curve to move here so that the
+				# speed up is constant in real time rather than in "plays".
+				#seq 10 20 | while read speed; do mpv --vid=no --speed=$speed/10 "$@"; done ;
+				#seq 201 300 | while read speed; do mpv --vid=no --speed=$speed/100 "$@"; done ;
+				#seq 3001 4000 | while read speed; do mpv --vid=no --speed=$speed/1000 "$@"; done ;
+				#
+				# If play 10 is 2x, then each play is 2^.1 faster
+				# seq 1 20 | while read step ; do echo $(((2 ** .1) ** $step)); done 
+				#
+				# no, then at twice that time it would be 4x faster
+				# speedup is probably best considered as "distance from 3x" speed so that it's asymptotic?
+				# Nearly asymptotic, I do want to keep getting faster slowly
+				# Let's pass a log though my two points so that the speedup is slowing
+				# log(step)+1 passes through (1,1)
+				# to make f(10)=2 -> a*log(10)+1=2 -> a=1/log(10)
+				# echo 'l(20)/l(10)+1' | bc -l
+				# seq 1 20 | while read step ; do speed=`echo "l($step)/l(10)+1" | bc -l`; echo speed = $speed ; done
+				# good, 10 plays to double and 100 to triple seems good
+				# After some testing, that's a bit fast of a speedup for normal song lengths, switched to 20
+				seq 1 1000 | while read step ; do
+						speed=`echo "l($step)/l(20)+1" | bc -l`
+						mpv --vid=no --speed=$speed "$@"
+				done
+				# There's probably a better version of this; but, this will work for now
+				# I don't like that this is so~ slow to speed up
+
+				# TODO: This depends on song length for seed-up rate
+				# - Take the start time and measure from there?
+				# - Ask mpv for the length of the track so that "skipping" can move forwards in speed?
+		}
+
