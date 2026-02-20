@@ -71,6 +71,7 @@ in {
           texliveFull
           xfce.xfce4-terminal
           #youtube-dl
+          zstd
         ]
         else []
       );

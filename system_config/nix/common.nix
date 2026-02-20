@@ -93,6 +93,7 @@ in {
     netcat
     stow
     tmux
+    usbutils
     wget
     vim
   ];
