@@ -5,7 +5,7 @@ set -e
 # TODO: Test alejandra parsing first.
 
 # In order of how fast/easily they respond
-nix_computers=("loaner" "hpshiny" "sia" "Chris") # "wall"
+nix_computers=("wall" "loaner" "hpshiny" "sia" "Chris")
 
 test_computer(){
 		ssh "$1" echo || { figlet "Skipping : $1" ; return ;}
