@@ -2,16 +2,18 @@
 
 set -e
 
+# TODO: parallel each computer
+
 # TODO: Test alejandra parsing first.
 
-# In order of how fast/easily they respond
-nix_computers=("wall" "loaner" "hpshiny" "sia" "Chris")
+# In order of how hard they are to fix if it's bad.
+nix_computers=("wall" "hpshiny" "sia" "loaner" "Chris")
 
 test_computer(){
-		ssh "$1" echo || { figlet "Skipping : $1" ; return ;}
-		figlet "Trying : $1"
+		ssh "$1" echo || { figlet "Skip : $1" ; return ;}
+		figlet "$1"
 		rsync -az ~/init/system_config/ "$1":/home/udh/init/system_config/
-		ssh "$1" -t sudo nixos-rebuild test --show-trace
+		ssh "$1" -t sudo nixos-rebuild switch --show-trace
 		#ssh $1 git checkout HEAD -- /home/udh/init/system_config
 }
 
