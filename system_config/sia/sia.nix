@@ -19,6 +19,7 @@ in {
   };
   imports = [
     ../nix/common.nix
+    ../nix/cross-dev-pi.nix
     ../nix/desk.nix
     ../nix/user-udh.nix
   ];
