@@ -1,0 +1,13 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/21-alias.udh
+
+if exists fzf; then
+	# TODO: Find out how to have fzf update the directory when it changes
+	# TODO: Check the terminal size and use 'down' instead of 'right' if the terminal is too thin
+	# TODO: Make this recursive but ignore .git dirs
+	if exists batwatch; then
+		alias qref="fzf --layout=reverse --preview-window='bottom:80%' --preview 'batwatch --color=always {}'"
+	else
+		alias qref="fzf --layout=reverse --preview-window='bottom:80%' --preview '$PAGER --color=always {}'"
+	fi
+fi

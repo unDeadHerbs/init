@@ -40,5 +40,5 @@ if exists fzf; then
 		alias qref="fzf --layout=reverse --preview-window='right:80%' --preview 'batwatch --color=always {}'"
 	else
 		alias qref="fzf --layout=reverse --preview-window='right:80%' --preview '$PAGER --color=always {}'"
-	fi ; fi
+	fi
 fi

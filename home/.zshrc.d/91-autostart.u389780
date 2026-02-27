@@ -1,0 +1,4 @@
+#! /usr/bin/env zsh
+
+[[ `pwd` == "/mnt/c/Windows/System32" ]] && cd
+[[ `pwd` == "/mnt/c/Users/u389780/AppData/Local/Microsoft/WindowsApps" ]] && cd
