@@ -19,8 +19,6 @@
 	enabled = true
 [status]
 	submodulesummary = true
-[protocol "file"]
-	allow = always
 [alias]
 
 	#
@@ -145,7 +143,9 @@
 
 	branch-start--branch = "!git merge-base $(git upstream-head)"
 	branch-start--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git branch-start--branch HEAD ; else git branch-start--branch \"$1\" ; fi }; f"
-	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..$(git upstream-head-ref)"
+	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..refs/remotes/$(git upstream-head)"
+	# To get the list of commits on the branch without upstream you can
+	# git log --left-only branch...upstream
 	log-branch-no-context = "!git log-standard $(git branch-start--opt-branch)..HEAD $(git branch-start--opt-branch)"
 	log-branch-only-hash = "!f(){ git log-branch-no-context --format=format:\"%H\" \"$@\" | sed 's,^[*] ,,' ; }; f"
 	# make a log-branch that only shows commits on origin/HEAD that conflict with the current branch?
@@ -206,7 +206,9 @@
 	# TODO: filter on file type
 	count-lines = "!git ls|cut -f 2 -|sed 's/[] ()'\\''\\\\[&;]/\\\\&/g'|sed 's/.*/cat &|wc -l \\&\\& echo \"+0\"/'|sh|xargs|sed 's/ //g'|bc"
 	count--pat-exclude-types = "!f(){ git grep -E \"$1\" -- \"${@:3}\" | grep -v \"$2\" | wc -l ; }; f"
-
+	# Print Duplicates by (count, hash, first location)
+	experimental-list-duplicates = "!f(){ git ls-tree -r HEAD | cut -f1 | cut -d' ' -f3 | sort | uniq -c | grep -v '^ *1 ' | sort -rn | while read ch; do count=$( echo $ch | cut -d' ' -f1 ) ; hash=$( echo $ch | cut -d' ' -f2 ) ; { echo $count $hash ; git ls-tree -r HEAD | grep $hash | head -1 | cut -f2 ; } | xargs ; done ; } ; f"
+	
 	#######################
 	# Remote Manipulation #
 	#######################
@@ -289,6 +291,16 @@
 	 	 git checkout \"$OHEAD\" && \
 		 git I-rep-bisect-test-and-kick3--branch-name \"$OHEAD\" ; } ; f"
 		 # TODO: bisect reset && checkout OHEAD
+	rep-bisect-test-and-kick3--base = "!f(){ \
+		 git require-test &&  \
+		 OHEAD=`git branch-or-hash` &&  \
+	 	 git checkout $1 && \
+		 git test && \
+	 	 git bisect start && \
+	 	 git bisect good && \
+	 	 git checkout \"$OHEAD\" && \
+		 git I-rep-bisect-test-and-kick3--branch-name \"$OHEAD\" ; } ; f"
+		 # TODO: bisect reset && checkout OHEAD
   # TODO: Make an even more pesimistic verion that rebases one commit at a time onto branch-start until it passes \"$stat\" ; done; }; f"
 	bisect-interactive = "bisect run bisect-interactive-step"
 	rep-interactive-bisect-and-kick = "!f(){ OHEAD=`git branch-or-hash` ; git bisect start && git bisect good $(git branch-start--opt-branch) && read -p \"good or bad? \" stat && while [ \"$stat\" == \"bad\" ] ; do git bisect bad && git bisect-interactive && git kickout-bad-from--branch $OHEAD && read -p \"good or bad? \" stat ; done && git bisect reset ; }; f"
@@ -341,6 +353,13 @@
 	###############################
 
 	checkout-or-create--branch = "!f(){ cd \"${GIT_PREFIX:-.}\" && { git checkout \"$@\" || git checkout -b \"$@\" ; } && git fetch-and-ff-pull ; }; f"
+	checkout-fuzzy--branch = "!f(){ \
+	if [ \"`git branch | grep \"$1\" | wc -l`\" -ne 1 ] ; then \
+	  echo \"Can't find unique branch \\\"$1\\\" \" ; \
+	else \
+	  git branch | grep \"$1\" | xargs git checkout ; \
+	fi ; \
+	}; f"
 
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
 	reset-up-one             = "reset HEAD^ --no-refresh"
@@ -563,12 +582,14 @@
 	b    = "branch"
 	bn   = "branch-name"
 	chk  = "as-chainable--arg checkout-or-create--branch"
+	chkf = "as-chainable--arg checkout-fuzzy--branch"
 	cm   = "commit--opt-message"
 	cmbt = "commit-branch-time"
 	d    = "paged diff-opt-commit"
-	d1   = "paged diff-opt-commit HEAD^ HEAD"
+	d1   = "d HEAD^ HEAD"
 	dstash = "paged diff-stashed"
 	db   = "diff-changes-on-branch"
+	dbn  = "db --numstat"
 	drm  = "delete--opt-branch-opt-remote"
 	f    = "as-chainable fetch-and-ff-pull"
 	greb = "blame-grep--pat-opt-file"
