@@ -50,7 +50,7 @@
 	# - Can I store it as a branch name?
 	# TODO: support different remote names
 	upstream-head = "echo origin/HEAD"
-	upstream-head-ref = "echo refs/remotes/$(git upstream-head)" # if no such, check refs/heads
+	upstream-head-ref = "!echo refs/remotes/$(git upstream-head)" # if no such, check refs/heads
 
 	watch = "!watch -c git"
 	rep-while-diff = "!f(){ while git diff | grep '.' > /dev/null; do git \"$@\"; done; }; f"
@@ -566,6 +566,7 @@
 	cm   = "commit--opt-message"
 	cmbt = "commit-branch-time"
 	d    = "paged diff-opt-commit"
+	d1   = "paged diff-opt-commit HEAD^ HEAD"
 	dstash = "paged diff-stashed"
 	db   = "diff-changes-on-branch"
 	drm  = "delete--opt-branch-opt-remote"
