@@ -7,6 +7,9 @@
 [submodule "home/.bashrc.d/bash-git-prompt"]
 	path = home/.bashrc.d/bash-git-prompt
 	url = https://github.com/magicmonty/bash-git-prompt.git
+[submodule "home/bin/bin/ical2org"]
+	path = home/bin/bin/ical2org
+	url = https://github.com/msherry/ical2org.git
 [submodule "home/.zshrc.d/fzf-tab"]
 	path = home/.zshrc.d/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab.git
