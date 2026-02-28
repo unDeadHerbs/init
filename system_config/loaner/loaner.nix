@@ -6,7 +6,8 @@
   pkgs,
   lib,
   ...
-}: with lib; let
+}:
+with lib; let
   # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
@@ -15,9 +16,9 @@ in {
     primary_account = lib.mkOption {
       default = "udh";
     };
-    auto_login = lib.mkOption{ default= false;};
-    boot_loader = lib.mkOption{ default= "grub";};
-    gui_system = lib.mkOption { default = "X"; };
+    auto_login = lib.mkOption {default = false;};
+    boot_loader = lib.mkOption {default = "grub";};
+    gui_system = lib.mkOption {default = "X";};
   };
   imports = [
     ../nix/common.nix
@@ -26,7 +27,7 @@ in {
     ../nix/loaner.nix
     #../nix/loaner2.nix
   ];
-  config={
+  config = {
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions
     # on your system were taken. It‘s perfectly fine and recommended to leave

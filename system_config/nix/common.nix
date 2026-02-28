@@ -4,7 +4,8 @@
   pkgs,
   lib,
   ...
-}: with lib; let
+}:
+with lib; let
   # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
@@ -20,22 +21,22 @@ in {
       };
     })
     (lib.mkIf (config.per_system_config.boot_loader == "systemd") {
-      loader ={
+      loader = {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;
       };
     })
     (lib.mkIf (config.per_system_config.boot_loader == "extlinux") {
-      loader ={
+      loader = {
         # I think uBoot is only part of the image and is just kept around after that?
         grub.enable = false;
         generic-extlinux-compatible.enable = true;
       };
     })
-    ({
+    {
       supportedFilesystems = ["ntfs"];
-    })
-    (lib.mkIf(config.per_system_config.primary_account != "udh") {
+    }
+    (lib.mkIf (config.per_system_config.primary_account != "udh") {
       plymouth.enable = true;
       initrd.verbose = false;
       kernelParams = [
@@ -46,8 +47,9 @@ in {
         "rd.systemd.show_status=auto"
       ];
       loader.timeout = 1;
-    })];
-  
+    })
+  ];
+
   system.autoUpgrade = {
     enable = true; # periodically execute systemd service nixos-upgrade.service
     allowReboot = false; # If false, run nixos-rebuild switch --upgrade
@@ -76,14 +78,16 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-  fonts.packages = with pkgs; if (config.per_system_config.gui_system != "tui")
-      then [
-    fira
-    fira-code
-    fira-code-symbols
-    liberation_ttf
-    ubuntu-classic
-      ]else[];
+  fonts.packages = with pkgs;
+    if (config.per_system_config.gui_system != "tui")
+    then [
+      fira
+      fira-code
+      fira-code-symbols
+      liberation_ttf
+      ubuntu-classic
+    ]
+    else [];
 
   environment.systemPackages = with pkgs; [
     # Install for all users
@@ -111,7 +115,7 @@ in {
   services.openssh = {
     enable = true;
     #settings.X11Forwarding = true;
-     settings.PasswordAuthentication = false;
+    settings.PasswordAuthentication = false;
     settings.PermitRootLogin = "no";
   };
   services.tor = {

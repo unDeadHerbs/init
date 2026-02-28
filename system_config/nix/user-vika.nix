@@ -7,26 +7,23 @@
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   services.xserver.xkb = {
-        layout = "us,ru";
-        variant = "";
-      };
+    layout = "us,ru";
+    variant = "";
+  };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) (
-      [
-        "google-chrome"
-        #"vscode"
-        "zoom"
-      ]
-    );
+    builtins.elem (lib.getName pkg) [
+      "google-chrome"
+      #"vscode"
+      "zoom"
+    ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.vika = {
     isNormalUser = true;
     description = "Viktoriia";
-    extraGroups = ["networkmanager" "disk" "audio" "dialout" "video" "input"]; 
-    packages = with pkgs;
-      [
+    extraGroups = ["networkmanager" "disk" "audio" "dialout" "video" "input"];
+    packages = with pkgs; [
       anki
       google-chrome
       ffmpeg
@@ -63,6 +60,6 @@ in {
       vlc
       #vscode
       #zoom-us
-      ];
+    ];
   };
 }

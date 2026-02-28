@@ -14,9 +14,9 @@ in {
     primary_account = lib.mkOption {
       default = "reiko";
     };
-    auto_login = lib.mkOption { default = true; };
-    boot_loader = lib.mkOption { default = "grub"; };
-    gui_system = lib.mkOption { default = "X"; };
+    auto_login = lib.mkOption {default = true;};
+    boot_loader = lib.mkOption {default = "grub";};
+    gui_system = lib.mkOption {default = "X";};
   };
   imports = [
     ../nix/common.nix

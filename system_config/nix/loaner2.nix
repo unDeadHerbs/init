@@ -59,13 +59,12 @@
 #    system = builtins.currentSystem;
 #  };
 #in builtins.readFile drv
-
-
 let
   drv = derivation {
     name = "hello";
     builder = "/bin/sh";
-    args = [ "-c" ''echo "{ networking.hostName = \"$(cat /sys/class/dmi/id/product_uuid);}}\"" > $out'' ];
+    args = ["-c" ''echo "{ networking.hostName = \"$(cat /sys/class/dmi/id/product_uuid);}}\"" > $out''];
     system = builtins.currentSystem;
   };
-in builtins.readFile drv
+in
+  builtins.readFile drv

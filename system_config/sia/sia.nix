@@ -9,15 +9,15 @@
   ...
 }: {
   options.per_system_config = {
-    primary_account = lib.mkOption{ default = "udh";};
-    auto_login = lib.mkOption{ default= true;};
+    primary_account = lib.mkOption {default = "udh";};
+    auto_login = lib.mkOption {default = true;};
 
-    multi_user = lib.mkOption{ default= false;};
+    multi_user = lib.mkOption {default = false;};
     # true -> common adds login page
     # false -> udh add i3
-    
-    boot_loader = lib.mkOption{ default= "grub";};
-    gui_system = lib.mkOption { default = "X"; };
+
+    boot_loader = lib.mkOption {default = "grub";};
+    gui_system = lib.mkOption {default = "X";};
   };
   imports = [
     ../nix/common.nix
@@ -35,7 +35,7 @@
     system.stateVersion = "25.11"; # Did you read the comment?
     # sudo nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
     # sudo nixos-rebuild switch --upgrade
-    
+
     # X11
     services.xserver = {
       enable = true;
@@ -91,7 +91,7 @@
     ];
 
     # Allow this machine to serve as a remote builder.
-    nix.settings.trusted-users = [ "root" "@wheel" ];
+    nix.settings.trusted-users = ["root" "@wheel"];
 
     # Public Servers
     networking.firewall.allowedTCPPorts = [80 443 8065];

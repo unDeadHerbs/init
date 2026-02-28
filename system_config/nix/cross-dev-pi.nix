@@ -1,8 +1,11 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Enable QEMU so it can execute ARM instructions.
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
   # Define a package set for rPi: Allowing reference to
   # `pkgs.pkgsCross.aarch64-multiplatform` without flipping the global
