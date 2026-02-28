@@ -11,7 +11,7 @@
 in {
   # Bootloader.
   boot = lib.mkMerge [
-    (lib.mkIf config.per_system_config.boot_grub_not_systemd {
+    (lib.mkIf (config.per_system_config.boot_loader == "grub") {
       loader.grub = {
         enable = true;
         device = "/dev/sda";
@@ -19,10 +19,17 @@ in {
         splashImage = ../../bg/nix-wallpaper-mosaic-blue.png;
       };
     })
-    (lib.mkIf (!config.per_system_config.boot_grub_not_systemd) {
+    (lib.mkIf (config.per_system_config.boot_loader == "systemd") {
       loader ={
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;
+      };
+    })
+    (lib.mkIf (config.per_system_config.boot_loader == "extlinux") {
+      loader ={
+        # I think uBoot is only part of the image and is just kept around after that?
+        grub.enable = false;
+        generic-extlinux-compatible.enable = true;
       };
     })
     ({
@@ -69,13 +76,14 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-  fonts.packages = with pkgs; [
+  fonts.packages = with pkgs; if (config.per_system_config.gui_system != "tui")
+      then [
     fira
     fira-code
     fira-code-symbols
     liberation_ttf
     ubuntu-classic
-  ];
+      ]else[];
 
   environment.systemPackages = with pkgs; [
     # Install for all users
@@ -83,16 +91,17 @@ in {
     (aspellWithDicts
       (dicts: with dicts; [en]))
     evince
+    git
+    hyfetch
     p7zip
     unzip
+    tmux
     # System Administration
     curl
-    git
     htop
-    hyfetch
     netcat
+    nettools
     stow
-    tmux
     usbutils
     wget
     vim
@@ -102,7 +111,7 @@ in {
   services.openssh = {
     enable = true;
     #settings.X11Forwarding = true;
-    settings.PasswordAuthentication = false;
+     settings.PasswordAuthentication = false;
     settings.PermitRootLogin = "no";
   };
   services.tor = {

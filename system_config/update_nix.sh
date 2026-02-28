@@ -7,7 +7,7 @@ set -e
 # TODO: Test alejandra parsing first.
 
 # In order of how hard they are to fix if it's bad.
-nix_computers=("wall" "hpshiny" "sia" "loaner" "Chris")
+nix_computers=("wall" "hpshiny" "pi-wall.local" "sia" "loaner" "Chris")
 
 test_computer(){
 		ssh "$1" echo || { figlet "Skip : $1" ; return ;}
@@ -26,9 +26,4 @@ else
 		for comp in $nix_computers; do
 				test_computer $comp
 		done
-
-		(
-				cd ~/init/system_config/
-				git diff .
-		)
 fi

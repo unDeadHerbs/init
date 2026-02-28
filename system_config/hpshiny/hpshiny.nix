@@ -16,7 +16,8 @@ in {
       default = "udh";
     };
     auto_login = lib.mkOption{ default= false;};
-    boot_grub_not_systemd = lib.mkOption{ default= false;};
+    boot_loader = lib.mkOption{ default= "systemd";};
+    gui_system = lib.mkOption { default = "Wayland"; };
   };
   imports = [
     ../nix/common.nix

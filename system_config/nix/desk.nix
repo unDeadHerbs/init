@@ -8,7 +8,7 @@
   # sudo nix-channel --add https://channels.nixos.org/nixos-unstable nixos-unstable
   # sudo nix-channel --update
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
-in {
+in lib.mkMerge [({
   services.avahi = {
     enable = true;
     publish.enable = true;
@@ -16,6 +16,14 @@ in {
     publish.userServices = true;
   };
 
+  # Trying to disable screen blanking in x11
+  #services.xserver.displayManager.setupCommands = ''
+  #  ${pkgs.xorg.xset}/bin/xset s off
+  #  ${pkgs.xorg.xset}/bin/xset -dpms
+  #  ${pkgs.xorg.xset}/bin/xset s noblank
+  #'';
+}) ( lib.mkIf (config.per_system_config.gui_system != "tui")
+       {
   environment.systemPackages = with pkgs; [
     deskflow
   ];
@@ -32,4 +40,4 @@ in {
       ExecStop = ''${pkgs.procps}/bin/pkill deskflow-core'';
     };
   };
-}
+       })]

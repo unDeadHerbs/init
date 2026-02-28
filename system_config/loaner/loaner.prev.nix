@@ -38,7 +38,7 @@ in {
     ];
     # Start faster (at the cost of a little space)
     initrd.systemd.enable = true;
-    # Enable windows filesystm support
+    # Enable windows filesystem support
     supportedFilesystems = ["ntfs"];
   };
 
@@ -55,7 +55,7 @@ in {
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
-  # Select internationalisation properties.
+  # Select internationalization properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {

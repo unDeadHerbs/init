@@ -8,19 +8,24 @@
 in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) (
-      if (config.per_system_config.primary_account == "udh")
+      if (config.per_system_config.primary_account == "udh" && config.per_system_config.gui_system != "tui" )
       then [
         "google-chrome"
       ]
       else []
     );
 
+  programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.udh = {
     isNormalUser = true;
     description = "udh";
     extraGroups = ["networkmanager" "wheel" "disk" "audio" "dialout" "video" "input"];
     shell = pkgs.zsh;
+    # TODO: Maybe
+    #openssh.authorizedKeys.keys = [
+    #   "ssh-ed25519 AAAAC3NzaC1lZDI1.... username@tld"
+    #];
     packages = with pkgs;
       [
         alejandra
@@ -52,7 +57,6 @@ in {
           figlet
           flameshot
           gnumake
-          google-chrome
           hunspell
           hunspellDicts.en_US
           hunspellDicts.en_GB-ise
@@ -72,7 +76,9 @@ in {
           xfce.xfce4-terminal
           #youtube-dl
           zstd
-        ]
+        ] ++ (if(config.per_system_config.gui_system == "tui")
+             then [ ]
+              else [ google-chrome ])
         else []
       );
   };
