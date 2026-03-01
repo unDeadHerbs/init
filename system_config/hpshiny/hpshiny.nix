@@ -13,9 +13,7 @@ with lib; let
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   options.per_system_config = {
-    primary_account = lib.mkOption {
-      default = "udh";
-    };
+    primary_account = lib.mkOption {default = "udh";};
     auto_login = lib.mkOption {default = false;};
     boot_loader = lib.mkOption {default = "systemd";};
     gui_system = lib.mkOption {default = "Wayland";};

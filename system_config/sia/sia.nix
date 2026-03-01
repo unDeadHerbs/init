@@ -74,11 +74,7 @@
     };
 
     # Programs with extra config requirements
-    programs.xfconf.enable = true;
-    programs.zsh.enable = true;
-    services.emacs.enable = true;
     programs.firefox.enable = true;
-    programs.mosh.enable = true;
 
     # Enable sudo without having a user password
     security.sudo.wheelNeedsPassword = false;

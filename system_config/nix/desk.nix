@@ -18,6 +18,8 @@ in
         publish.userServices = true;
       };
 
+      programs.mosh.enable = true;
+
       # Trying to disable screen blanking in x11
       #services.xserver.displayManager.setupCommands = ''
       #  ${pkgs.xorg.xset}/bin/xset s off
