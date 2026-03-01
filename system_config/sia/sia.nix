@@ -81,7 +81,6 @@
 
     # List packages installed in system profile.
     environment.systemPackages = with pkgs; [
-      mattermost
       nginx
       noip
     ];
@@ -90,29 +89,167 @@
     nix.settings.trusted-users = ["root" "@wheel"];
 
     # Public Servers
+    boot.enableContainers = true;
+    virtualisation.containers.enable = true;
     networking.firewall.allowedTCPPorts = [80 443 8065];
     security.acme = {
       acceptTerms = true;
       defaults.email = "undeadherbs@gmail.com";
     };
-    services.mattermost = {
+
+    networking.nat = {
       enable = true;
-      siteUrl = "http://udh.ddns.net";
+      internalInterfaces = ["ve-+"];
+      externalInterface = "eno1";
+      # Lazy IPv6 connectivity for the container
+      enableIPv6 = true;
     };
     services.nginx = {
       enable = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-      virtualHosts = {
-        # Replace with the domain from your siteUrl
-        "udh.ddns.net" = {
-          forceSSL = true; # Enforce SSL for the site
-          enableACME = true; # Enable SSL for the site
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:8065"; # Route to Mattermost
-            proxyWebsockets = true;
-          };
+    };
+
+    # Webserver Container settings
+    containers.RootWebServer = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress = "192.168.100.10";
+      localAddress = "192.168.100.12";
+      hostAddress6 = "fc00::1";
+      localAddress6 = "fc00::2";
+      config = {
+        config,
+        pkgs,
+        lib,
+        ...
+      }: {
+        services.httpd = {
+          enable = true;
+          adminAddr = "admin@udh.ddns.net";
         };
+
+        networking = {
+          firewall.allowedTCPPorts = [80];
+          # Use systemd-resolved inside the container
+          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+          useHostResolvConf = lib.mkForce false;
+        };
+
+        services.resolved.enable = true;
+        system.stateVersion = "25.11";
+      };
+    };
+
+    services.nginx .
+      virtualHosts .
+        "udh.ddns.net" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://192.168.100.12";
+        proxyWebsockets = true;
+      };
+      locations."/robots.txt" = {
+        extraConfig = ''
+          rewrite ^/(.*)  $1;
+          return 200 "User-agent: *\nDisallow: /";
+        '';
+      };
+    };
+
+    # Mattermost Test Server
+    containers.mattermostTestServer = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress = "192.168.100.10";
+      localAddress = "192.168.100.13";
+      hostAddress6 = "fc00::1";
+      localAddress6 = "fc00::3";
+      config = {
+        config,
+        pkgs,
+        lib,
+        ...
+      }: {
+        networking = {
+          firewall.allowedTCPPorts = [8065];
+          # Use systemd-resolved inside the container
+          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+          useHostResolvConf = lib.mkForce false;
+        };
+        services.resolved.enable = true;
+        system.stateVersion = "25.11";
+        environment.systemPackages = with pkgs; [mattermost];
+        services.mattermost = {
+          enable = true;
+          siteUrl = "https://mmt.udh.ddns.net"; # Set this to the URL you will be hosting the site on.
+          host = "0.0.0.0"; # Enable listing to host machine on VPN
+        };
+      };
+    };
+
+    services.nginx .
+      virtualHosts .
+        "mmt.udh.ddns.net" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://192.168.100.13:8065";
+        proxyWebsockets = true;
+      };
+    };
+
+    # Mattermost CfR Server
+    containers.mattermostCfRServer = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress = "192.168.100.10";
+      localAddress = "192.168.100.14";
+      hostAddress6 = "fc00::1";
+      localAddress6 = "fc00::4";
+      config = {
+        config,
+        pkgs,
+        lib,
+        ...
+      }: let
+        callPlugin = builtins.fetchurl {
+          # Pinning to 0.29 because 1.0 moves group calls to a premium feature.
+          # https://forum.mattermost.com/t/start-call-button-disappeared-after-v10-update/19538/5
+          # Move to teamspeak once that's supported.
+          url = "https://github.com/mattermost/mattermost-plugin-calls/releases/download/v0.29.2/mattermost-plugin-calls-v0.29.2.tar.gz";
+          sha256 = "1pag2932pvxyjm728mggzy2hx7gapi7ib9wcyy8b03q47nsixmmk";
+        };
+      in {
+        networking = {
+          firewall.allowedTCPPorts = [8065];
+          # Use systemd-resolved inside the container
+          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+          useHostResolvConf = lib.mkForce false;
+        };
+        services.resolved.enable = true;
+        system.stateVersion = "25.11";
+        environment.systemPackages = with pkgs; [mattermost];
+        services.mattermost = {
+          enable = true;
+          siteUrl = "https://cfr.udh.ddns.net"; # Set this to the URL you will be hosting the site on.
+          host = "0.0.0.0"; # Enable listing to host machine on VPN
+          plugins = [
+            callPlugin
+          ];
+        };
+      };
+    };
+
+    services.nginx .
+      virtualHosts .
+        "cfr.udh.ddns.net" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://192.168.100.14:8065";
+        proxyWebsockets = true;
       };
     };
 
