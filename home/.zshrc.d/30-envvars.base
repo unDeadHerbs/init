@@ -37,4 +37,6 @@ exists fzf && {
 		source $(dirname "$0")/fzf-tab/fzf-tab.plugin.zsh
 
 }
-[ -e /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+#[ -e /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $(dirname "$0")/zsh-autosuggestions/zsh-autosuggestions.zsh
