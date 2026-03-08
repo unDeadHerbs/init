@@ -568,7 +568,7 @@ database is permanently out of sync.
 
 (setq org-roam-dailies-capture-templates
 			`(("d" "default from template" plain "%?"
-				 :target (file+head "%<%Y%m%d>-Daily.org"
+				 :target (file+head "%<%Y>-Week_%<%V>-Daily.org"
 														,(with-temp-buffer
 																(insert-file-contents "~/org/roam/daily/daily-template.org")
 																(buffer-string)))
@@ -1737,22 +1737,24 @@ that org-mode and it's agenda is part of the interface of Emacs
 rather than a separate thing inside of it.  That all things being
 done are being done in a project and so that perspective should be
 wrapping it.
-*** TODO LaTeX
+*** Preview Latex Fragment
 :PROPERTIES:
-:NAME:     LaTeX
+:NAME:     Preview-Latex-Fragment
 :END:
-`guix install emacs-auctex texlive`
-**** Live Previews
-:PROPERTIES:
-:NAME:     LaTeX_Preview
-:END:
-This is live previes the LaTeX as I type.
 #+BEGIN_SRC emacs-lisp
-(udh/install-and-load 'org-latex-impatient)
+(udh/install-and-load 'org-fragtog)
+(add-hook 'org-mode-hook #'org-fragtog-mode)
+(add-to-list 'org-latex-packages-alist '("" "amsmath" t))
+; needed? (add-to-list 'org-latex-packages-alist '("" "amssymb" t))
+(add-to-list 'org-latex-packages-alist '("" "braket" t))
+(add-to-list 'org-latex-packages-alist '("" "tikz" t))
+(add-to-list 'org-latex-packages-alist '("" "arrows.meta" t))
+(add-to-list 'org-latex-packages-alist '("" "positioning" t))
+(add-to-list 'org-latex-packages-alist '("" "mathtools" t))
+(add-to-list 'org-latex-packages-alist '("" "physics" t))
+(add-to-list 'org-latex-packages-alist '("" "xfrac" t))
 #+END_SRC
-***** TODO it seems to not know where latex is
-***** TODO when do i want to enable this?
-**** TODO Not syntax hilighted in centerd region
+*** TODO LaTeX is not syntax hilighted in centerd region
 Org-mode offers a BEGIN_CENTER header; but, it forgets how to
 highlight org-mode within that region.  It's probably defaulting to
 text-mode.
