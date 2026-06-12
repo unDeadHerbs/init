@@ -15,6 +15,7 @@
 	default = current
 	followTags = true
 	recurseSubmodules = on-demand
+	autoSetupRemote = true
 [rerere]
 	autoupdate = true
 	enabled = true
@@ -70,8 +71,8 @@
 	rep-while-stash = "!f(){ while git stash list | grep '.' > /dev/null; do git \"$@\"; done; }; f"
 	rep-ws = "rep-while-stash"
 
-  # This currently updates all of the file timestamps for the unused changes every time, which is unacceptable
-  # make-tmp-commit = "cm \"uDH_TEMPORARY_COMMIT_UNIQUE_NAME\""
+	# This currently updates all of the file timestamps for the unused changes every time, which is unacceptable
+	# make-tmp-commit = "cm \"uDH_TEMPORARY_COMMIT_UNIQUE_NAME\""
 	# first-small-wrap = "prefixed-with2 small-add make-tmp-commit stash-wrap prefixed-with reset-up-one"
 	# rep-each-small = "rep-while-diff first-small-wrap"
 	# TODO: rep-each-small
@@ -87,6 +88,7 @@
 	prefixed-with--arg = "!f(){ git \"$1\" \"$2\" && shift && shift && git \"$@\" ; }; f"
 	prefixed-with--opt-continue = "!f(){ git \"$1\" && shift && if [ \"$#\" -ne 0 ]; then git \"$@\" ; fi ; }; f"
 	prefixed-with--arg-opt-continue = "!f(){ git \"$1\" \"$2\" && shift && shift && if [ \"$#\" -ne 0 ]; then git \"$@\" ; fi ; }; f"
+	as-value-as-arg-to-next = "!f(){ val=`git \"$1\"` && shift && nxt=\"$1\" && shift && git \"$nxt\" \"$val\" \"$@\" ; } ; f"
 
 	#do-at-hash = "!f(){ cd git \"${GIT_PREFIX:-.}\"; stash-wrap checkout $1; git "all but $1"; git stash-wrap return to head; }; f"
 
@@ -124,7 +126,7 @@
 	project-over-view  = "!git log-stashes | awk '/[0-9a-f]{7}....(.....[(]|WIP|TODO)/ || !/[0-9a-f]{7}/; END{print}'"
 	ref-from-branch    = "rev-parse --short"
 
-  #is-clean = "diff --quiet --exit-code"
+	#is-clean = "diff --quiet --exit-code"
 	is-dirty = "![ -n \"$(git status --porcelain)\" ]"
 	make-date = "!f(){ if git is-dirty; then date \"+%s\" ; else git log -1 --pretty=\"%at%n%ct\" | sort -r | head -1 ; fi };f "
 
@@ -144,9 +146,13 @@
 	authors-on-branch = "!f(){ git log $(git branch-start--branch \"$1\")..\"$1\" --format=\"%ad%x09%an%x09$1\" | sort --field-separator='\t' --key=2 --unique ; }; f"
 	branches-containing-author = "!f(){ git all-branches | git pipe-each authors-on-branch | grep -i \"$1\" ; }; f"
 
-	branch-start--branch = "!git merge-base $(git upstream-head)"
+	branch-start--branch = "as-value-as-arg-to-next upstream-head merge-base"
 	branch-start--opt-branch = "!f(){ if [ $# -eq 0 ] ; then git branch-start--branch HEAD ; else git branch-start--branch \"$1\" ; fi }; f"
+	# TODO: log-branch--opt-branch
 	log-branch         = "!git log-standard $(git branch-start--opt-branch)~2..HEAD $(git branch-start--opt-branch)~2..refs/remotes/$(git upstream-head)"
+	# TODO: extract log-long-form's arguments to be a standard
+	# TODO: extract the log-branch's log struture into a command
+	log-long-branch = "paged log-branch --numstat --show-signature"
 	# To get the list of commits on the branch without upstream you can
 	# git log --left-only branch...upstream
 	log-branch-no-context = "!git log-standard $(git branch-start--opt-branch)..HEAD $(git branch-start--opt-branch)"
@@ -163,7 +169,7 @@
 	upstream-branch-name = "rev-parse --abbrev-ref --symbolic-full-name @{u}"
 	diff-upstream = "!git diff-branchs--branch-branch HEAD $(git upstream-branch-name)"
 
-  first-after--commit = "!f(){ git rev-list \"$1\"..HEAD |tail -1; }; f"
+	first-after--commit = "!f(){ git rev-list \"$1\"..HEAD |tail -1; }; f"
 	####################
 	# Local Inspection #
 	####################
@@ -178,7 +184,10 @@
 	diff-opt-commit      = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git diff-standard HEAD ; else git diff-standard \"$@\" ; fi ; }; f"
 	# TODO this should find if `HEAD` or `master` is closer and then use that instead
 	#diff-changes-on-branch = "!f(){ git diff-standard HEAD...$(git ref-from-branch $1) ; }; f"
-	diff-changes-on-branch = "!f(){ git diff-standard $(git branch-start--opt-branch) HEAD \"$@\"; }; f"
+	diff-changes-on-branch--branch = "!f(){ git diff-standard $(git branch-start--opt-branch \"$1\") \"$@\"; }; f"
+	diff-changes-on-this-branch = "!f(){ git diff-standard $(git branch-start--opt-branch) HEAD \"$@\"; }; f"
+	# \"${1:0:1}\" is "argument one, chars 0 though 1" or "the first char of the first arugemnt"
+	diff-changes-on-branch--opt-branch = "!f(){ if [ $# -eq 0 ] || [ \"${1:0:1}\" == \"-\" ]; then git diff-changes-on-this-branch \"$@\" ; else git diff-changes-on-branch--branch \"$@\"; fi ; }; f"
 	branch-name          = "rev-parse --abbrev-ref HEAD"
 	head-hash 	     = "rev-parse --short HEAD"
 	branch-or-hash = "!f(){ { git branch-name ; git head-hash; } | grep -E -v \"^HEAD$\" | head -1; }; f"
@@ -242,14 +251,33 @@
 	# TODO: rename to rebase-kickout--hash
 	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name) && git reset-hard && git rebase-skip-hard; }; f"
 	# TODO: Have this say how many hashes were passed (maybe a wrapped version)
+	# TODO: Only if on brach, else warn (add unsafe version for that)
 	rebase-kickout--multi-hash = "!f() { \
-        if [ $# -gt 0 ]; then \
-          first=`git common-ancestors \"$@\"` && \
-					or_seq=`printf '%s|' \"$@\" | sed 's/|$//'` && \
-          GIT_SEQUENCE_EDITOR=\"sed -i -E 's/^pick ($or_seq)/drop \\1/'\" \
-            git rebase -i --no-autosquash \"$first\"^; \
-				fi; \
-    }; f"
+	      if [ $# -gt 0 ]; then \
+	         first=`git common-ancestors \"$@\"` && \
+	         or_seq=`printf '%s|' \"$@\" | sed 's/|$//'` && \
+	         GIT_SEQUENCE_EDITOR=\"sed -i -E 's/^pick ($or_seq)/drop \\1/'\" \
+	             git rebase -i --no-autosquash \"$first\"^; \
+	      fi; \
+	}; f"
+
+
+	blame-hash--file-line = "!f() { \
+	    if [ $# -ne 2 ]; then \
+	        echo >&2 \"Incorrect number of arguments to 'blame-hash--file-line'.\" ; \
+	    else \
+	        git blame -f -L \"$2,$2\" \"$1\" \
+	        | cut -d' ' -f1 ; \
+	    fi ; \
+	}; f"
+	# The second Double -- indicates that it takes =reset=
+	piped--next--first = "!f() { \
+		after=\"$1\" && \
+		shift && \
+		git \"$@\" \
+		| git piped $after ; \
+	}; f"
+	rebase-kickout--file-line = "piped--next--first rebase-kickout blame-hash--file-line"
 
 	# TODO: don't kickout develop.  log-branch also returns commits before the branch for display purposes, remove those somehow
 	rebase-kickout--path = "!f(){ git log-branch-only-hash -- \"$@\" | git pipe-each hash-short-from-hash | git piped rebase-kickout--multi-hash ; }; f"
@@ -268,7 +296,7 @@
 
 	bisect-pessimistic-hash = "!f(){ ls .git/refs/bisect/good-* | sed 's/.git\\/\\(.*\\)/^\\1/'|xargs git rev-list refs/bisect/bad | tail -1 ; }; f"
 	bisect-checkout-pessimistic = "!git checkout $(git bisect-pessimistic-hash)"
-  kickout-bad-from--branch = "!f(){ git checkout \"$1\" && git rebase-kickout refs/bisect/bad ; }; f"
+	kickout-bad-from--branch = "!f(){ git checkout \"$1\" && git rebase-kickout refs/bisect/bad ; }; f"
 	#bisect-kick-from-test = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
 	# TODO: also dump the last/bad hash to output 3 so that other scripts can use it? namely to mark bad^ as good
 	I-bisect-test = "!f(){ until git bisect log | grep \"first bad\"; do if git test; then git bisect good; else git bisect bad; fi ; done ; }; f"
@@ -277,12 +305,12 @@
 	rep-bisect-test-and-kick = "!f(){ git require-test && OHEAD=`git branch-or-hash` && until git test; do git bisect start && git bisect good $(git branch-start--opt-branch) && git bisect bad && git I-bisect-test && git kickout-bad-from--branch $OHEAD && git bisect reset ; done ; }; f"
 	rep-bisect-test-and-kick2 = "!f(){ git require-test && OHEAD=`git branch-or-hash` && git bisect start && until git test; do git bisect good $(git branch-start--opt-branch) && git bisect bad && git I-bisect-test-pessimistic && git kickout-bad-from--branch $OHEAD && git diff-if-short refs/bisect/bad && PGOOD=`git hash-short-from-hash refs/bisect/bad^` && git bisect reset && git bisect start; git bisect good \"$PGOOD\"; done ; git bisect reset; }; f"
 
-  I-rep-bisect-test-and-kick3--branch-name = "!f(){ \
+	I-rep-bisect-test-and-kick3--branch-name = "!f(){ \
 	 	 until git test; do \
-	 	 			 git bisect bad && \
-	 				 git I-bisect-test-pessimistic && \
-					 git diff-if-short refs/bisect/bad && \
-	 				 git kickout-bad-from--branch \"$1\"; done ; } ; f"
+		      git bisect bad && \
+		      git I-bisect-test-pessimistic && \
+		      git diff-if-short refs/bisect/bad && \
+	 	      git kickout-bad-from--branch \"$1\" ; done ; } ; f"
 	# TODO: print an error message if upstream-head fails
 	rep-bisect-test-and-kick3 = "!f(){ \
 		 git require-test &&  \
@@ -303,16 +331,16 @@
 	 	 git bisect good && \
 	 	 git checkout \"$OHEAD\" && \
 		 git I-rep-bisect-test-and-kick3--branch-name \"$OHEAD\" ; } ; f"
-		 # TODO: bisect reset && checkout OHEAD
-  # TODO: Make an even more pesimistic verion that rebases one commit at a time onto branch-start until it passes \"$stat\" ; done; }; f"
+	# TODO: bisect reset && checkout OHEAD
+	# TODO: Make an even more pesimistic verion that rebases one commit at a time onto branch-start until it passes \"$stat\" ; done; }; f"
 	bisect-interactive = "bisect run bisect-interactive-step"
 	rep-interactive-bisect-and-kick = "!f(){ OHEAD=`git branch-or-hash` ; git bisect start && git bisect good $(git branch-start--opt-branch) && read -p \"good or bad? \" stat && while [ \"$stat\" == \"bad\" ] ; do git bisect bad && git bisect-interactive && git kickout-bad-from--branch $OHEAD && read -p \"good or bad? \" stat ; done && git bisect reset ; }; f"
 
-  # TODO: move this
+	# TODO: move this
 	# TODO: if not already at that branch?
 	force--branch-to-here-checkout="!f(){ git branch -D \"$1\" ; git branch \"$1\" ; git checkout \"$1\" ; }; f"
 	
-  interactive-azure-bisect-step--branch="!f(){ git force--branch-to-here-checkout \"$1\" ; git push -f ; git bisect-interactive-step ; }; f"
+	interactive-azure-bisect-step--branch="!f(){ git force--branch-to-here-checkout \"$1\" ; git push -f ; git bisect-interactive-step ; }; f"
 	# TODO: keep last "good" between rounds
 	bisect-and-kick-azure = "!f(){ branch=`git branch-or-hash` ; ubranch=azure_bisect_branch ; until git interactive-azure-bisect-step--branch $branch ; do git force--branch-to-here-checkout $ubranch ; git bisect start && git bisect good $(git branch-start--opt-branch) && git bisect bad && git bisect run git interactive-azure-bisect-step--branch $branch && git kickout-bad-from--branch $ubranch && git bisect reset ; done ; git force--branch-to-here-checkout $branch ; git branch -D $ubranch ; }; f"
 	
@@ -331,11 +359,11 @@
 	bisect-interactive = "bisect run bisect-interactive-step"
 	rep-interactive-bisect-and-kick = "!f(){ OHEAD=`git branch-or-hash` ; git bisect start && git bisect good $(git branch-start--opt-branch) && read -p \"good or bad? \" stat && while [ \"$stat\" == \"bad\" ] ; do git bisect bad && git bisect-interactive && git kickout-bad-from--branch $OHEAD && read -p \"good or bad? \" stat ; done && git bisect reset ; }; f"
 
-  # TODO: move this
+	# TODO: move this
 	# TODO: if not already at that branch?
 	force--branch-to-here-checkout="!f(){ git branch -D \"$1\" ; git branch \"$1\" ; git checkout \"$1\" ; }; f"
 	
-  interactive-azure-bisect-step--branch="!f(){ git force--branch-to-here-checkout \"$1\" ; git push -f ; git bisect-interactive-step ; }; f"
+	interactive-azure-bisect-step--branch="!f(){ git force--branch-to-here-checkout \"$1\" ; git push -f ; git bisect-interactive-step ; }; f"
 	# TODO: keep last "good" between rounds
 	bisect-and-kick-azure = "!f(){ branch=`git branch-or-hash` ; ubranch=azure_bisect_branch ; until git interactive-azure-bisect-step--branch $branch ; do git force--branch-to-here-checkout $ubranch ; git bisect start && git bisect good $(git branch-start--opt-branch) && git bisect bad && git bisect run git interactive-azure-bisect-step--branch $branch && git kickout-bad-from--branch $ubranch && git bisect reset ; done ; git force--branch-to-here-checkout $branch ; git branch -D $ubranch ; }; f"
 	
@@ -359,10 +387,11 @@
 	checkout-fuzzy--branch = "!f(){ \
 	if [ \"`git branch | grep \"$1\" | wc -l`\" -ne 1 ] ; then \
 	  echo \"Can't find unique branch \\\"$1\\\" \" ; \
+		git branch | grep \"$1\" ; \
 	else \
 	  git branch | grep \"$1\" | xargs git checkout ; \
 	fi ; \
-	}; f"
+	}; f" 
 
 	reset-opt-file-or-commit = "!f(){ cd \"${GIT_PREFIX:-.}\" && if [ $# -eq 0 ];then git reset HEAD --hard; else git reset \"$@\"; fi }; f"
 	reset-up-one             = "reset HEAD^ --no-refresh"
@@ -452,6 +481,7 @@
 	sed--pat-filter-rule-type = "!f(){ git grep -l  \"$1\" -- \"$4\" | grep -ivE \"$2\"  | xargs -l -r sed -Ee \"$3\" -i ; }; f"
 	# TODO: make a small change, commit it, repeat -- this matters for multiple changes on a single line
 	# TODO: convert a stack of commits into stashes
+	sed-after--match-insert = "!f(){ git grep -l \"$1\" | xargs -l sed -i \"/$1/a\\\n$2\" ; }; f"
 
 	#########################
 	# Not Head Manipulation #
@@ -460,7 +490,7 @@
 	#amend-staged-to-hash-verbose-unsafe = "git do-at-hash "$1" ammend-with-staged-keep-date; rebase all but hash onto new commit; move back to head; pop unstaged; git log-relivant HEAD hash"
 	#amend-staged-to-hash-verbose        = "stash-unstaged-wrap amend-staged-to-hash-verbose-unsafe"
 
-  #bisect-rebase test_name from_hash to_hash test_cmd
+	#bisect-rebase test_name from_hash to_hash test_cmd
 	# bisect a test between two commits
 	# - when the failur is found
 	#   - leave a tag so it can be refound
@@ -470,7 +500,7 @@
 	# git rebase -i HEAD~5 ; change the last "pick" line to "edit"; do changes ; git rebase --continue
 	# This will allow for updating a past commit with new content
 
-  # stash_wrap
+	# stash_wrap
 	 edit-old-change--hash-file="!f(){ \
 	  OHEAD=`git branch-or-hash` && \
 	  git checkout $1 && \
@@ -482,7 +512,7 @@
 	# TODO: can I edit the commit instead of the files at that commit?
 	# - being given the delta might be nicer
 	# - probably only do that if the user just suplies the hash and not the file
-  # stash_wrap
+	# stash_wrap
 	# edit-old-change--hash="!f(){ \
 	#  OHEAD=`git branch-or-hash` && \
 	#  git checkout $1 && \
@@ -528,7 +558,6 @@
 	diff-submodule = "submodule foreach --recursive \"git d\""
 	submodules-update = "!f(){ cd \"${GIT_PREFIX:-.}\" && git fetch-and-ff-pull ; git submodule sync ; git submodule update --init --recursive ; }; f"
 	submodules-fix = "submodules-update"
-	fix-submodules = "submodules-fix"
 	# I suspect the quoting isn't right on this
 	#submodule-recurse = "!f(){ cd \"${GIT_PREFIX:-.}\" && git \"$@\" && git submodule foreach \"git submodule-recurse $@\" }; f"
 
@@ -573,7 +602,9 @@
 
 	# Utility to allow chaining short commands
 	as-chainable = "prefixed-with--opt-continue"
+	C1 = "as-chainable"
 	as-chainable--arg = "prefixed-with--arg-opt-continue"
+	CA   = "as-chainable--arg"
 
 	a    = "add-verbose-opt-list"
 	ac   = "add-and-commit"
@@ -591,7 +622,7 @@
 	d    = "paged diff-opt-commit"
 	d1   = "d HEAD^ HEAD"
 	dstash = "paged diff-stashed"
-	db   = "diff-changes-on-branch"
+	db   = "diff-changes-on-branch--opt-branch"
 	dbn  = "db --numstat"
 	drm  = "delete--opt-branch-opt-remote"
 	f    = "as-chainable fetch-and-ff-pull"
@@ -601,8 +632,10 @@
 	l1sd = "log1-status-diff"
 	lb   = "log-branch"
 	ll   = "log-long-form"
+	llb  = "log-long-branch"
 	lr   = "log-recent"
 	ls   = "list-files--opt-path"
+	# TODO: Only show the diff if its under 20 lines?  If no diff, list branch todos?
 	lsd  = "log-status-diff"
 	lt   = "log-top-twenty"
 	lts  = "fold log-top-twenty echo status"
@@ -620,8 +653,32 @@
 	rh   = "as-chainable reset-hard"
 	rhx  = "reset-hard-ignored"
 	rsact= "rep-wd fold small-add commit-branch-time"
+	SW   = "stash-wrap"
 	s    = "stash-tracked-verbose"
 	stat = "as-chainable status"
 
-  # allow fast forwared merges on pull
+	## Thoughts ##
+	# allow fast forwared merges on pull
 	pull = "pull -ff"
+	todos="!git db|grep TODO"
+	p-f = "CA p --force-with-lease"
+	hash-before-rebase = "!git reflog|grep -C1 -m1 'rebase (start)'|tail -1|cut -f1 -d' '"
+	# TODO: There's also `git reflog "branch-name"` that might be better.  Find the line before "rebase (finish)"?
+	diff-with-pre-rebase = "!diff <(git db $(git hash-before-rebase)) <(git db)"
+	log-new-in-rebase = "!git log-standard $(git branch-start--branch $(git hash-before-rebase))...$(git branch-start--branch HEAD)"
+	# TODO log-new-in-merge = find last merge and log-standard between branch-start-newest before and after it
+	build = "CA auto build"
+	monday = "sw p-f f rbo C1 log-new-in-rebase build C1 log-new-in-rebase p-f"
+	# TODO: only checkpoint.amd if last commit has WIP in the name
+	checkpoint = "build C1 ai cm-to-wip"
+	chp = "C1 checkpoint"
+	cm-to-wip="!f(){ \
+		if git log -1 --pretty=\"%s\" | grep -i wip > /dev/null ; \
+		then \
+		echo adding to current WIP commit ; \
+		git amd ; \
+		else \
+		git commit -m \"WIP `git branch-name` `date`\"; \
+		fi ; \
+	} ; f"
+	aiw = "C1 ai cm-to-wip"
