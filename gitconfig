@@ -35,7 +35,7 @@
 
 	debug = "!GIT_TRACE=1 git"
 	# TODO: add GIT_PREFIX to this
-	pipe-each = "!xargs -L 1 git"
+	pipe-each = "!xargs -rL 1 git"
 	piped = "!xargs git"
 	paged = "!f(){ cd \"${GIT_PREFIX:-.}\"; git \"$@\" | if [ \"$PAGER\" != \"\" ] ; then $PAGER; else cat ; fi ; }; f"
 	# TODO: make sure that staged and unstagedness is kept
@@ -252,6 +252,9 @@
 	rebase-kickout                      = "!f(){ git rebase-standard --onto $1^ $1 $(git branch-name) && git reset-hard && git rebase-skip-hard; }; f"
 	# TODO: Have this say how many hashes were passed (maybe a wrapped version)
 	# TODO: Only if on brach, else warn (add unsafe version for that)
+	# TODO: If there are many hashes, split them?
+	# - There is a version of this which takes a sequence of files, expand that interface?
+	# - Maybe write the hashes to a tmp file?
 	rebase-kickout--multi-hash = "!f() { \
 	      if [ $# -gt 0 ]; then \
 	         first=`git common-ancestors \"$@\"` && \
@@ -296,11 +299,13 @@
 
 	bisect-pessimistic-hash = "!f(){ ls .git/refs/bisect/good-* | sed 's/.git\\/\\(.*\\)/^\\1/'|xargs git rev-list refs/bisect/bad | tail -1 ; }; f"
 	bisect-checkout-pessimistic = "!git checkout $(git bisect-pessimistic-hash)"
-	kickout-bad-from--branch = "!f(){ git checkout \"$1\" && git rebase-kickout refs/bisect/bad ; }; f"
+	kickout-bad-from--branch = "!f(){ git checkout \"$1\" && git diff-if-short refs/bisect/bad && git rebase-kickout refs/bisect/bad ; }; f"
 	#bisect-kick-from-test = "!f(){ OHEAD=`git branch-or-hash` ; git bisect-here-from-test \"$@\" && git checkout $OHEAD && git rebase-kickout refs/bisect/bad && git bisect reset ; }; f"
 	# TODO: also dump the last/bad hash to output 3 so that other scripts can use it? namely to mark bad^ as good
-	I-bisect-test = "!f(){ until git bisect log | grep \"first bad\"; do if git test; then git bisect good; else git bisect bad; fi ; done ; }; f"
-	I-bisect-test-pessimistic = "!f(){ git bisect-checkout-pessimistic && git bisect run git test ; }; f"
+	# TODO: Is this not "bisect run git test"?
+	#I-bisect-test = "!f(){ until git bisect log | tail -2 | grep \"first bad\"; do if git test; then git bisect good; else git bisect bad; fi ; done ; }; f"
+	I-bisect-test = "bisect run git test"
+	I-bisect-test-pessimistic = "fold bisect-checkout-pessimistic I-bisect-test"
 	# TODO: assert that branch-start passes the test?
 	rep-bisect-test-and-kick = "!f(){ git require-test && OHEAD=`git branch-or-hash` && until git test; do git bisect start && git bisect good $(git branch-start--opt-branch) && git bisect bad && git I-bisect-test && git kickout-bad-from--branch $OHEAD && git bisect reset ; done ; }; f"
 	rep-bisect-test-and-kick2 = "!f(){ git require-test && OHEAD=`git branch-or-hash` && git bisect start && until git test; do git bisect good $(git branch-start--opt-branch) && git bisect bad && git I-bisect-test-pessimistic && git kickout-bad-from--branch $OHEAD && git diff-if-short refs/bisect/bad && PGOOD=`git hash-short-from-hash refs/bisect/bad^` && git bisect reset && git bisect start; git bisect good \"$PGOOD\"; done ; git bisect reset; }; f"
@@ -464,9 +469,8 @@
 	#clean-test-or-eject-head = "stash-wrap test-or-eject-head"
 	#small-build-commit-eject = "fold small-add commit-branch-time clean-test-or-eject-head"
 	test-commit-or-eject = "fold add-all commit-branch-time test-or-eject-head"
-	pop-test-commit-or-eject = "fold pop test-commit-or-eject"
 	# TODO: unsafe until rep-ws works correctly
-	rep-pop-build-commit-eject = "rep-ws pop-test-commit-or-eject"
+	rep-pop-build-commit-eject = ""
 
 	###########################
 	# Local Code Manipulation #
@@ -580,15 +584,11 @@
 	add-and-commit        = "!f(){ cd \"${GIT_PREFIX:-.}\" && git add-verbose-opt-list \"${@:1:$(($#-1))}\"; git commit-standard -m \"${@:$#:$#}\" ; }; f"
 	log-oops              = "paged log-lost --all"
 	c-rand = "!git commit-standard -m \"$(echo 'wtc: ' $(curl http://whatthecommit.com/index.txt -s))\""
-	i-rep-small-build-commit-eject = "fold stash-all-as-small rep-pop-build-commit-eject"
-	# TODO: check if it builds before, should probably fail if it didn't rather than just ejecting
-	# This results in being able to resume, and should be safe as long as other people make working commits
+
 	# TODO: this depends on the stash being empty when starting, instead make the commit
-	#rep-small-build-commit-eject = "fold test-or-eject-head i-rep-small-build-commit-eject"
-	
 	# TODO: this currently assumes an empty stash before starting, see above for how to emable better version
 	# TODO: have a sed version that only makes one change per file and then loop it until no changes are made
-	sed-test-commit--from-to = "!f(){ git sed--from-to \"$1\" \"$2\" && git fold stash-all-as-small rep-pop-build-commit-eject ; }; f"
+	sed-test-commit--from-to = "!f(){ git sed--from-to \"$1\" \"$2\" && git C1 stash-all-as-small rep-ws fold pop test-commit-or-eject ; }; f"
 	#sed-commit-bisect-test--from-to = "!f(){ git sed--from-to \"$1\" \"$2\" && git fold rsact rep-bisect-test-and-kick2 ; }; f"
 	#sed-test-commit--from-to = "!f(){ git sed--from-to \"$1\" \"$2\" && git rep-wd small-build-commit-eject ; }; f"
 
@@ -682,3 +682,34 @@
 		fi ; \
 	} ; f"
 	aiw = "C1 ai cm-to-wip"
+	# This has problemns with spaces in lines
+	reset-non-cpp = "!git stat|grep modified:|cut -d' ' -f 4|grep -Ev \"[ch](pp)?$\" | xargs -L 1 git checkout HEAD --"
+	bisect-found-bad-commits = "!git bisect log|grep first|grep -Eo \"[0-9a-f]{20,}\""
+	bisect-last-few-kicked-out = "!git bisect-found-bad-commits| tail -5 | git pipe-each diff-if-short"
+
+  x = "!f(){ \
+	num=\"$1\" ; \
+	shift ; \
+	seq $num  \
+	| while read n ; do \
+	git \"$1\" ; \
+	done ; \
+	shift ; \
+	git \"$@\" ; \
+	}; f"
+  aaaa = "rep-wd x 10 small-add stash-wrap rep-bisect-test-and-kick3"
+	aa3 = "rep-wd small-add stash-wrap test-or-eject-head"
+	rep-cont-bisect-test-and-kick = "!f(){ OHEAD=`git branch-or-hash` && until git test; do git bisect bad && git I-bisect-test && git kickout-bad-from--branch $OHEAD ; done && git bisect-good ; }; f"
+	bisect-start = "bisect start" # TODO: Don't take the branch but rather HEAD
+	bisect-good = "bisect good" # TODO: don't move?
+	small-commit = "fold small-add commit-branch-time"
+	# The goal here is that bisect changes lots of files which makes
+	# recompiling sad (mostly fixed by c_cache; but, not enough) and
+	# makes rebasing take a really long time on windows; so, instead, we
+	# only add a few commits each time before we check.  Particularly if
+	# we expect lots of failures.  To improve this, I should probably
+	# both should time both how long a build and rebase takes and
+	# estimate the "goodness" from =git bisect log= to chose a more
+	# correct number for how many commits to add; but, this will do for
+	# right now.
+	aa4 = "require-test C1 stash-wrap test bisect-start bisect-good rep-wd x 64 small-commit stash-wrap rep-cont-bisect-test-and-kick"
