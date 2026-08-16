@@ -1,0 +1,28 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+
+init_sync(){
+		init_sync_i(){
+				git f &&
+						git p &&
+						git submodules-fix
+		}
+		pushd ~/init
+		init_sync_i || return
+		popd
+}
+org_sync(){
+		pushd ~/storage/downloads/org
+		git fetch
+		git merge --ff-only origin/HEAD
+		git submodules-fix
+		git add roam
+		git commit -m "termux `date`"
+		git merge --no-ff origin/HEAD
+		git push
+		popd
+}
+sync(){
+		init_sync
+		org_sync
+}
