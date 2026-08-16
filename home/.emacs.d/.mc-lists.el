@@ -10,6 +10,7 @@
 				markdown-end-of-line
 				markdown-outdent-or-delete
 				org-beginning-of-line
+				org-ctrl-c-ctrl-c
 				org-cycle
 				org-end-of-line
 				org-fill-paragraph
