@@ -8,11 +8,10 @@
   ...
 }: {
   options.per_system_config = {
-    primary_account = lib.mkOption {
-      default = "udh";
-    };
+    full_udh_account = lib.mkOption {default = true;};
     tui_not_gui_system = lib.mkOption {default = true;};
     boot_loader = lib.mkOption {default = "extlinux";};
+    quiet_boot = lib.mkOption {default = false;};
     gui_system = lib.mkOption {default = "tui";};
   };
   imports = [
@@ -26,14 +25,14 @@
       "kernel.hung_task_timeout_secs" = 0;
     };
 
-    #nix.buildMachines = [{
-    #  hostName = "udh@192.168.0.42";
-    #  systems = [ "x86_64-linux" "aarch64-linux" ]; # Specify the architectures it supports
-    #  # other options like maxJobs, supportedFeatures can be added here
-    #}];
-    #nix.distributedBuilds = true;
-    #nix.settings.max-jobs = 0;
-    #nix.settings.builders-use-substitutes = true;
+    nix.buildMachines = [{
+      hostName = "udh@192.168.0.42";
+      systems = [ "x86_64-linux" "aarch64-linux" ]; # Specify the architectures it supports
+      # other options like maxJobs, supportedFeatures can be added here
+    }];
+    nix.distributedBuilds = true;
+    nix.settings.max-jobs = 0;
+    nix.settings.builders-use-substitutes = true;
 
     networking.hostName = "pi-wall"; # Define your hostname.
 
@@ -51,7 +50,7 @@
     users.users.reiko = {
       isNormalUser = true;
       description = "reiko";
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager"];
       packages = with pkgs; [
       ];
     };
@@ -59,5 +58,10 @@
     security.sudo.wheelNeedsPassword = false;
 
     system.stateVersion = "25.11";
+
+    # TODO: Setup Unifi Controller
+    #nixpkgs.config.allowUnfreePredicate = pkg:
+    #  builtins.elem (lib.getName pkg) ["unifi-controller"];
+    #environment.systemPackages = with pkgs; [unifi];
   };
 }

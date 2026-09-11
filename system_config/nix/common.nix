@@ -36,7 +36,7 @@ in {
     {
       supportedFilesystems = ["ntfs"];
     }
-    (lib.mkIf (config.per_system_config.primary_account != "udh") {
+    (lib.mkIf (config.per_system_config.quiet_boot) {
       plymouth.enable = true;
       initrd.verbose = false;
       kernelParams = [

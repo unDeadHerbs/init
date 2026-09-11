@@ -30,11 +30,11 @@ in {
       hunspell
       hunspellDicts.uk_UA
       hunspellDicts.en_US
-      kdePackages.kate
-      kdePackages.kdenlive
-      kdePackages.kolourpaint
-      krita
-      libreoffice
+      #kdePackages.kate
+      #kdePackages.kdenlive
+      #kdePackages.kolourpaint
+      #krita
+      #libreoffice
       obs-studio
       p7zip
       pandoc
@@ -56,7 +56,7 @@ in {
       #R
       #rstudio
       #spyder # qt bug
-      thunderbird
+      #thunderbird
       vlc
       #vscode
       #zoom-us

@@ -8,3 +8,4 @@ nix-shell -p zstd --run "unzstd nixos-image-sd-card-*.zst"
 rm result
 rm -f nixos-image-sd-card-*.zst
 
+# dd if=/path/nixos-image-sd-card-*.img of=/dev/sdX bs=4M status=progress

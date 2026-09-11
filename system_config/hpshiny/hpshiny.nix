@@ -13,8 +13,9 @@ with lib; let
   unstable = import <nixos-unstable> {config = {allowUnfree = true;};};
 in {
   options.per_system_config = {
-    primary_account = lib.mkOption {default = "udh";};
+    full_udh_account = lib.mkOption {default = true;};
     auto_login = lib.mkOption {default = false;};
+    quiet_boot = lib.mkOption {default = true;};
     boot_loader = lib.mkOption {default = "systemd";};
     gui_system = lib.mkOption {default = "Wayland";};
   };
@@ -35,10 +36,12 @@ in {
 
     # Display
     services = {
-      # TODO: hide "udh" in sddm
       displayManager.sddm.enable = true;
       displayManager.sddm.wayland.enable = true;
       desktopManager.plasma6.enable = true;
+    };
+    programs.steam = {
+      enable = true;
     };
 
     # Enable CUPS to print documents.
@@ -53,8 +56,6 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
     };
 
     # Enable sudo without having a user password

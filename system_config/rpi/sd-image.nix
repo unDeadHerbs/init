@@ -5,11 +5,12 @@
 # - Mount the remote host
 # - copy init over
 # - sudo su
+# - generate root ssh key and add to build server
 # - nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
 # - nix-channel --update
 # - nixos-generate-config to make /etc/nixos/hardware-configuration.nix
 # - copy the base config to /etc/nixos
-# - nixos-rebuild --no-reexec switch --upgrade --build-host udh@sia.local
+# - nixos-rebuild --no-reexec switch --upgrade
 # # https://wiki.nixos.org/wiki/Nixos-rebuild#Deploying_on_a_different_architecture
 {lib, ...}: {
   imports = [

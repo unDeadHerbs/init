@@ -9,14 +9,16 @@
   ...
 }: {
   options.per_system_config = {
-    primary_account = lib.mkOption {default = "udh";};
+    full_udh_account = lib.mkOption {default = true;};
     auto_login = lib.mkOption {default = true;};
+    auto_login_account = lib.mkOption {default = "udh";};
 
     multi_user = lib.mkOption {default = false;};
     # true -> common adds login page
     # false -> udh add i3
 
     boot_loader = lib.mkOption {default = "grub";};
+    quiet_boot = lib.mkOption {default = false;};
     gui_system = lib.mkOption {default = "X";};
   };
   imports = [
@@ -36,6 +38,10 @@
     # sudo nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
     # sudo nixos-rebuild switch --upgrade
 
+    services.xserver.xkb = {
+      layout = "us";
+      variant = "";
+    };
     # X11
     services.xserver = {
       enable = true;
@@ -46,19 +52,24 @@
           primary = true;
         }
       ];
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
+      # TODO: disable lightdm?
       displayManager.lightdm.enable = true;
-      windowManager.i3.enable = true;
     };
+
+    services.xserver.windowManager.i3.enable = true;
     services.displayManager = {
       defaultSession = "none+i3";
-      autoLogin.enable = true;
-      autoLogin.user = config.per_system_config.primary_account;
+      autoLogin.enable = config.per_system_config.auto_login;
+      autoLogin.user = config.per_system_config.auto_login_account;
     };
-    services.picom.enable = true; # for transparency
+
+    users.users.udh.packages = with pkgs;
+      [
+        anki-bin
+         (anki.withAddons [
+           ankiAddons.anki-connect
+         ])
+      ];
 
     # Enable CUPS to print documents.
     services.printing.enable = true;
@@ -141,9 +152,7 @@
       };
     };
 
-    services.nginx .
-      virtualHosts .
-        "udh.ddns.net" = {
+    services.nginx.virtualHosts."udh.ddns.net" = {
       forceSSL = true;
       enableACME = true;
       locations."/" = {
@@ -159,46 +168,43 @@
     };
 
     # Mattermost Test Server
-    containers.mattermostTestServer = {
-      autoStart = true;
-      privateNetwork = true;
-      hostAddress = "192.168.100.10";
-      localAddress = "192.168.100.13";
-      hostAddress6 = "fc00::1";
-      localAddress6 = "fc00::3";
-      config = {
-        config,
-        pkgs,
-        lib,
-        ...
-      }: {
-        networking = {
-          firewall.allowedTCPPorts = [8065];
-          # Use systemd-resolved inside the container
-          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-          useHostResolvConf = lib.mkForce false;
-        };
-        services.resolved.enable = true;
-        system.stateVersion = "25.11";
-        environment.systemPackages = with pkgs; [mattermost];
-        services.mattermost = {
-          enable = true;
-          siteUrl = "https://mmt.udh.ddns.net"; # Set this to the URL you will be hosting the site on.
-          host = "0.0.0.0"; # Enable listing to host machine on VPN
-        };
-      };
-    };
-
-    services.nginx .
-      virtualHosts .
-        "mmt.udh.ddns.net" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://192.168.100.13:8065";
-        proxyWebsockets = true;
-      };
-    };
+    #containers.mattermostTestServer = {
+    #  autoStart = true;
+    #  privateNetwork = true;
+    #  hostAddress = "192.168.100.10";
+    #  localAddress = "192.168.100.13";
+    #  hostAddress6 = "fc00::1";
+    #  localAddress6 = "fc00::3";
+    #  config = {
+    #    config,
+    #    pkgs,
+    #    lib,
+    #    ...
+    #  }: {
+    #    networking = {
+    #      firewall.allowedTCPPorts = [8065];
+    #      # Use systemd-resolved inside the container
+    #      # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+    #      useHostResolvConf = lib.mkForce false;
+    #    };
+    #    services.resolved.enable = true;
+    #    system.stateVersion = "25.11";
+    #    environment.systemPackages = with pkgs; [mattermost];
+    #    services.mattermost = {
+    #      enable = true;
+    #      siteUrl = "https://mmt.udh.ddns.net"; # Set this to the URL you will be hosting the site on.
+    #      host = "0.0.0.0"; # Enable listing to host machine on VPN
+    #    };
+    #  };
+    #};
+    #services.nginx.virtualHosts."mmt.udh.ddns.net" = {
+    #  forceSSL = true;
+    #  enableACME = true;
+    #  locations."/" = {
+    #    proxyPass = "http://192.168.100.13:8065";
+    #    proxyWebsockets = true;
+    #  };
+    #};
 
     # Mattermost CfR Server
     containers.mattermostCfRServer = {
@@ -241,10 +247,7 @@
         };
       };
     };
-
-    services.nginx .
-      virtualHosts .
-        "cfr.udh.ddns.net" = {
+    services.nginx.virtualHosts."cfr.udh.ddns.net" = {
       forceSSL = true;
       enableACME = true;
       locations."/" = {
@@ -253,14 +256,93 @@
       };
     };
 
-    #environment.etc."nextcloud-admin-pass".text = "PWD123456789";
-    #services.nextcloud = {
-    #  enable = true;
-    #  package = pkgs.nextcloud31;
-    #  hostName = "localhost";
-    #  config.adminpassFile = "/etc/nextcloud-admin-pass";
-    #  config.dbtype = "sqlite";
-    #  settings.trusted_domains = ["sia.local"];
+    # CfR Nextcloud Server
+    #containers.nextcloudCfRServer = {
+    #  autoStart = true;
+    #  privateNetwork = true;
+    #  hostAddress = "192.168.100.10";
+    #  localAddress = "192.168.100.15";
+    #  hostAddress6 = "fc00::1";
+    #  localAddress6 = "fc00::5";
+    #  config = {
+    #    config,
+    #    pkgs,
+    #    lib,
+    #    ...
+    #  }: {
+    #    networking = {
+    #      firewall.allowedTCPPorts = [80];
+    #      # Use systemd-resolved inside the container
+    #      # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+    #      useHostResolvConf = lib.mkForce false;
+    #    };
+    #    services.resolved.enable = true;
+    #    system.stateVersion = "25.11";
+    #    #environment.systemPackages = with pkgs; [nextcloud];
+    #    # TODO: Don't do this
+    #    environment.etc."nextcloud-admin-pass".text = "PWD123456789";
+    #    services.nextcloud = {
+    #      enable = true;
+    #      package = pkgs.nextcloud31;
+    #      hostName = "localhost";
+    #      config.adminpassFile = "/etc/nextcloud-admin-pass";
+    #      config.dbtype = "sqlite";
+    #      #settings.trusted_domains = ["sia.local"];
+    #      #settings.trusted_domains = ["192.168.100.10"];
+    #      settings.trusted_domains = ["192.168.100.15" "cfrnc.udh.ddns.net"];
+    #    };
+    #  };
     #};
+    #services.nginx.virtualHosts."cfrnc.udh.ddns.net" = {
+    #  forceSSL = true;
+    #  enableACME = true;
+    #  locations."/" = {
+    #    proxyPass = "http://192.168.100.15";
+    #    proxyWebsockets = true;
+    #  };
+    #};
+    
+    #containers.NIATM-jekyll = {
+    #  autoStart = true;
+    #  privateNetwork = true;
+    #  hostAddress = "192.168.100.10";
+    #  localAddress = "192.168.100.16";
+    #  hostAddress6 = "fc00::1";
+    #  localAddress6 = "fc00::6";
+    #  # Bind the host folder to the container
+    #  bindMounts = {
+    #    "/srv/jekyll" = {
+    #      hostPath = "/home/udh/NIATM_website";
+    #      isReadOnly = false; # Jekyll to write to _site folder
+    #    };
+    #  };
+    #  
+    #  config = { pkgs, ... }: {
+    #    environment.systemPackages = [ 
+    #      pkgs.jekyll 
+    #      pkgs.bundler 
+    #    ];
+    #    networking.firewall.allowedTCPPorts = [ 4000 ];
+    #    systemd.services.jekyll-serve = {
+    #      description = "Jekyll Service";
+    #      wantedBy = [ "multi-user.target" ];
+    #      after = [ "network.target" ];
+    #      serviceConfig = {
+    #        WorkingDirectory = "/srv/jekyll";
+    #        #ExecStart = "${pkgs.jekyll}/bin/jekyll serve --host 0.0.0.0 --trace";
+    #        ExecStart = "${pkgs.bundler}/bin/bundle exec jekyll serve --livereload -H 0.0.0.0 --trace";
+    #        Restart = "always";
+    #      };
+    #    };
+    #  };
+    #};
+    services.nginx.virtualHosts."niatm.udh.ddns.net" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://192.168.0.31:4000";
+        proxyWebsockets = true;
+      };
+    };
   };
 }

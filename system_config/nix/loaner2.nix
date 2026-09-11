@@ -11,7 +11,6 @@
 #    ifd
 #  ];
 #}
-
 #{ config, pkgs, lib, ... }:
 #
 #let
@@ -36,9 +35,7 @@
 #    generatedHostConfig
 #  ];
 #}
-
-
-##{ config, pkgs, ... }: 
+##{ config, pkgs, ... }:
 #let
 #  #pkgs = import <nixpkgs> {};
 #  drv = derivation {
@@ -49,8 +46,6 @@
 #    system = builtins.currentSystem;
 #  };
 #in (builtins.readFile drv)
-
-
 #let
 #  drv = derivation {
 #    name = "hello";
