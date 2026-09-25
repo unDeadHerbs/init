@@ -121,6 +121,7 @@ in {
   services.tor = {
     enable = true;
     openFirewall = true;
+    client.enable = true;
     relay = {
       enable = true;
       role = "relay";

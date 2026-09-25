@@ -340,7 +340,7 @@
       forceSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://192.168.0.31:4000";
+        proxyPass = "http://windmills.local:4000";
         proxyWebsockets = true;
       };
     };
