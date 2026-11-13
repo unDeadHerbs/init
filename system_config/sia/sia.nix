@@ -37,6 +37,9 @@
     system.stateVersion = "25.11"; # Did you read the comment?
     # sudo nix-channel --add https://channels.nixos.org/nixos-25.11 nixos
     # sudo nixos-rebuild switch --upgrade
+    nix.settings = {
+      cores = 10; # 12 core machine; but, loud when running at full.
+    };
 
     services.xserver.xkb = {
       layout = "us";
