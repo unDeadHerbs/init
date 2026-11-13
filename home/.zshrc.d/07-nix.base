@@ -1,0 +1,15 @@
+#! /usr/bin/env zsh
+
+source ~/.zshrc.d/01-local
+
+if [ -e /etc/NIXOS ]; then
+    if [ -n "$NIX_LD_LIBRARY_PATH" ]; then
+        export LD_LIBRARY_PATH="$NIX_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
+    fi
+
+		if ! exists opencode; then
+				opencode () {
+						NIXPKGS_ALLOW_UNFREE=1 nix-shell -p "opencode" -p "pyright" --command "opencode $(_sh_quote "$@")"
+				}
+		fi
+fi

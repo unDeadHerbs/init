@@ -1,0 +1,31 @@
+#! /usr/bin/env zsh
+source ~/.zshrc.d/01-local
+
+# uv is a new python environment manager.  It has an ad-hoc mode
+# called uvx.  I can "install" some programs by using their ad-hoc
+# versions, as they either require no configuration or use dot-files
+# so that the encapsulation doesn't affect them.
+
+if exists nix-shell; then
+		if ! exists uv; then
+				# TODO: This is here because the creation of "n" isn't until
+				# later, reorder the files to fix.
+				uv () {
+						NIXPKGS_ALLOW_UNFREE=1 nix-shell -p "uv" -p "python3" --command "uv $(_sh_quote "$@")"
+				}
+		fi
+		if ! exists uvx; then
+				# TODO: This is here because the creation of "n" isn't until
+				# later, reorder the files to fix.
+				uvx () {
+						NIXPKGS_ALLOW_UNFREE=1 nix-shell -p "uv" -p "python3" --command "uvx $(_sh_quote "$@")"
+				}
+		fi
+fi
+
+if exists uvx; then
+		# Black is a python formatter
+		exists black    || alias black="uvx black"
+		exists ocrmypdf || alias ocrmypdf="uvx ocrmypdf"
+		exists whisper  || alias whisper="uvx --from openai-whisper whisper"
+fi
