@@ -9,3 +9,4 @@ home/.local/share/zoxide/db.zo
 home/.config/hyfetch.json
 home/.config/neofetch/config.conf
 **/*~
+home/.emacs.d/org-roam.db
