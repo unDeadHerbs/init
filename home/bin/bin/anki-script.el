@@ -7,7 +7,7 @@
 (anki-editor-sync-collection)
 
 ;; To convert the list of argument folders into a list of files
-(let* ((args (cdr (cdr (cdr command-line-args))))
+(let* ((args '("~/org/roam") ) ;(cdr (cdr (cdr command-line-args))))
 			 (ForDs (if (eq args '()) '(".") args))
 			 (files (mapcan (lambda (ForD)
 												(if (file-directory-p ForD)
