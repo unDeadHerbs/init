@@ -24,16 +24,14 @@ done
 clear
 
 # Quotes break the ~
+MOTD=~/.motd/base
 if [[ -e ~/.motd/$HOST ]]; then
-    source ~/.motd/$HOST
-		if [[ -e ~/.motd/$USER ]]; then
-				source ~/.motd/$USER
-		fi
-else if [[ -e ~/.motd/$USER ]]; then
-		 source ~/.motd/$USER
-else
-		[[ -e ~/.motd/base ]] && source ~/.motd/base
-fi ; fi
+    MOTD=~/.motd/$HOST
+fi
+if [[ -e ~/.motd/$USER ]]; then
+		MOTD=~/.motd/$USER
+fi
+source $MOTD
 
 PATH="/home/udh/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/udh/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
