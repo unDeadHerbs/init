@@ -10,3 +10,4 @@ home/.config/hyfetch.json
 home/.config/neofetch/config.conf
 **/*~
 home/.emacs.d/org-roam.db
+home/.emacs.d/.org-id-locations
